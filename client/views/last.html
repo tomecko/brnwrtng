@@ -1,0 +1,26 @@
+<template name="last">
+    <br/>
+    <h4>5 most recent sessions:</h4>
+    <table class="table">
+        <tr>
+            <th>tytuł</th>
+            <th>opis</th>
+            <th>link</th>
+            <th>current round</th>
+            <th>ideas/round</th>
+            <th>mins/round</th>
+            <th>time created</th>
+        </tr>
+        {{#each recentBrainSessions}}
+            <tr>
+                <td>{{title}}</td>
+                <td>{{desc}}</td>
+                <td><a href="{{pathFor 'brainSession'}}">link do sesji</a></td>
+                <td>{{round}}</td>
+                <td>{{ideasPerRound}}</td>
+                <td>{{roundLength}}</td>
+                <td>{{formatDate createdAt 'YYYY-MM-DD HH:mm'}}</td>
+            </tr>
+        {{/each}}
+    </table>
+</template>

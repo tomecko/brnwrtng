@@ -1,0 +1,9 @@
+{
+  "packages": {
+    "iron-router": {},
+    "bootstrap-3": {},
+    "moment": {},
+    "handlebar-helpers": {},
+    "font-awesome": {}
+  }
+}

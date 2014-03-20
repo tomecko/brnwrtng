@@ -1,0 +1,180 @@
+<template name="brainSession">
+    <div class="row">
+        <div class="col-sm-3">
+            {{> brainSession_info}}
+            {{> brainSession_timer}}
+            {{> brainSession_participants}}
+            {{> brainSession_actions}}
+            {{> brainSession_chat}}
+        </div>
+        
+        {{#if closed}}
+            <div class="col-sm-9">
+                {{> brainSession_ideas}}
+            </div>
+        {{else}}
+            {{#if round}}
+                <div class="col-sm-3">
+                    {{> brainSession_ideas_current_round}}
+                </div>
+                <div class="col-sm-6">
+                    {{> brainSession_ideas}}
+                </div>
+            {{else}}
+                <div class="col-sm-9">
+                    <h2>not started!</h2>
+                </div>
+            {{/if}}
+        {{/if}}
+
+    </div>
+</template>
+
+<template name="brainSession_info">
+    <h2>{{title}}</h2>
+    <p>
+        {{#if desc}}
+            {{desc}}
+        {{else}}
+            no description
+        {{/if}}
+    </p>
+    {{#if closed}}
+        <h3>Finished</h3>
+    {{else}}
+        {{#if round}}
+            <h3>Round: {{round}}</h3>
+        {{else}}
+            <h3>Not started yet.</h3>
+        {{/if}}
+    {{/if}}
+</template>
+
+<template name="brainSession_timer">
+    {{#unless closed}}
+        <h2 id="timer" {{#if $lt timerSeconds '10'}}style="color:red;"{{/if}}>
+            Time to go: {{formatDuration timerSeconds}}
+        </h2>
+    {{/unless}}
+</template>
+
+<template name="brainSession_participants">
+    {{#if participants}}
+        {{#if isSuperuser}}
+            You're a superuser.<br/>
+        {{/if}}
+        Participants:    
+        <ul class="list-unstyled">
+        {{#each participants}}
+<!--                <li {{#unless $or activity.write activity.isHere}}class="text-muted"{{/unless}}>
+                {{emails.0.address}}
+                {{#if activity.write}}
+                    <i class="fa fa-pencil"></i>
+                {{/if}}
+                {{#unless $or activity.write activity.isHere}}
+                    <i class="fa fa-sign-out"></i>
+                {{/unless}}
+            </li>-->
+            <li>
+                {{emails.0.address}}
+                {{#if activity.write}}
+                    <i class="fa fa-pencil"></i>
+                {{/if}}
+                
+                {{#if _eq currentUser._id _id}}
+                    <button class="btn btn-default btn-xs {{#if activity.ready}}btn-primary{{/if}} ready" data-ready="{{#if activity.ready}}true{{else}}false{{/if}}">
+                        {{#if activity.ready}}
+                            I'm ready!
+                        {{else}}
+                            I'm not ready.
+                        {{/if}}
+                    </button>
+                {{else}}
+                    {{#if activity.ready}}
+                        <span class="label label-primary">
+                            ready
+                        </span>
+                    {{/if}}
+                {{/if}}
+                
+            </li>
+        {{/each}}
+        </ul>
+        <p>
+            Number of participants: {{getLength participants}}
+        </p>
+    {{/if}}
+</template>
+
+<template name="brainSession_actions">
+    {{#unless closed}}
+        {{#if round}}
+            <p>
+                {{#if isSuperuser}}
+                    <button class="next-round btn btn-primary">Next round</button>
+                    <button class="end-session btn btn-default">End session</button>
+                {{/if}}
+            </p>
+        {{else}}
+            <p>
+                {{#if isSuperuser}}
+                    <button class="next-round btn btn-primary">Start session</button>
+                {{/if}}
+            </p>
+        {{/if}}
+    {{/unless}}
+</template>
+
+<template name="brainSession_chat">
+    <h2>Chat</h2>
+    {{#if messages}}
+        <ul class="list-unstyled" id="chat">
+        {{#each messages}}
+            <li>
+                <span class="label {{#if _neq author currentUser._id}}label-primary{{else}}label-default{{/if}}">{{user author}}:</span>
+                {{text}}
+                <span class="text-muted" title="{{formatDate time 'YYYY/MM/DD HH:mm'}}">{{formatDate time 'HH:mm'}}</span>
+            </li>
+        {{else}}
+            <li><em>be first to write a message!</em></li>
+        {{/each}}
+        </ul>
+    {{/if}}
+    <form id="chat-send-message">
+        <input type="text" class="form-control" placeholder="your message">
+    </form>
+</template>
+
+<template name="brainSession_ideas">
+    {{#if closed}}
+        <h2>All ideas</h2>
+    {{else}}
+        <h2>Previous ideas</h2>
+    {{/if}}
+    {{#each ideas}}
+        {{#if text}}
+            <div class="well well-sm">
+                <span class="text-muted">Round: {{round}}</span>
+                {{#if ../closed}}
+                    | <span class="text-muted">Author: {{author.emails.0.address}}</span>
+                {{/if}}
+                <br/>
+                {{text}}
+            </div>
+        {{/if}}
+    {{else}}
+        no ideas
+    {{/each}}
+</template>
+
+<template name="brainSession_ideas_current_round">
+    {{#if round}}
+        <h2>Your ideas in current round</h2>
+        <div data-round="{{round}}" data-sheet="{{sheet}}">
+            {{#each ideasPerRound}}
+                <h3>Idea {{inc this}}</h3>
+                <textarea  data-no="{{this}}" class="form-control"></textarea>
+            {{/each}}
+        </div>
+    {{/if}}
+</template>

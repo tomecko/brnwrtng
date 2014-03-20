@@ -1,0 +1,37 @@
+<template name="setup">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <h1>Setup</h1>
+                <form role="form">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" placeholder="" required>
+                    </div>
+                    <div class="form-group">
+                    {{#if currentUser}}
+                        Your e-mail: {{currentUser.emails.0.address}}
+                    {{else}}
+                        <label for="email">Your e-mail</label>
+                        <input id="email" class="form-control" type="email" name="email" value="" required>
+                    {{/if}}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="desc">Description</label>
+                        <textarea class="form-control" id="desc" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Round Length <small>(in minutes)</small></label>
+                        <input type="number" class="form-control" id="roundLength" value="5" min="1" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Ideas per Round</label>
+                        <input type="number" class="form-control" id="ideasPerRound" name="ideasPerRound" value="3" min="1" max="5" step="1">
+                    </div>
+                    <input type="submit" class="btn btn-default btn-primary btn-lg" value="Create Brainwriting Session"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</template>

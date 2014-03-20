@@ -1,0 +1,20 @@
+<head>
+    <title>brainwriting_meteor</title>
+</head>
+
+<template name="layout">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="pull-right">
+                {{#if currentUser}}
+                    <a href="/">Home</a>
+                    {{currentUser.emails.0.address}}
+                    <button class="logout btn btn-default"><i class="fa fa-power-off"></i> Log Out</button>
+                {{else}}
+                    Guest
+                {{/if}}
+            </header>
+        </div>
+    </div>
+    {{yield}}
+</template>

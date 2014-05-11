@@ -3,11 +3,14 @@
         <div class="col-sm-3">
             <div class="well well-sm">
                 {{#unless closed}}
-                    {{> brainSession_timer}}
+                    <div class="text-center">
+                        {{> brainSession_round_info}}
+                        {{> brainSession_timer}}
+                        {{> brainSession_actions}}
+                    </div>
                 {{else}}
                     <h2>Finished</h2>
                 {{/unless}}
-                {{> brainSession_actions}}
                 <hr/>
                 {{> brainSession_participants}}
                 <hr/>
@@ -42,15 +45,17 @@
 </template>
 
 <template name="brainSession_round_info">
-    {{#if closed}}
-        Finished
-    {{else}}
-        {{#if round}}
-            Round {{round}}
+    <h2 class="text-center">
+        {{#if closed}}
+            Finished
         {{else}}
-            Not started
+            {{#if round}}
+                Round {{round}}
+            {{else}}
+                Not started
+            {{/if}}
         {{/if}}
-    {{/if}}
+    </h2>
 </template>
 
 <template name="brainSession_info">
@@ -65,12 +70,11 @@
 </template>
 
 <template name="brainSession_timer">
-    <h2 id="timer" style="{{#if $lt timerSeconds '10'}}color:red;{{/if}}">
-        {{> brainSession_round_info}}
-        <div id="timer-knob" class="pull-right" data-minutes="{{roundLength}}">
+    <h2 id="timer" class="clearfix text-center" style="{{#if $lt timerSeconds '10'}}color:red;{{/if}}">
+        <div id="timer-knob" data-minutes="{{roundLength}}">
             <input type="text" value="0" class="dial">
         </div>
-        <div class="pull-right">
+        <div>
             {{formatDuration timerSeconds}}
         </div>
     </h2>
@@ -117,12 +121,12 @@
 <template name="brainSession_actions">
     {{#unless closed}}
         {{#if round}}
-            <p>
+            <div class="btn-group">
                 {{#if isSuperuser}}
                     <button class="next-round btn btn-primary">Next round</button>
                     <button class="end-session btn btn-default">End session</button>
                 {{/if}}
-            </p>
+            </div>
         {{else}}
             <p>
                 {{#if isSuperuser}}

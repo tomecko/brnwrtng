@@ -120,19 +120,15 @@
 
 <template name="brainSession_actions">
     {{#unless closed}}
-        {{#if round}}
+        {{#if isSuperuser}}
             <div class="btn-group">
-                {{#if isSuperuser}}
+                {{#if round}}
                     <button class="next-round btn btn-primary">Next round</button>
                     <button class="end-session btn btn-default">End session</button>
-                {{/if}}
-            </div>
-        {{else}}
-            <p>
-                {{#if isSuperuser}}
+                {{else}}
                     <button class="next-round btn btn-primary">Start session</button>
                 {{/if}}
-            </p>
+            </div>
         {{/if}}
     {{/unless}}
 </template>

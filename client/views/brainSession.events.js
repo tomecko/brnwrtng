@@ -58,8 +58,8 @@ Template.brainSession.events({
             author: Meteor.userId(),
             no: $target.data('no'),
             session: Router.current().params._id,
-            sheet: $container.data('sheet'),
-            round: $container.data('round'),
+            sheet: +$container.attr('data-sheet'),
+            round: +$container.attr('data-round'),
             text: $target.val(),
         });
         Meteor.call('upsertActivity',{

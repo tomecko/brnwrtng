@@ -2,3 +2,20 @@
     max-height: 200px;
     overflow-y: auto;
 }
+
+.brwr-form-control-small {
+    padding: 3px 6px 3px 12px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+#timer {
+    line-height: 80px;
+}
+
+#timer-knob {
+    margin:0 10px;
+}

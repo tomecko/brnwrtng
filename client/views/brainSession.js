@@ -18,14 +18,14 @@ Template.brainSession_ideas_current_round.sheet = function() {
         participantCount = brainSession.participants.length,
         userNo = brainSession.participants.indexOf(Meteor.user()._id);
     if (brainSession) {
+        $("textarea").val('');
         return (userNo + roundZeroBased) % participantCount;
     }
 };
 
 Template.brainSession_ideas_current_round.ideasPerRound = function() {
     var brainSessionId = Router.current().params._id,
-        brainSession = BrainSessions.findOne(brainSessionId),
-        array = [];
+        brainSession = BrainSessions.findOne(brainSessionId);
     if (brainSession) {
         return _.range(brainSession.ideasPerRound);
     }
@@ -48,7 +48,7 @@ Template.brainSession_ideas.ideas = function() {
                 sheet: sheet
             }, {
                 sort : {
-                    round : 1,
+                    round : -1,
                     no: 1
                 }
             });
@@ -94,11 +94,34 @@ Template.brainSession_participants.participants = function() {
 
 // liczba sekund do końca rundy
 Template.brainSession_timer.timerSeconds = function() {
+    var brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId),
+        timerSeconds = getTimerSeconds(),
+        brainSessionLengthInSeconds;
+    if (brainSession) {
+        brainSessionLengthInSeconds = brainSession.roundLength*60;
+        knobSettings.max = brainSessionLengthInSeconds
+        $('.dial')
+            .trigger('configure', knobSettings)
+            .val(brainSessionLengthInSeconds - timerSeconds)
+            .trigger('change');
+    }
     return getTimerSeconds();
-}
+};
 
 // hack, żeby chat był przescrollowany na dół
 Template.brainSession_chat.rendered = function() {
     var $chat = $("#chat");
     $chat.scrollTop(9999);
+};
+
+Template.brainSession_timer.rendered = function() {
+    $(".dial").knob(knobSettings);
+};
+
+var knobSettings = {
+    width: 80,
+    height: 80,
+    displayInput: false,
+    rotation: 'anticlockwise'
 }

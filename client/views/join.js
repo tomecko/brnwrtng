@@ -9,14 +9,14 @@ Template.join.events({
             password: 'somepassword'
         }, function() {
             Meteor.loginWithPassword(email, 'somepassword', function() {
+                var id = Router.current().params._id;
                 BrainSessions.update(id,{
                     '$addToSet' : {
                         participants : Meteor.user()._id
                     }
-                })
-                Router.go('brainSession', {id: id});
+                });
+                Router.go('brainSession', {_id: id});
             });
         });
-        
     }
 });

@@ -1,5 +1,5 @@
 <head>
-    <title>brainwriting_meteor</title>
+    <title>Brainwriting</title>
 </head>
 
 <template name="layout">
@@ -8,13 +8,13 @@
             <div class="pull-right">
                 {{#if currentUser}}
                     <a href="/">Home</a>
-                    {{currentUser.emails.0.address}}
+                    {{currentUserEmail}}
                     <button class="logout btn btn-default"><i class="fa fa-power-off"></i> Log Out</button>
                 {{else}}
-                    Guest
+                    Not logged in
                 {{/if}}
-            </header>
+            </div>
         </div>
     </div>
-    {{yield}}
+    {{> yield}}
 </template>

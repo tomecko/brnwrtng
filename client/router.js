@@ -2,6 +2,8 @@ Router.configure({
     layoutTemplate: 'layout'
 });
 
+Router.onBeforeAction('loading');
+
 Router.map(function () {
     
     // strona główna, landing page
@@ -18,15 +20,23 @@ Router.map(function () {
     this.route('setup', {
         path: '/setup',
     });
+    
+    // strona, na której organizator sesji dostaje linka, którego ma przesłać uczestnikom
+    this.route('invite', {
+        path: '/invite/:_id',
+        data: function() {
+            return BrainSessions.findOne(this.params._id);
+        }
+    });
 
     // strona sesji
     this.route('brainSession', {
         path: '/session/:_id',
-        before: function() {
-            // jeśli niezalogowany, to niech się zaloguj na stronie "join"
+        onBeforeAction: function() {
+            // jeśli niezalogowany, to niech się zaloguje na stronie "join"
             if (!Meteor.user() && !Meteor.loggingIn()) {
                 console.log('Join before session!');
-                Router.go('join', {id: this.params._id});
+                Router.go('join', {_id: this.params._id});
             }
             if (Meteor.user()) {
                 BrainSessions.update(this.params._id,{
@@ -38,6 +48,9 @@ Router.map(function () {
         },
         data: function() {
             return BrainSessions.findOne(this.params._id);
+        },
+        waitOn: function(){
+            return [Meteor.subscribe("brainSessions")];
         }
     });
 

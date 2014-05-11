@@ -1,0 +1,14 @@
+<template name="invite">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 well">
+                <h1>New Brainwriting Session created!</h1>
+                <br/>
+                <p>Now share the link below with your team:</p>
+                <input id="session-link" type="text" value="{{absoluteUrl}}{{pathFor 'brainSession'}}" class="form-control">
+                <br/>
+                <a href="{{pathFor 'brainSession'}}" class="btn btn-primary btn-lg">go to Brainwriting Session</a>
+            </div>
+        </div>
+    </div>
+</template>

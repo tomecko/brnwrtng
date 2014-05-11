@@ -27,6 +27,22 @@ Handlebars.registerHelper("isSuperuser", function() {
     }
 });
 
+Handlebars.registerHelper("absoluteUrl", function() {
+    return Meteor.absoluteUrl().slice(0, - 1);;
+});
+
+Handlebars.registerHelper("currentUserEmail", function() {
+    return Meteor.user().emails[0].address;
+});
+
+Handlebars.registerHelper("convertMinutesToSeconds", function(mins) {
+    return mins*60;
+});
+
+Handlebars.registerHelper("emailHelper", function(user) {
+	if (user.emails) return user.emails[0].address;
+});
+
 Handlebars.registerHelper("inc", function(int) {
     return ++int;
 });

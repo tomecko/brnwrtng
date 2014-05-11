@@ -59,7 +59,7 @@ function createSession(doc, userId) {
     BrainSessions.insert(doc,
         function(err, id){
             if (!err) {
-                Router.go('brainSession', {_id: id});
+                Router.go('invite', {_id: id});
             }
         }
     );

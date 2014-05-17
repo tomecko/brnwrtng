@@ -1,7 +1,7 @@
 <template name="setup">
     <div class="container">
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-3 well">
+            <div class="col-lg-8 col-lg-offset-2 well">
                 <h1>New Brainwriting Session</h1>
                 <hr/>
                 <form role="form">
@@ -18,7 +18,7 @@
                     <div class="form-group">
                         <label for="title">Title</label>
                         <p>What's the problem you want to solve? What's your brainwriting about?</p>
-                        <input type="text" class="form-control" id="title" placeholder="e.g. Company website improvements" required>
+                        <input type="text" class="form-control" id="title" placeholder="e.g. How to improve our website?" required>
                     </div>
                     
                     <div class="form-group">
@@ -31,13 +31,7 @@
                         <p>
                             One round should last
                             <input type="number" class="form-control brwr-form-control-small" id="roundLength" value="5" min="1" max="9" step="1">
-                            minutes.
-                        </p>
-                    </div>
-                    
-                    <div class="form-group form-inline">
-                        <p>
-                            Let participants generate 
+                            minutes. Let people provide 
                             <input type="number" class="form-control brwr-form-control-small" id="ideasPerRound" name="ideasPerRound" value="3" min="1" max="5" step="1">
                             ideas per round.
                         </p>

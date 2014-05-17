@@ -1,12 +1,32 @@
 <template name="home">
+    <!--<a href="{{pathFor 'last'}}">last 5 sessions</a>-->
     <div class="container">
+        
         <div class="row">
             <div class="jumbotron">
                 <h1>Brainwriter</h1>
                 <p>Brainwriting is a simple and quick method for generating new ideas.</p>
                 <p><a href="/setup" class="btn btn-primary btn-lg">Let's try brainwriting!</a></p>
-                <a href="{{pathFor 'last'}}">last 5 sessions</a>
             </div>
         </div>
+        
+        <div class="row">
+            <div class="col-lg-4 box">
+                <i class="fa fa-lightbulb-o box-icon" style="color: #ccc;"></i>
+                <h2>Challenge</h2>
+                <p>Define a problem you want to solve.<br/>Gather few smart people who may help.</p>
+            </div>
+            <div class="col-lg-4 box">
+                <i class="fa fa-exchange box-icon" style="color: #666;"></i>
+                <h2>Let's brainwrite!</h2>
+                <p>You write down first quick ideas.<br/>In the next round you read other's concepts.<br/>They may inspire you to further brilliant ideas.<br/>It's brainstorming but without talking!</p>
+            </div>
+            <div class="col-lg-4 box">
+                <i class="fa fa-lightbulb-o box-icon" style="color: #ff0;"></i>
+                <h2>Case solved</h2>
+                <p>After few rounds group ends up<br/>with dozens of great ideas.<br/>It's really quick and easy to conduct.<br/><a href="/setup" class="">Ok, let's do it!</a></p>
+            </div>
+        </div>
+
     </div>
 </template>

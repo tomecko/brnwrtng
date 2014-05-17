@@ -47,6 +47,10 @@ Handlebars.registerHelper("inc", function(int) {
     return ++int;
 });
 
+Handlebars.registerHelper("nlToBreak", function(str) {
+    return str.replace(/\n/g, '<br />');;
+});
+
 Handlebars.registerHelper("formatDate", function(timestamp, format) {
     return moment(timestamp * 1000).format(format);
 });

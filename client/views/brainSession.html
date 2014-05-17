@@ -35,13 +35,19 @@
                             </div>
                         </div>
                     {{else}}
-                        <button class="btn btn-primary btn-lg ready">I'm ready!</button>
+                        {{> brainSession_ready_buttons}}
                     {{/if}}
                 {{/if}}
             </div>
         </div>
 
     </div>
+</template>
+
+<template name="brainSession_ready_buttons">
+    <button class="btn btn-primary btn-lg ready" data-ready="true">I'm ready!</button>
+    <br/>
+    <button class="btn btn-link ready" data-ready="false">I'm not ready!</button>
 </template>
 
 <template name="brainSession_round_info">
@@ -89,29 +95,14 @@
         <ul class="list-unstyled">
         {{#each participants}}
             <li>
+                {{#unless closed}}
+                    <i class="fa fa-fw fa-check-circle" style="{{#unless activity.ready}}color:#ccc;{{/unless}}"></i>
+                {{/unless}}
+                
                 {{emailHelper this}}
                 {{#if activity.write}}
                     <i class="fa fa-pencil"></i>
                 {{/if}}
-                
-                {{#if _eq currentUser._id _id}}
-                    <button class="btn btn-default btn-xs {{#if activity.ready}}btn-primary{{/if}} ready" data-ready="{{#if activity.ready}}true{{else}}false{{/if}}">
-                        {{#unless closed}}
-                            {{#if activity.ready}}
-                                I'm ready!
-                            {{else}}
-                                I'm not ready.
-                            {{/if}}
-                        {{/unless}}
-                    </button>
-                {{else}}
-                    {{#if activity.ready}}
-                        <span class="label label-primary">
-                            ready
-                        </span>
-                    {{/if}}
-                {{/if}}
-                
             </li>
         {{/each}}
         </ul>
@@ -170,7 +161,7 @@
                         | <span class="text-muted">Author: {{emailHelper author}}</span>
                     {{/if}}
                     <br/>
-                    {{text}}
+                    {{{nlToBreak text}}}
                 </div>
             {{/if}}
         {{else}}
@@ -188,5 +179,6 @@
                 <textarea data-no="{{this}}" class="form-control" style="margin-bottom:10px;"></textarea>
             {{/each}}
         </div>
+        {{> brainSession_ready_buttons}}
     {{/if}}
 </template>

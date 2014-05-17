@@ -5,7 +5,7 @@ Template.brainSession.events({
             brainSession = BrainSessions.findOne(brainSessionId),
             $target = $(event.target),
             ready = $target.data('ready'),
-            newValue = ready ? false : brainSession.round;
+            newValue = ready ? brainSession.round : false;
         Meteor.call('upsertActivity',{
             user: Meteor.userId(),
             session: brainSessionId

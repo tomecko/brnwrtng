@@ -26,6 +26,9 @@ Router.map(function () {
         path: '/invite/:_id',
         data: function() {
             return BrainSessions.findOne(this.params._id);
+        },
+        waitOn: function(){
+            return [Meteor.subscribe("brainSessions")];
         }
     });
 

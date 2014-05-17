@@ -1,3 +1,7 @@
+Template.invite.brainSession = function() {
+    return brainSession = BrainSessions.findOne(Router.current().params._id);
+}
+
 Template.invite.rendered = function() {
     $("#session-link").select();
 }

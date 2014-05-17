@@ -5,9 +5,9 @@
                 <h1>New Brainwriting Session created!</h1>
                 <br/>
                 <p>Now share the link below with your team:</p>
-                <input id="session-link" type="text" value="{{absoluteUrl}}{{pathFor 'brainSession'}}" class="form-control">
+                <input id="session-link" type="text" value="{{absoluteUrl}}{{getBrainSessionPath brainSession._id}}" class="form-control">
                 <br/>
-                <a href="{{pathFor 'brainSession'}}" class="btn btn-primary btn-lg">go to Brainwriting Session</a>
+                <a href="{{getBrainSessionPath brainSession._id}}" class="btn btn-primary btn-lg">go to Brainwriting Session</a>
             </div>
         </div>
     </div>

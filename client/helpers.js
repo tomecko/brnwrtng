@@ -1,4 +1,4 @@
-Handlebars.registerHelper("debug", function(optionalValue) { 
+UI.registerHelper("debug", function(optionalValue) { 
   console.log("========================================");
   console.log("Current Context");
   console.log("====================");
@@ -12,14 +12,14 @@ Handlebars.registerHelper("debug", function(optionalValue) {
   console.log("");
 });
 
-Handlebars.registerHelper("user", function(userId) {
+UI.registerHelper("user", function(userId) {
     var user = Meteor.users.findOne(userId);
     if (user) {
         return user.emails[0].address;
     }
 });
 
-Handlebars.registerHelper("isSuperuser", function() {
+UI.registerHelper("isSuperuser", function() {
     var brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId);
     if (Meteor.user() && brainSession) {
@@ -27,97 +27,103 @@ Handlebars.registerHelper("isSuperuser", function() {
     }
 });
 
-Handlebars.registerHelper("absoluteUrl", function() {
+UI.registerHelper("absoluteUrl", function() {
     return Meteor.absoluteUrl().slice(0, - 1);;
 });
 
-Handlebars.registerHelper("currentUserEmail", function() {
+UI.registerHelper('getBrainSessionPath', function(id) {
+    return Router.path('brainSession', {
+        _id: id
+    });
+});
+
+UI.registerHelper("currentUserEmail", function() {
     return Meteor.user().emails[0].address;
 });
 
-Handlebars.registerHelper("convertMinutesToSeconds", function(mins) {
+UI.registerHelper("convertMinutesToSeconds", function(mins) {
     return mins*60;
 });
 
-Handlebars.registerHelper("emailHelper", function(user) {
+UI.registerHelper("emailHelper", function(user) {
 	if (user.emails) return user.emails[0].address;
 });
 
-Handlebars.registerHelper("inc", function(int) {
+UI.registerHelper("inc", function(int) {
     return ++int;
 });
 
-Handlebars.registerHelper("nlToBreak", function(str) {
+UI.registerHelper("nlToBreak", function(str) {
     return str.replace(/\n/g, '<br />');;
 });
 
-Handlebars.registerHelper("formatDate", function(timestamp, format) {
+UI.registerHelper("formatDate", function(timestamp, format) {
     return moment(timestamp * 1000).format(format);
 });
 
-Handlebars.registerHelper("formatDuration", function(secondsTotal) {
+UI.registerHelper("formatDuration", function(secondsTotal) {
     return formatDuration(secondsTotal);
 });
 
-Handlebars.registerHelper("_eq", function(arg1, arg2) {
+UI.registerHelper("_eq", function(arg1, arg2) {
 	return arg1 == arg2;
 });
 
-Handlebars.registerHelper("_eqq", function(arg1, arg2) {
+UI.registerHelper("_eqq", function(arg1, arg2) {
 	return arg1 === arg2;
 });
 
-Handlebars.registerHelper("_neq", function(arg1, arg2) {
+UI.registerHelper("_neq", function(arg1, arg2) {
 	return arg1 != arg2;
 });
 
-Handlebars.registerHelper("_gt", function(arg1, arg2) {
+UI.registerHelper("_gt", function(arg1, arg2) {
 	return arg1 > arg2;
 });
 
-Handlebars.registerHelper("_lt", function(arg1, arg2) {
+UI.registerHelper("_lt", function(arg1, arg2) {
 	return arg1 < arg2;
 });
 
-Handlebars.registerHelper("_gte", function(arg1, arg2) {
+UI.registerHelper("_gte", function(arg1, arg2) {
 	return arg1 >= arg2;
 });
 
-Handlebars.registerHelper("_lte", function(arg1, arg2) {
+UI.registerHelper("_lte", function(arg1, arg2) {
 	return arg1 <= arg2;
 });
 
-Handlebars.registerHelper("_neqq", function(arg1, arg2) {
+UI.registerHelper("_neqq", function(arg1, arg2) {
 	return arg1 !== arg2;
 });
 
-Handlebars.registerHelper("_or", function(arg1, arg2) {
+UI.registerHelper("_or", function(arg1, arg2) {
 	return arg1 || arg2;
 });
 
-Handlebars.registerHelper("_and", function(arg1, arg2) {
+UI.registerHelper("_and", function(arg1, arg2) {
 	return arg1 && arg2;
 });
 
-Handlebars.registerHelper("_inArray", function(arr, val) {
+UI.registerHelper("_inArray", function(arr, val) {
     if (arr && val) {
         return arr.indexOf(val) >= 0;
     }
 });
 
-Handlebars.registerHelper("_len", function(arr) {
+UI.registerHelper("_len", function(arr) {
     return arr.length;
 });
 
-Handlebars.registerHelper("_lenLte", function(arr, len) {
+UI.registerHelper("_lenLte", function(arr, len) {
     return arr && (arr.length <= len);
 });
 
-Handlebars.registerHelper("_lenGte", function(arr, len) {
+UI.registerHelper("_lenGte", function(arr, len) {
     return arr && (arr.length >= len);
 });
 
-Handlebars.registerHelper("getPropertyValue", function(obj, property) {
+UI.registerHelper("getPropertyValue", function(obj, property) {
     if(obj && property in obj){
         return obj[property];
     }

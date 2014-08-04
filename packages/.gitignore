@@ -6,3 +6,6 @@ event-hooks
 font-awesome
 blaze-layout
 jq-knob
+iron-layout
+iron-core
+iron-dynamic-template

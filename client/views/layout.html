@@ -3,18 +3,5 @@
 </head>
 
 <template name="layout">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="pull-right">
-                {{#if currentUser}}
-                    <a href="/">Home</a>
-                    {{currentUserEmail}}
-                    <button class="logout btn btn-default"><i class="fa fa-power-off"></i> Log Out</button>
-                {{else}}
-                    Not logged in
-                {{/if}}
-            </div>
-        </div>
-    </div>
     {{> yield}}
 </template>

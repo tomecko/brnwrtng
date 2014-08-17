@@ -1,6 +1,9 @@
 Template.setup.events({
-    'submit form': function(event){
+    'click #create-brainwriting': function(event) {
+
+	// zeby nie bylo wielu sesji ;)
         event.preventDefault();
+
         var title = document.getElementById('title').value,
             desc = document.getElementById('desc').value,
             ideasPerRound = document.getElementById('ideasPerRound').value,

@@ -15,15 +15,32 @@ UI.registerHelper("debug", function(optionalValue) {
 UI.registerHelper("user", function(userId) {
     var user = Meteor.users.findOne(userId);
     if (user) {
-        return user.emails[0].address;
+        return user.username;
     }
 });
 
 UI.registerHelper("isSuperuser", function() {
-    var brainSessionId = Router.current().params._id,
-        brainSession = BrainSessions.findOne(brainSessionId);
-    if (Meteor.user() && brainSession) {
-        return _.contains(brainSession.superusers, Meteor.userId());
+    var brainSessionId = Router.current().params._id;
+    var brainToken = Router.current().params._token;
+    var brainSession = BrainSessions.findOne(brainSessionId);
+
+    return (brainSession.token == brainToken);
+});
+
+UI.registerHelper("isUserNotReady", function() {
+    var userId = Meteor.userId();
+    var brainSessionId = Router.current().params._id;
+    var brainSession = BrainSessions.findOne(brainSessionId);
+
+    var currentActivity = Activity.findOne({
+        user: userId, 
+        session: brainSessionId
+    });
+
+    if(currentActivity) {
+	return currentActivity.ready != brainSession.round;
+    } else {
+	return true;
     }
 });
 
@@ -37,16 +54,12 @@ UI.registerHelper('getBrainSessionPath', function(id) {
     });
 });
 
-UI.registerHelper("currentUserEmail", function() {
-    return Meteor.user().emails[0].address;
-});
-
 UI.registerHelper("convertMinutesToSeconds", function(mins) {
     return mins*60;
 });
 
-UI.registerHelper("emailHelper", function(user) {
-	if (user.emails) return user.emails[0].address;
+UI.registerHelper("userDisplayHelper", function(user) {
+    return user.username;
 });
 
 UI.registerHelper("inc", function(int) {

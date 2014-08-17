@@ -1,4 +1,3 @@
-Meteor.subscribe('users');
 Meteor.subscribe('brainSessions');
 Meteor.subscribe('ideas');
 Meteor.subscribe('activity');

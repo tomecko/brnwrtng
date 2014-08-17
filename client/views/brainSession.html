@@ -45,9 +45,11 @@
 </template>
 
 <template name="brainSession_ready_buttons">
-    <button class="btn btn-primary btn-lg ready" data-ready="true">I'm ready!</button>
-    <br/>
-    <button class="btn btn-link ready" data-ready="false">I'm not ready!</button>
+    {{#if round}}
+	{{#if isUserNotReady}}
+        <button class="btn btn-primary btn-lg ready" data-ready="true">Submit and get ready for next round!</button>
+	{{/if}}
+    {{/if}}
 </template>
 
 <template name="brainSession_round_info">
@@ -88,9 +90,6 @@
 
 <template name="brainSession_participants">
     {{#if participants}}
-        {{#if isSuperuser}}
-            <!--You're a superuser.<br/>-->
-        {{/if}}
         Participants ({{getLength participants}}):    
         <ul class="list-unstyled">
         {{#each participants}}
@@ -98,8 +97,8 @@
                 {{#unless closed}}
                     <i class="fa fa-fw fa-check-circle" style="{{#unless activity.ready}}color:#ccc;{{/unless}}"></i>
                 {{/unless}}
-                
-                {{emailHelper this}}
+
+                {{userDisplayHelper this}}
                 {{#if activity.write}}
                     <i class="fa fa-pencil"></i>
                 {{/if}}
@@ -173,12 +172,16 @@
 
 <template name="brainSession_ideas_current_round">
     {{#if round}}
-        <h2>Your ideas in round {{round}}</h2>
-        <div data-round="{{round}}" data-sheet="{{sheet}}">
-            {{#each ideasPerRound}}
-                <textarea data-no="{{this}}" class="form-control" style="margin-bottom:10px;"></textarea>
-            {{/each}}
-        </div>
+	{{#if isUserNotReady}}
+            <h2>Your ideas in round {{round}}</h2>
+            <div data-round="{{round}}" data-sheet="{{sheet}}">
+                {{#each ideasPerRound}}
+                    <textarea data-no="{{this}}" class="form-control" style="margin-bottom:10px;"></textarea>
+                {{/each}}
+            </div>
+	{{else}}
+	    <h2>Get ready for the next round!</h2>
+	{{/if}}
         {{> brainSession_ready_buttons}}
     {{/if}}
 </template>

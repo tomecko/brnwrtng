@@ -1,11 +1,7 @@
 // TODO: napisać sensowne publikowanie danych
 
 Meteor.publish("users", function () {
-    return Meteor.users.find({}, {
-        fields: {
-            emails : 1
-        }
-    });
+    return Meteor.users.find({_id: this.userId, _username: this.username});
 });
 
 Meteor.publish("brainSessions", function () {

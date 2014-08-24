@@ -44,3 +44,12 @@
     font-style: italic;
     color: #aaa;
 }
+
+button:focus {
+    outline: 0 !important;
+}
+
+button.stylish-clicked:active {
+    position: relative;
+    top: 3px;
+}

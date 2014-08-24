@@ -1,29 +1,33 @@
 Template.home.events({
-    'click #create-brainwriting': function(event) {
+    'click .js-create-session': function(event) {
 
-	// zeby nie bylo wielu sesji ;)
+        // zeby nie bylo wielu sesji ;)
         event.preventDefault();
 
-	// losujemy sobie token - identyfikator ktorego posiadacz bedzie moderatorem
-	var token = ('000000000' + Math.floor((Math.random() * 999999999) + 1)).slice(9);
+        forceLogin(function(userId) {
+            
+            // domyslne wartosci
+            var brainwritingSession = {
+                ideasPerRound: 3,
+                roundLength: 3,
+                createdAt: moment().unix(),
+                round: 0,
+                adminToken: getRandomString(9), // losujemy sobie token, ktorego posiadacz bedzie moderatorem
+                admins: [userId],
+                participants: [userId]
+            };
 
-	// tworzymy sesje z domyslnymi wartosciami
-	var brainwritingSession = {
-            title: 'brainwriting title',
-            desc: 'brainwriting description',
-            ideasPerRound: 5,
-            roundLength: 5,
-            createdAt: moment().unix(),
-	    round: 0,
-	    token: token
-        };
-
-    	BrainSessions.insert(brainwritingSession,
-            function(err, id){
-                if (!err) {
-                    Router.go('join', {_id: id, _token: token});
+            // tworzenie sesji
+            BrainSessions.insert(brainwritingSession,
+                function(err, id){
+                    // przekierowanie na stronę sesji
+                    if (!err) {
+                        Router.go('brainSession', {_id: id});
+                    }
                 }
-            }
-        );
+            );
+
+        });
+        
     }
 });

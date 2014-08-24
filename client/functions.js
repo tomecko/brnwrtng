@@ -29,3 +29,38 @@ formatDuration = function(secondsTotal) {
         + ":" + (seconds  < 10 ? "0" + seconds : seconds);
     return result;    
 }
+
+getRandomString = function(length) {
+    var text = "",
+        possible = "0123456789";
+
+    for( var i=0; i < length; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+forceLogin = function(callback) {
+
+    // zarejestrowanie i zalogowanie, jeśli ktoś nie jest zalogowany
+    if (!Meteor.user()){
+
+        var username = "user_"+getRandomString(9);
+
+        Meteor.call('addUser', {
+            username: username,
+            password: 'somepassword'
+        }, function(error, userId) {
+            if (userId) {
+                Meteor.loginWithPassword(username, 'somepassword');
+                callback(userId);
+            }
+        });
+
+    }
+    // a jeśli jest zalogowany, to tworzymy sesję
+    else {
+        callback(Meteor.userId());
+    }
+        
+}

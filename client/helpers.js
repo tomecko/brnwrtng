@@ -12,36 +12,26 @@ UI.registerHelper("debug", function(optionalValue) {
   console.log("");
 });
 
-UI.registerHelper("user", function(userId) {
-    var user = Meteor.users.findOne(userId);
-    if (user) {
-        return user.username;
+UI.registerHelper("isSuperuser", function() {
+    var brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId);
+
+    if (brainSession && Meteor.userId()) {
+        return _.indexOf(brainSession.admins, Meteor.userId()) > -1;
     }
 });
 
-UI.registerHelper("isSuperuser", function() {
-    var brainSessionId = Router.current().params._id;
-    var brainToken = Router.current().params._token;
-    var brainSession = BrainSessions.findOne(brainSessionId);
-
-    return (brainSession.token == brainToken);
-});
-
-UI.registerHelper("isUserNotReady", function() {
-    var userId = Meteor.userId();
-    var brainSessionId = Router.current().params._id;
-    var brainSession = BrainSessions.findOne(brainSessionId);
+UI.registerHelper("isUserReady", function() {
+    var userId = Meteor.userId(),
+        brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId);
 
     var currentActivity = Activity.findOne({
         user: userId, 
         session: brainSessionId
     });
 
-    if(currentActivity) {
-	return currentActivity.ready != brainSession.round;
-    } else {
-	return true;
-    }
+    return currentActivity ? currentActivity.ready == brainSession.round : false;
 });
 
 UI.registerHelper("absoluteUrl", function() {
@@ -58,8 +48,17 @@ UI.registerHelper("convertMinutesToSeconds", function(mins) {
     return mins*60;
 });
 
-UI.registerHelper("userDisplayHelper", function(user) {
-    return user.username;
+UI.registerHelper("userName", function(user) {
+    if (user) {
+        return (user.profile && user.profile.name) ? user.profile.name : user.username;
+    }
+});
+
+UI.registerHelper("userNameById", function(userId) {
+    var user = Meteor.users.findOne(userId);
+    if (user) {
+        return (user.profile && user.profile.name) ? user.profile.name : user.username;
+    }
 });
 
 UI.registerHelper("inc", function(int) {
@@ -67,7 +66,7 @@ UI.registerHelper("inc", function(int) {
 });
 
 UI.registerHelper("nlToBreak", function(str) {
-    return str.replace(/\n/g, '<br />');;
+    return str.replace(/\n/g, '<br/>');
 });
 
 UI.registerHelper("formatDate", function(timestamp, format) {
@@ -140,4 +139,8 @@ UI.registerHelper("getPropertyValue", function(obj, property) {
     if(obj && property in obj){
         return obj[property];
     }
+});
+
+UI.registerHelper("sessionEquals", function(key, value) {
+    return Session.get(key) === value;
 });

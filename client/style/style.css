@@ -30,3 +30,12 @@
     font-size: 10em;
     text-shadow: 1px 3px 10px #222;
 }
+
+.clickable {
+    cursor: pointer;
+}
+
+.empty {
+    font-style: italic;
+    color: #aaa;
+}

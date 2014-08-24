@@ -23,12 +23,13 @@ Meteor.methods({
         check(activity.user, String);
         check(activity.session, String);
         check(field, String);
+        
+        // jeśli nie podano wartości, zapisujemy timestamp
         if ('undefined' == typeof value) {
             value = moment().unix();
         }
         
-        var query = {};
-        query['$set'] = {};
+        var query = {'$set': {}};
         query['$set'][field] = value;
         
         return Activity.upsert({

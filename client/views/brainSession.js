@@ -1,3 +1,9 @@
+// czy użytkownik ustawił już sobie imię?
+Template.brainSession.hasName = function() {
+    var user = Meteor.user();
+    return user && user.profile && user.profile.name && user.profile.name.length > 0;
+};
+
 Template.brainSession_chat.messages = function() {
     var brainSessionId = Router.current().params._id;
     return ChatMessages.find({
@@ -75,17 +81,19 @@ Template.brainSession_participants.participants = function() {
     if (brainSession) {
         _.each(brainSession.participants, function(el, i, list){
             list[i] = Meteor.users.findOne(el);
-            list[i].activity = Activity.findOne({
-                user: el, 
-                session: brainSessionId
-            });
-            if (list[i].activity) {
-                if (list[i].activity.write) {
-                    // uznajemy, ze pisze, jesli pisał w ciagu ostatnich 3 sekund
-                    list[i].activity.write = (Session.get("currentTimestamp")-list[i].activity.write) < 3;
+            if (list[i]) {
+                list[i].activity = Activity.findOne({
+                    user: el, 
+                    session: brainSessionId
+                });
+                if (list[i].activity) {
+                    if (list[i].activity.write) {
+                        // uznajemy, ze pisze, jesli pisał w ciagu ostatnich 3 sekund
+                        list[i].activity.write = (Session.get("currentTimestamp")-list[i].activity.write) < 3;
+                    }
+                    list[i].activity.ready = (list[i].activity.ready === brainSession.round);
+                    return true;
                 }
-                list[i].activity.ready = (list[i].activity.ready === brainSession.round);
-                return true;
             }
         });
         return brainSession.participants;
@@ -109,6 +117,53 @@ Template.brainSession_timer.timerSeconds = function() {
     return getTimerSeconds();
 };
 
+
+Template.brainSession.rendered = function() {
+    
+    this.autorun(function (c) {
+        var user = Meteor.user();
+        if (user) {
+            if (!(user.profile && user.profile.name && user.profile.name.length > 0)) {
+                $('#user-setup-modal').modal('show');
+            }
+        }
+    });
+    
+    // TODO:
+    // pobrać wpisane idee i umieścić je w textarea
+    // czyli obsłużyć przypadek, że ktoś sobie pisze i odświeża stronę w trakcie rundy
+    // niech mu się zachowują treści pomysłów
+    
+    $('#session-desc.editable').editable({
+        mode: 'inline',
+        success: function(response, newValue) {
+            var brainSessionId = Router.current().params._id;
+            if (brainSessionId) {
+                BrainSessions.update(brainSessionId, {
+                    $set: {
+                        desc: newValue
+                    }
+                });
+            }
+        }
+    });
+    
+    $('#session-title.editable').editable({
+        mode: 'inline',
+        success: function(response, newValue) {
+            var brainSessionId = Router.current().params._id;
+            if (brainSessionId) {
+                BrainSessions.update(brainSessionId, {
+                    $set: {
+                        title: newValue
+                    }
+                });
+            }
+        }
+    });
+    
+};
+
 // hack, żeby chat był przescrollowany na dół
 Template.brainSession_chat.rendered = function() {
     var $chat = $("#chat");
@@ -124,4 +179,4 @@ var knobSettings = {
     height: 80,
     displayInput: false,
     rotation: 'anticlockwise'
-}
+};

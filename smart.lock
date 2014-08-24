@@ -8,8 +8,7 @@
       "font-awesome": {},
       "jq-knob": {},
       "iron-layout": {},
-      "iron-router": {},
-      "x-editable-bootstrap": {}
+      "iron-router": {}
     },
     "packages": {
       "bootstrap-3": {
@@ -46,11 +45,6 @@
         "git": "https://github.com/EventedMind/iron-router.git",
         "tag": "v0.8.2",
         "commit": "05415a8891ea87a00fb1e2388585f2ca5a38e0da"
-      },
-      "x-editable-bootstrap": {
-        "git": "https://github.com/nate-strauser/meteor-x-editable-bootstrap.git",
-        "tag": "v1.5.1",
-        "commit": "ddb9e4523b570f88d96c4fbafa5f6883e544baf8"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

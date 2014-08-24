@@ -4,6 +4,19 @@ Template.brainSession.hasName = function() {
     return user && user.profile && user.profile.name && user.profile.name.length > 0;
 };
 
+Template.brainSession_info.linkForParticipants = function() {
+    var brainSessionId = Router.current().params._id;
+    return Meteor.absoluteUrl("session/"+brainSessionId);
+};
+
+Template.brainSession_info.linkForAdmins = function() {
+    var brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId);
+    if (brainSession) {
+        return Meteor.absoluteUrl("session/"+brainSessionId+"/"+brainSession.adminToken);
+    }
+};
+
 Template.brainSession_chat.messages = function() {
     var brainSessionId = Router.current().params._id;
     return ChatMessages.find({
@@ -133,34 +146,6 @@ Template.brainSession.rendered = function() {
     // pobrać wpisane idee i umieścić je w textarea
     // czyli obsłużyć przypadek, że ktoś sobie pisze i odświeża stronę w trakcie rundy
     // niech mu się zachowują treści pomysłów
-    
-    $('#session-desc.editable').editable({
-        mode: 'inline',
-        success: function(response, newValue) {
-            var brainSessionId = Router.current().params._id;
-            if (brainSessionId) {
-                BrainSessions.update(brainSessionId, {
-                    $set: {
-                        desc: newValue
-                    }
-                });
-            }
-        }
-    });
-    
-    $('#session-title.editable').editable({
-        mode: 'inline',
-        success: function(response, newValue) {
-            var brainSessionId = Router.current().params._id;
-            if (brainSessionId) {
-                BrainSessions.update(brainSessionId, {
-                    $set: {
-                        title: newValue
-                    }
-                });
-            }
-        }
-    });
     
 };
 

@@ -35,6 +35,11 @@
     cursor: pointer;
 }
 
+.link-input {
+    max-width: 400px;
+    display: inline-block;
+}
+
 .empty {
     font-style: italic;
     color: #aaa;

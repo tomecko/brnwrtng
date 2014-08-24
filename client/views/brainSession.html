@@ -143,6 +143,11 @@
             {{/if}}
         </p>
         
+        <p>
+            Share this link to invite people: <input type="text" class="form-control link-input" value="{{linkForParticipants}}" onClick="this.select();"><br/>
+            Your admin link: <input type="text" class="form-control link-input" value="{{linkForAdmins}}" onClick="this.select();">
+        </p>
+        
     {{else}}
     
         {{#if title}}
@@ -152,7 +157,7 @@
         {{/if}}
         
         {{#if desc}}
-            <p>{{desc}}</p>
+            <p>{{{nlToBreak desc}}}</p>
         {{/if}}
     
     {{/if}}

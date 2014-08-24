@@ -27,7 +27,7 @@ Router.map(function () {
 
                     // jeśli ktoś podaje token admina, to dopisujemy go do admina
                     if (Router.current().params.token) {
-                        var brainSession = BrainSessions.findOne();
+                        var brainSession = BrainSessions.findOne(brainSessionId);
                         if (brainSession) {
                             if (Router.current().params.token === brainSession.adminToken) {
                                 BrainSessions.update(brainSessionId, {

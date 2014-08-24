@@ -6,7 +6,6 @@
     "font-awesome": {},
     "jq-knob": {},
     "iron-layout": {},
-    "iron-router": {},
-    "x-editable-bootstrap": {}
+    "iron-router": {}
   }
 }

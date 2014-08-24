@@ -151,7 +151,7 @@
     {{else}}
     
         {{#if title}}
-            <h2>{{title}}</h2>
+            <h2 class="{{#unless title}}empty{{/unless}}">{{title}}</h2>
         {{else}}
             no title
         {{/if}}

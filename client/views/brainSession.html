@@ -234,7 +234,7 @@
 
 <template name="brainSession_ideas">
     
-    {{#if _neq round 1}}
+    {{#if ideas}}
         {{#if closed}}
             <h2>All ideas</h2>
         {{else}}
@@ -246,15 +246,15 @@
                 <div class="well well-sm">
                     <span class="text-muted">Round: {{round}}</span>
                     {{#if ../closed}}
-                        | <span class="text-muted">Author: {{emailHelper author}}</span>
+                        | <span class="text-muted">Author: {{userName author}}</span>
                     {{/if}}
                     <br/>
                     {{{nlToBreak text}}}
                 </div>
             {{/if}}
-        {{else}}
-            no ideas
         {{/each}}
+    {{else}}
+        no ideas
     {{/if}}
     
 </template>

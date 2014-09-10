@@ -50,6 +50,10 @@ Router.map(function () {
                 
                 this.render();
                 
+            } else {
+                
+                this.render('loading');
+                
             }
             
         },

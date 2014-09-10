@@ -1,7 +1,7 @@
 // wpisanie do sesji aktualnego czasu
 Meteor.setInterval(function() {
-    Session.set("currentTimestamp", moment().unix());
-}, 200);
+    Session.set("currentTimestamp", Math.floor(TimeSync.serverTime() / 1000));
+}, 500);
 
 // aktualizacja tytułu strony
 Meteor.setInterval(function() {
@@ -21,4 +21,4 @@ Meteor.setInterval(function() {
             document.title = title;
         }
     }
-}, 200);
+}, 500);

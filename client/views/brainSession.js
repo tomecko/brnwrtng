@@ -35,10 +35,15 @@ Template.brainSession_ideas_current_round.sheet = function() {
         brainSession = BrainSessions.findOne(brainSessionId),
         roundZeroBased = -1 + brainSession.round,
         participantCount = brainSession.participants.length,
-        userNo = brainSession.participants.indexOf(Meteor.user()._id);
+        userNo = brainSession.participants.indexOf(Meteor.user()._id),
+        sheet;
     if (brainSession) {
-        $("textarea").val('');
-        return (userNo + roundZeroBased) % participantCount;
+        sheet = (userNo + roundZeroBased) % participantCount;
+        if (sheet !== Session.get("sheet", sheet)) {
+            $("textarea").val('');
+        }
+        Session.set("sheet", sheet);
+        return sheet;
     }
 };
 

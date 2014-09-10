@@ -39,10 +39,10 @@ Template.brainSession_ideas_current_round.sheet = function() {
         sheet;
     if (brainSession) {
         sheet = (userNo + roundZeroBased) % participantCount;
-        if (sheet !== Session.get("sheet", sheet)) {
+        if (roundZeroBased !== Session.get("roundZeroBased")) {
             $("textarea").val('');
         }
-        Session.set("sheet", sheet);
+        Session.set("roundZeroBased", roundZeroBased);
         return sheet;
     }
 };

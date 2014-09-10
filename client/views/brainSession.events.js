@@ -50,7 +50,7 @@ Template.brainSession.events({
             session: Router.current().params._id,
             author: Meteor.userId(),
             text: text,
-            time: moment().unix()
+            time: TimeSync.serverTime()
         }, function(){
             $chat.scrollTop(9999);
         });

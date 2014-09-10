@@ -63,7 +63,7 @@ Template.brainSession.events({
         BrainSessions.update(brainSessionId,{
             '$set' : {
                 round: nextRound,
-                roundStart: moment().unix()
+                roundStart: Math.floor(TimeSync.serverTime() / 1000)
             }
         });
     },

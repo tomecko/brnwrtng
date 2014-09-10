@@ -10,7 +10,7 @@ Template.home.events({
             var brainwritingSession = {
                 ideasPerRound: 3,
                 roundLength: 3,
-                createdAt: moment().unix(),
+                createdAt: Math.floor(TimeSync.serverTime() / 1000),
                 round: 0,
                 adminToken: getRandomString(9), // losujemy sobie token, ktorego posiadacz bedzie moderatorem
                 admins: [userId],

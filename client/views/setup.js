@@ -15,7 +15,7 @@ Template.setup.events({
             desc: desc,
             ideasPerRound: ideasPerRound,
             roundLength: roundLength,
-            createdAt: moment().unix()
+            createdAt: Math.floor(TimeSync.serverTime() / 1000)
         };
         
         // zalogowany organizator od razu tworzy sesję

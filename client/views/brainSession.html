@@ -127,21 +127,23 @@
 <template name="brainSession_info">
     {{#if isSuperuser}}
     
-        <h2 id="session-title" class="{{#unless title}}empty{{/unless}} session-setup-modal-open clickable">
-            {{#if title}}
-                {{title}}
-            {{else}}
-                No title
-            {{/if}}
-        </h2>
-    
-        <p id="session-desc" class="{{#unless desc}}empty{{/unless}} session-setup-modal-open clickable">
-            {{#if desc}}
-                {{{nlToBreak desc}}}
-            {{else}}
-                No description
-            {{/if}}
-        </p>
+        <div class="session-setup-modal-open clickable">
+            <h2 id="session-title" class="{{#unless title}}empty{{/unless}}">
+                {{#if title}}
+                    {{title}}
+                {{else}}
+                    No title
+                {{/if}}
+            </h2>
+
+            <p id="session-desc" class="{{#unless desc}}empty{{/unless}}">
+                {{#if desc}}
+                    {{{nlToBreak desc}}}
+                {{else}}
+                    No description
+                {{/if}}
+            </p>
+        </div>
         
         <p>
             Share this link to invite people: <input type="text" class="form-control link-input" value="{{linkForParticipants}}" onClick="this.select();"><br/>

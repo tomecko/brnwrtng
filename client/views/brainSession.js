@@ -170,3 +170,8 @@ var knobSettings = {
     displayInput: false,
     rotation: 'anticlockwise'
 };
+
+Meteor.setInterval(function(){
+    var $chat = $("#chat");
+    $chat.scrollTop(9999);
+}, 1000);

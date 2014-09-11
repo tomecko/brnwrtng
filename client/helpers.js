@@ -70,7 +70,7 @@ UI.registerHelper("nlToBreak", function(str) {
 });
 
 UI.registerHelper("formatDate", function(timestamp, format) {
-    if (timestamp > moment().add('y',100).unix()) timestamp = Math.floor(timestamp/1000);
+    if (timestamp > moment().add(100,'y').unix()) timestamp = Math.floor(timestamp/1000);
     return moment(timestamp * 1000).format(format);
 });
 

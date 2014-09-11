@@ -46,6 +46,7 @@ Template.brainSession.events({
             $chat = $("#chat"),
             text = $input.val();
         $input.val("");
+        if ('' === text) return;
         ChatMessages.insert({
             session: Router.current().params._id,
             author: Meteor.userId(),

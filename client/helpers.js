@@ -1,24 +1,19 @@
-UI.registerHelper("debug", function(optionalValue) { 
-  console.log("========================================");
-  console.log("Current Context");
-  console.log("====================");
-  console.log(this);
+UI.registerHelper("debug", function(optionalValue) {
+    console.log("========================================");
+    console.log("Current Context");
+    console.log("====================");
+    console.log(this);
 
-  if (optionalValue) {
-    console.log("Value"); 
-    console.log("===================="); 
-    console.log(optionalValue); 
-  } 
-  console.log("");
+    if (optionalValue) {
+        console.log("Value");
+        console.log("====================");
+        console.log(optionalValue);
+    }
+    console.log("");
 });
 
 UI.registerHelper("isSuperuser", function() {
-    var brainSessionId = Router.current().params._id,
-        brainSession = BrainSessions.findOne(brainSessionId);
-
-    if (brainSession && Meteor.userId()) {
-        return _.indexOf(brainSession.admins, Meteor.userId()) > -1;
-    }
+    return isSuperuser();
 });
 
 UI.registerHelper("isUserReady", function() {
@@ -27,7 +22,7 @@ UI.registerHelper("isUserReady", function() {
         brainSession = BrainSessions.findOne(brainSessionId);
 
     var currentActivity = Activity.findOne({
-        user: userId, 
+        user: userId,
         session: brainSessionId
     });
 
@@ -35,7 +30,7 @@ UI.registerHelper("isUserReady", function() {
 });
 
 UI.registerHelper("absoluteUrl", function() {
-    return Meteor.absoluteUrl().slice(0, - 1);;
+    return Meteor.absoluteUrl().slice(0, -1);;
 });
 
 UI.registerHelper('getBrainSessionPath', function(id) {
@@ -45,7 +40,7 @@ UI.registerHelper('getBrainSessionPath', function(id) {
 });
 
 UI.registerHelper("convertMinutesToSeconds", function(mins) {
-    return mins*60;
+    return mins * 60;
 });
 
 UI.registerHelper("userName", function(user) {
@@ -70,7 +65,7 @@ UI.registerHelper("nlToBreak", function(str) {
 });
 
 UI.registerHelper("formatDate", function(timestamp, format) {
-    if (timestamp > moment().add(100,'y').unix()) timestamp = Math.floor(timestamp/1000);
+    if (timestamp > moment().add(100, 'y').unix()) timestamp = Math.floor(timestamp / 1000);
     return moment(timestamp * 1000).format(format);
 });
 
@@ -79,43 +74,43 @@ UI.registerHelper("formatDuration", function(secondsTotal) {
 });
 
 UI.registerHelper("_eq", function(arg1, arg2) {
-	return arg1 == arg2;
+    return arg1 == arg2;
 });
 
 UI.registerHelper("_eqq", function(arg1, arg2) {
-	return arg1 === arg2;
+    return arg1 === arg2;
 });
 
 UI.registerHelper("_neq", function(arg1, arg2) {
-	return arg1 != arg2;
+    return arg1 != arg2;
 });
 
 UI.registerHelper("_gt", function(arg1, arg2) {
-	return arg1 > arg2;
+    return arg1 > arg2;
 });
 
 UI.registerHelper("_lt", function(arg1, arg2) {
-	return arg1 < arg2;
+    return arg1 < arg2;
 });
 
 UI.registerHelper("_gte", function(arg1, arg2) {
-	return arg1 >= arg2;
+    return arg1 >= arg2;
 });
 
 UI.registerHelper("_lte", function(arg1, arg2) {
-	return arg1 <= arg2;
+    return arg1 <= arg2;
 });
 
 UI.registerHelper("_neqq", function(arg1, arg2) {
-	return arg1 !== arg2;
+    return arg1 !== arg2;
 });
 
 UI.registerHelper("_or", function(arg1, arg2) {
-	return arg1 || arg2;
+    return arg1 || arg2;
 });
 
 UI.registerHelper("_and", function(arg1, arg2) {
-	return arg1 && arg2;
+    return arg1 && arg2;
 });
 
 UI.registerHelper("_inArray", function(arr, val) {
@@ -137,7 +132,7 @@ UI.registerHelper("_lenGte", function(arr, len) {
 });
 
 UI.registerHelper("getPropertyValue", function(obj, property) {
-    if(obj && property in obj){
+    if (obj && property in obj) {
         return obj[property];
     }
 });

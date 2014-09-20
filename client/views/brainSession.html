@@ -1,32 +1,100 @@
 <template name="brainSession">
+
+    {{#if isSuperuser}}
+        <div class="modal" id="admin-setup-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h2 class="modal-title">
+                            New session created!
+                        </h2>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <h4><strong>Subject:</strong></h4>
+                            <input type="text" id="admin-setup-modal-title" class="form-control input-lg" value="{{title}}" placeholder="what problem do you want to solve?" autofocus="true">
+                        </div>
+
+                        <div class="form-group">
+                            <h4><strong>
+                                Your name:
+                            </strong></h4>
+                            <input type="text" id="admin-setup-modal-name" class="form-control input-lg" style="max-width: 200px;" placeholder="(optional)" value="{{currentUser.profile.name}}">
+                        </div>
+
+                        <div class="form-group">
+                            <h4>
+                                Send this link to invite people:<br/>
+                                <strong>{{linkForParticipants}}</strong>
+                            </h4>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        {{!-- <button type="button" class="btn btn-default" data-dismiss="modal">Thanks, I'd like to be anonymous</button> --}}
+                        <button type="button" class="btn btn-lg btn-primary" id="admin-setup-modal-ok">
+                            Let's start!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/if}}
     
-    <div class="modal" id="user-setup-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal" id="user-setup-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h2 class="modal-title">
                         {{#if hasName}}
                             Hey, {{currentUser.profile.name}}!
                         {{else}}
-                            Hey, stranger! 
+                            Welcome to brainwrite.it! 
                         {{/if}}
-                    </h4>
+                    </h2>
                 </div>
                 <div class="modal-body">
-                    <h4><strong>
-                        {{#if hasName}}
-                            You can change your name here:
-                        {{else}}
-                            What's your name?
-                        {{/if}}
-                    </strong></h4>
-                    <input type="text" id="user-setup-modal-name" class="form-control input-lg" style="max-width: 200px;" autofocus="true">
+                    
+                    {{#unless hasName}} {{!-- TODO: lepszy warunek: pokazywac tylko na wejsciu na sesję --}}
+                    <div class="form-group">
+                        <h4>
+                            The subject of the brainwriting session:<br/>
+                            <strong>
+                                {{#if title}}
+                                    {{title}}
+                                {{else}}
+                                    <i>not defined</i>
+                                {{/if}}
+                            </strong>
+                        </h4>
+                    </div>
+                    <hr>
+                    {{/unless}}
+
+                    <div class="form-group">
+                        <h4><strong>
+                            {{#if hasName}}
+                                You can change your name:
+                            {{else}}
+                                Your name:
+                            {{/if}}
+                        </strong></h4>
+                        <input type="text" id="user-setup-modal-name" class="form-control input-lg" style="max-width: 200px;" autofocus="true" placeholder="(optional)">
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Thanks, I'd like to be anonymous</button>
-                    <button type="button" class="btn btn-primary" id="user-setup-modal-ok">
-                        {{#if hasName}}
+                    {{!--<button type="button" class="btn btn-default" data-dismiss="modal">Thanks, I'd like to be anonymous</button>--}}
+                    <button type="button" class="btn btn-lg btn-primary" id="user-setup-modal-ok">
+                        {{#if hasName}} {{!-- TODO: lepszy warunek: pokazywac tylko na wejsciu na sesję --}}
                             Change name!
                         {{else}}
                             Let's start!
@@ -37,13 +105,13 @@
         </div>
     </div>
     
-    <div class="modal" id="session-setup-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal" id="session-setup-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h4 class="modal-title">
-                        Session title and description
+                        Session subject
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -51,10 +119,10 @@
                         <label for="session-setup-modal-title">Title</label>
                         <input type="text" class="form-control" id="session-setup-modal-title" value="{{title}}">
                     </div>
-                    <div class="form-group">
+                    {{!--} <div class="form-group">
                         <label for="session-setup-modal-desc">Description</label>
                         <textarea id="session-setup-modal-desc" class="form-control">{{desc}}</textarea>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -102,6 +170,8 @@
                                 {{> brainSession_ideas}}
                             </div>
                         </div>
+                    {{else}}
+                        <h2>Session hasn't begun yet.</h2>
                     {{/if}}
                 {{/if}}
             </div>
@@ -132,10 +202,11 @@
                 {{#if title}}
                     {{title}}
                 {{else}}
-                    No title
+                    No subject
                 {{/if}}
             </h2>
 
+            {{!--
             <p id="session-desc" class="{{#unless desc}}empty{{/unless}}">
                 {{#if desc}}
                     {{{nlToBreak desc}}}
@@ -143,6 +214,7 @@
                     No description
                 {{/if}}
             </p>
+            --}}
         </div>
         
         <p>
@@ -155,12 +227,14 @@
         {{#if title}}
             <h2 class="{{#unless title}}empty{{/unless}}">{{title}}</h2>
         {{else}}
-            no title
+            no subject
         {{/if}}
         
+        {{!--
         {{#if desc}}
             <p>{{{nlToBreak desc}}}</p>
         {{/if}}
+        --}}
     
     {{/if}}
     
@@ -207,7 +281,7 @@
                     <button class="next-round btn btn-primary">Next round</button>
                     <button class="end-session btn btn-default">End session</button>
                 {{else}}
-                    <button class="next-round btn btn-primary">Start session</button>
+                    <button class="next-round btn btn-lg btn-primary">Start session</button>
                 {{/if}}
             </div>
         {{/if}}
@@ -240,7 +314,10 @@
         {{#if closed}}
             <h2>All ideas</h2>
         {{else}}
-            <h2>Previous ideas</h2>
+            {{#if _gt round 1}}
+                <h2>Others' random ideas</h2>
+                <p>Read other participants' ideas for inspiration.</p>
+            {{/if}}
         {{/if}}
 
         {{#each ideas}}
@@ -271,9 +348,10 @@
         </div>
         <button id="submit-ideas" class="btn btn-primary btn-lg btn-block stylish-clicked">
             {{#if isUserReady}}
-                <i class="fa fa-check"></i>
+                <i class="fa fa-check-circle"></i> Ideas sent
+            {{else}}
+                Send Ideas
             {{/if}}
-            Submit
         </button>
     {{/if}}
 </template>

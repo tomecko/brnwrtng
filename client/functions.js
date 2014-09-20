@@ -9,7 +9,7 @@ getTimerSeconds = function() {
         }
         return _.min([
             roundLengthSeconds,
-            roundLengthSeconds + brainSession.roundStart - Session.get("currentTimestamp")
+            brainSession.roundEnd - Session.get("currentTimestamp")
         ]);
     }
 }

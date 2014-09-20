@@ -120,6 +120,7 @@ UI.registerHelper("_inArray", function(arr, val) {
 });
 
 UI.registerHelper("_len", function(arr) {
+    if (!arr) return;
     return arr.length;
 });
 

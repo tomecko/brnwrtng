@@ -86,7 +86,8 @@ Template.brainSession_ideas.ideas = function() {
             }, {
                 sort: {
                     round: 1,
-                    no: 1
+                    author: 1,
+                    no: 1,
                 }
             }).fetch();
             _.each(ideas, function(el, i, list) {
@@ -183,7 +184,8 @@ var knobSettings = {
     width: 80,
     height: 80,
     displayInput: false,
-    rotation: 'anticlockwise'
+    rotation: 'anticlockwise',
+    readOnly: true
 };
 
 Meteor.setInterval(function() {

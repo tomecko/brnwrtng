@@ -5,7 +5,7 @@ Template.home.events({
         event.preventDefault();
 
         forceLogin(function(userId) {
-            
+
             // domyslne wartosci
             var brainwritingSession = {
                 ideasPerRound: 3,
@@ -19,15 +19,17 @@ Template.home.events({
 
             // tworzenie sesji
             BrainSessions.insert(brainwritingSession,
-                function(err, id){
+                function(err, id) {
                     // przekierowanie na stronę sesji
                     if (!err) {
-                        Router.go('brainSession', {_id: id});
+                        Router.go('brainSession', {
+                            _id: id
+                        });
                     }
                 }
             );
 
         });
-        
+
     }
 });

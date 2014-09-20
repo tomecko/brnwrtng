@@ -4,7 +4,6 @@ Template.brainSession.events({
         var userId = Meteor.userId(),
             name = $("#admin-setup-modal-name").val(),
             brainSessionId = Router.current().params._id;
-        console.log("x");
         Meteor.users.update(userId, {
             $set: {
                 'profile.name': name
@@ -76,20 +75,57 @@ Template.brainSession.events({
             $chat.scrollTop(9999);
         });
     },
-    // organizator przechodzi do następnej rundy
+    // organizator rozpoczyna sesję lub przechodzi do następnej rundy
     'click .next-round': function() {
         var brainSessionId = Router.current().params._id,
             brainSession = BrainSessions.findOne(brainSessionId),
-            nextRound = 1 + brainSession.round;
-        BrainSessions.update(brainSessionId, {
-            '$set': {
-                round: nextRound,
-                roundStart: Math.floor(TimeSync.serverTime() / 1000)
+            now = Math.floor(TimeSync.serverTime() / 1000);
+        if (brainSession) {
+            // rozpoczynanie sesji
+            if (brainSession.round === 0) {
+                BrainSessions.update(brainSessionId, {
+                    '$set': {
+                        round: 1,
+                        roundStart: now,
+                        roundEnd: now + (60 * brainSession.roundLength)
+                    }
+                });
+            } else { // następna runda
+                BrainSessions.update(brainSessionId, {
+                    '$set': {
+                        roundEnd: now + CONFIG.END_ROUND_DELAY,
+                        shortened: true
+                    }
+                });
             }
-        });
+        }
+    },
+    // wycofanie się z kończenia rundy
+    'click .next-round-undo': function() {
+        var brainSessionId = Router.current().params._id,
+            brainSession = BrainSessions.findOne(brainSessionId),
+            now = Math.floor(TimeSync.serverTime() / 1000);
+        if (brainSession) {
+            BrainSessions.update(brainSessionId, {
+                '$set': {
+                    roundEnd: brainSession.roundStart + (60 * brainSession.roundLength)
+                },
+                '$unset': {
+                    shortened: ""
+                }
+            });
+        }
     },
     // organizator kończy sesję
     'click .end-session': function() {
+        $("#end-session-modal").modal("show");
+    },
+    // organizator kończy sesję
+    'click .end-session-modal-close': function() {
+        $("#end-session-modal").modal("hide");
+    },
+    // organizator kończy sesję
+    'click #end-session-modal-ok': function() {
         var brainSessionId = Router.current().params._id,
             brainSession = BrainSessions.findOne(brainSessionId);
         BrainSessions.update(brainSessionId, {
@@ -97,6 +133,7 @@ Template.brainSession.events({
                 closed: true,
             }
         });
+        $("#end-session-modal").modal("hide");
     },
     // uczestnik sesji pisze ideę
     'keyup textarea.idea': function(event) {
@@ -121,5 +158,25 @@ Template.brainSession.events({
             user: Meteor.userId(),
             session: brainSessionId
         }, "ready", false);
+    },
+    'click .idea-box-like': function(event) {
+        var ideaId = this._id,
+            idea = Ideas.findOne(this._id);
+        if (idea) {
+            // odejmujemy
+            if (idea.likedBy && idea.likedBy.indexOf(Meteor.userId()) > -1) {
+                Ideas.update(this._id, {
+                    '$pull': {
+                        'likedBy': Meteor.userId()
+                    }
+                });
+            } else { // dodajemy
+                Ideas.update(this._id, {
+                    '$addToSet': {
+                        'likedBy': Meteor.userId()
+                    }
+                });
+            }
+        }
     }
 });

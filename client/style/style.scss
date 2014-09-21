@@ -1,0 +1,67 @@
+$primary-color: #428bca;
+
+#chat {
+    max-height: 200px;
+    overflow-y: hidden;
+}
+
+.brwr-form-control-small {
+    padding: 3px 6px 3px 12px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+.warn {
+    color: #f00 !important;
+}
+
+#timer-knob {
+    margin:0 10px;
+}
+
+.idea-box {
+    width: 300px;
+    height: 200px;
+    float: left;
+    margin-right: 20px;
+    overflow: hidden; // TODO: lepiej zrobić
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.link-input {
+    max-width: 400px;
+    display: inline-block;
+}
+
+.empty {
+    font-style: italic;
+    color: #aaa;
+}
+
+button:focus {
+    outline: 0 !important;
+}
+
+button.stylish-clicked:active {
+    position: relative;
+    top: 3px;
+}
+
+.warn.warn-not-visible {
+    visibility: hidden;
+}
+
+.primary-color {
+    color: $primary-color;
+}
+
+.copy {
+    padding: 6px 12px;
+    background: #eee;
+}

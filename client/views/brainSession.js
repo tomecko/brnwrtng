@@ -158,7 +158,6 @@ Template.brainSession.rendered = function() {
                     $('#user-setup-modal').modal('show');
                 }
             }
-
         }
 
     });

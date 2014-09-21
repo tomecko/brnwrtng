@@ -177,5 +177,12 @@ Template.brainSession.events({
                 });
             }
         }
+    },
+    'focus .js-select-text-on-focus': function(event) {
+        var $target = $(event.target);
+        $target.select();
+    },
+    'mouseup .js-select-text-on-focus': function(event) {
+        return false;
     }
 });

@@ -38,12 +38,11 @@ Template.brainSession.events({
         $("#session-setup-modal").modal("show");
     },
     // zmienianie tytułu i opisu sesji
-    'click #session-setup-modal-ok': function(event) {
+    'click #session-setup-modal-ok': function() {
         var brainSessionId = Router.current().params._id;
         BrainSessions.update(brainSessionId, {
             $set: {
-                title: $("#session-setup-modal-title").val(),
-                desc: $("#session-setup-modal-desc").val()
+                title: $("#session-setup-modal-title").val()
             }
         });
         $('#session-setup-modal').modal('hide');

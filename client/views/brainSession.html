@@ -192,7 +192,7 @@
                     <span class="text-muted">Round: {{round}}</span>
                     {{#if ../closed}}
                         | <span class="text-muted">Author: {{userName author}}</span>
-                        | <span>{{#if _len likedBy}}{{_len likedBy}}{{/if}} <i class="fa fa-thumbs{{#unless _inArray likedBy currentUser._id}}-o{{/unless}}-up primary-color idea-box-like clickable" title="{{#if _inArray likedBy currentUser._id}}unlike{{else}}like{{/if}}"></i></span>
+                        | <span>{{#if _len likedBy}}{{_len likedBy}}{{/if}} <i class="fa fa-star{{#unless _inArray likedBy currentUser._id}}-o{{/unless}} primary-color idea-box-like clickable" title="{{#if _inArray likedBy currentUser._id}}unlike{{else}}like{{/if}}"></i></span>
                     {{/if}}
                     <br/>
                     {{{nlToBreak text}}}

@@ -138,7 +138,7 @@
         <ul class="list-unstyled blink blink-fast">
         {{#each participants}}
             <li>
-                {{#unless closed}}
+                {{#unless ../closed}}
                     <i class="fa fa-fw fa-check-circle primary-color" style="{{#unless activity.ready}}color:#ccc;{{/unless}}"></i>
                 {{/unless}}
                 
@@ -177,7 +177,7 @@
     
     {{#if ideas}}
         {{#if closed}}
-            <h2>All ideas</h2>
+            <h2>All ideas <button class="btn btn-primary" onclick="alert('Sorry, this hasn\'t been implemented yet!\n\nWhat did you expect to happen?');">export to file</button></h2>
         {{else}}
             {{#if _gt round 1}}
                 <h2>Others' random ideas</h2>

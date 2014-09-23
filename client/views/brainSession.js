@@ -1,5 +1,5 @@
 // czy użytkownik ustawił już sobie imię?
-Template.brainSession.hasName = function() {
+Template.brainSession_modals.hasName = function() {
     var user = Meteor.user();
     return user && user.profile && user.profile.name && user.profile.name.length > 0;
 };
@@ -155,7 +155,7 @@ Template.brainSession.rendered = function() {
             } else {
                 // jeśli user jest bez imienia
                 if (!user.profile || typeof user.profile.name === 'undefined') {
-                    $('#user-setup-modal').modal('show');
+                    $('#user-welcome-modal').modal('show');
                 }
             }
         }

@@ -18,35 +18,50 @@ Template.brainSession.events({
 
         $("#admin-setup-modal").modal("hide");
     },
-    // otwieranie okna do edycji imienia
-    'click .user-setup-modal-open': function(event) {
-        $("#user-setup-modal").modal("show");
-    },
-    // zmienianie imienia
-    'click #user-setup-modal-ok': function(event) {
+
+    // zamykanie okna powitalnego dla nie-admina
+    'click #user-welcome-modal-ok': function(event) {
         var userId = Meteor.userId(),
-            name = $("#user-setup-modal-name").val();
+            name = $("#user-welcome-modal-name").val();
         Meteor.users.update(userId, {
             $set: {
                 'profile.name': name
             }
         });
-        $('#user-setup-modal').modal('hide');
+        $('#user-welcome-modal').modal('hide');
     },
+
+    // otwieranie okna do edycji imienia
+    'click .name-edit-modal-open': function(event) {
+        $("#name-edit-modal").modal("show");
+    },
+    // zmienianie imienia
+    'click #name-edit-modal-ok': function(event) {
+        var userId = Meteor.userId(),
+            name = $("#name-edit-modal-name").val();
+        Meteor.users.update(userId, {
+            $set: {
+                'profile.name': name
+            }
+        });
+        $('#name-edit-modal').modal('hide');
+    },
+
     // otwieranie okna z edycją tytułu i opisu sesji
-    'click .session-setup-modal-open': function() {
-        $("#session-setup-modal").modal("show");
+    'click .session-edit-modal-open': function() {
+        $("#session-edit-modal").modal("show");
     },
     // zmienianie tytułu i opisu sesji
-    'click #session-setup-modal-ok': function() {
+    'click #session-edit-modal-ok': function() {
         var brainSessionId = Router.current().params._id;
         BrainSessions.update(brainSessionId, {
             $set: {
-                title: $("#session-setup-modal-title").val()
+                title: $("#session-edit-modal-title").val()
             }
         });
-        $('#session-setup-modal').modal('hide');
+        $('#session-edit-modal').modal('hide');
     },
+
     // przycisk gotowości na sesję lub następną rundę
     'click #submit-ideas': function(event) {
         var brainSessionId = Router.current().params._id,

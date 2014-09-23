@@ -64,7 +64,7 @@
 <template name="brainSession_info">
     {{#if isSuperuser}}
     
-        <div class="session-setup-modal-open clickable">
+        <div class="session-edit-modal-open clickable">
             <h2 id="session-title" class="{{#unless title}}empty{{/unless}}">
                 {{#if title}}
                     {{title}}
@@ -142,7 +142,7 @@
                     <i class="fa fa-fw fa-check-circle primary-color" style="{{#unless activity.ready}}color:#ccc;{{/unless}}"></i>
                 {{/unless}}
                 
-                <span class="{{#if _eq currentUser._id this._id}}user-setup-modal-open clickable{{/if}}">{{userName this}}</span>
+                <span class="{{#if _eq currentUser._id this._id}}name-edit-modal-open clickable{{/if}}">{{userName this}}</span>
                 
                 {{#if activity.write}}
                     <i class="fa fa-pencil faa-horizontal animated"></i>

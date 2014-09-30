@@ -71,3 +71,16 @@ isSuperuser = function() {
         return _.indexOf(brainSession.admins, Meteor.userId()) > -1;
     }
 }
+
+everybodyIsReady = function() {
+    var brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId);
+    if (brainSession) {
+        var readyPeopleCount = Activity.find({
+                session: brainSessionId,
+                ready: brainSession.round
+            }).count(),
+            peopleCount = brainSession.participants.length;
+        return readyPeopleCount === peopleCount;
+    }
+}

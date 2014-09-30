@@ -4,5 +4,5 @@ Activity = new Meteor.Collection("activity");
 ChatMessages = new Meteor.Collection("chatMessages");
 
 CONFIG = {
-    END_ROUND_DELAY: 10
+    END_ROUND_DELAY: 5
 };

@@ -65,7 +65,7 @@ UI.registerHelper("nlToBreak", function(str) {
 });
 
 UI.registerHelper("formatDate", function(timestamp, format) {
-    if (timestamp > moment().add(100, 'y').unix()) timestamp = Math.floor(timestamp / 1000);
+    if (timestamp > moment().add(100, 'y').unix()) timestamp = Math.floor(timestamp / 1000); // ew. sprowadzenie microtime do time
     return moment(timestamp * 1000).format(format);
 });
 

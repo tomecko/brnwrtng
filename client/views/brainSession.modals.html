@@ -10,14 +10,14 @@
                             <span class="sr-only">Close</span>
                         </button>
                         <h2 class="modal-title">
-                            New session created!
+                            Create new session
                         </h2>
                     </div>
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <h4><strong>Subject:</strong></h4>
-                            <input type="text" id="admin-setup-modal-title" class="form-control input-lg" value="{{title}}" placeholder="what problem do you want to solve?" autofocus="true">
+                            <h4><strong>What problem do you want to solve? </strong></h4>
+                            <input type="text" id="admin-setup-modal-title" class="form-control input-lg" value="{{title}}" placeholder="e.g. how to improve our team performance?" autofocus="true">
                         </div>
 
                         <div class="form-group">
@@ -54,16 +54,14 @@
                             <span class="sr-only">Close</span>
                         </button>
                         <h2 class="modal-title">
-                            End session?
+                            End brainwriting?
                         </h2>
                     </div>
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <h4>
-	                            <strong>Are you sure you want to end session?</strong><br/>
-	                            There will be no more rounds and all participants will read all ideas.
-                            </h4>
+                            <h4><strong>Are you sure you want to end brainwriting?</strong></h4>
+                            <h4><strong>There will be no more rounds and all people will read all ideas.</strong></h4>
                         </div>
 
                     </div>
@@ -72,7 +70,7 @@
 							Cancel
                         </button>
                         <button type="button" class="btn btn-lg btn-primary" id="end-session-modal-ok">
-                            Yes, end session!
+                            Yes, end brainwriting!
                         </button>
                     </div>
                 </div>
@@ -84,13 +82,17 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">
-                            Session subject
-                        </h4>
+                        <h2 class="modal-title">
+                            Brainwriting subject
+                        </h2>
                     </div>
                     <div class="modal-body">
-                        <h4><strong>Subject:</strong></h4>
-                        <input type="text" id="session-edit-modal-title" class="form-control input-lg" value="{{title}}" placeholder="what problem do you want to solve?" autofocus="true">
+
+                        <div class="form-group">
+                            <h4><strong>What problem do you want to solve? </strong></h4>
+                            <input type="text" id="session-edit-modal-title" class="form-control input-lg" value="{{title}}" placeholder="e.g. how to improve our team performance?" autofocus="true">
+                        </div>
+
                         {{!--} <div class="form-group">
                             <label for="session-edit-modal-desc">Description</label>
                             <textarea id="session-edit-modal-desc" class="form-control">{{desc}}</textarea>
@@ -100,6 +102,72 @@
                         <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancel</button>
                         <button type="button" class="btn btn-primary btn-lg" id="session-edit-modal-ok">
                             Confirm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="round-end-warning-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h2 class="modal-title">
+                            Next round?
+                        </h2>
+                    </div>
+                    <div class="modal-body">
+                        <h4><strong>It seems not everybody has finished.</strong></h4>
+                        <h4><strong>Do you really want to go to the next round?</strong></h4>
+                        <div class="checkbox">
+                            <label class="skip-next-round-warning-switch">
+                                <input type="checkbox" checked="{{#unless sessionEquals 'skipNextRoundWarning' false}}checked{{/unless}}">
+                                don't show this message again
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-lg next-round next-round-force">
+                            Yes, go to the next round!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="session-links-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h2 class="modal-title">
+                            Invite people
+                        </h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <h4>
+                                <strong><i class="fa fa-link"></i> Send this link to invite people:<br/></strong>
+                            </h4>
+                            <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForParticipants}}">
+                        </div>
+                        <a id="session-links-modal-show-admin-link" class="clickable">
+                            <i class="fa fa-link"></i>
+                            show admin link
+                        </a>
+                        <div class="form-group" style="display: none">
+                            <h4>
+                                <strong><i class="fa fa-link"></i> Admin link:<br/></strong>
+                            </h4>
+                            <p>Send this link to grant someone admin rights.<br/>(e.g. going to the next round or ending brainwriting)</p>
+                            <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForAdmins}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-lg" id="session-links-modal-ok">
+                            OK, got it!
                         </button>
                     </div>
                 </div>
@@ -177,7 +245,7 @@
                         <h4><strong>
                             Your name:
                         </strong></h4>
-                        <input type="text" id="name-edit-modal-name" class="form-control input-lg" style="max-width: 200px;" autofocus="true">
+                        <input type="text" id="name-edit-modal-name" class="form-control input-lg" style="max-width: 200px;" autofocus="true" value="{{#if hasName}}{{currentUser.profile.name}}{{/if}}">
                     </div>
                 </div>
                 <div class="modal-footer">

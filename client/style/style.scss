@@ -24,7 +24,7 @@ $primary-color: #428bca;
 
 .idea-box {
     width: 300px;
-    height: 200px;
+    height: 150px;
     float: left;
     margin-right: 20px;
     overflow: hidden; // TODO: lepiej zrobić
@@ -64,4 +64,8 @@ button.stylish-clicked:active {
 .copy {
     padding: 6px 12px;
     background: #eee;
+}
+
+.clickable {
+    cursor: pointer;
 }

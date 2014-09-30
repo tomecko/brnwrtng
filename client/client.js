@@ -1,12 +1,15 @@
+Session.setDefault('skipNextRoundWarning', 'unknown');
+Session.setDefault('allIdeasSorting', 'round');
+
 // dynamika rund
 Meteor.setInterval(function() {
-    var now = Math.floor(TimeSync.serverTime() / 1000);
+    var now = Math.floor(TimeSync.serverTime() / 1000),
+        brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId);
     // wpisanie do sesji aktualnego czasu
     Session.set("currentTimestamp", now);
-    // ew. odpalenie następnej rundy
-    var brainSessionId = Router.current().params._id,
-        brainSession = BrainSessions.findOne(brainSessionId);
     if (brainSession) {
+        // ew. odpalenie następnej rundy
         if (brainSession.roundEnd < now) {
             BrainSessions.update(brainSessionId, {
                 '$set': {
@@ -18,9 +21,19 @@ Meteor.setInterval(function() {
                     shortened: ""
                 }
             });
+            Session.set('everybodyReady', false);
+            $("#round-end-warning-modal").modal('hide');
+        }
+        // pokazanie tooltipa podpowiedzi, że wszyscy rzekomo gotowi na następną rundę
+        if (everybodyIsReady() && brainSession.round !== Session.get('everybodyReadyRound')) {
+            $(".next-round").tooltip('show');
+            Session.set('everybodyReadyRound', brainSession.round);
+            Meteor.setTimeout(function() {
+                $(".next-round").tooltip('hide');
+            }, 5000);
         }
     }
-}, 1000);
+}, 900);
 
 // miganie timerem
 Meteor.setInterval(function() {
@@ -45,4 +58,4 @@ Meteor.setInterval(function() {
             document.title = title;
         }
     }
-}, 1000);
+}, 900);

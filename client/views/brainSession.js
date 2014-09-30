@@ -9,7 +9,7 @@ Template.brainSession.linkForParticipants = function() {
     return Meteor.absoluteUrl("session/" + brainSessionId);
 };
 
-Template.brainSession_info.linkForAdmins = function() {
+Template.brainSession.linkForAdmins = function() {
     var brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId);
     if (brainSession) {
@@ -81,14 +81,31 @@ Template.brainSession_ideas.ideas = function() {
                 }
             });
         } else {
-            ideas = Ideas.find({
-                session: Router.current().params._id
-            }, {
-                sort: {
+            var sort;
+            if ('likes' === Session.get('allIdeasSorting')) {
+                sort = {
+                    likesCount: -1,
                     round: 1,
                     author: 1,
                     no: 1,
                 }
+            } else if ('author' === Session.get('allIdeasSorting')) {
+                sort = {
+                    author: 1,
+                    round: 1,
+                    likesCount: -1
+                }
+            } else {
+                sort = {
+                    round: 1,
+                    author: 1,
+                    likesCount: -1
+                }
+            }
+            ideas = Ideas.find({
+                session: Router.current().params._id
+            }, {
+                sort: sort
             }).fetch();
             _.each(ideas, function(el, i, list) {
                 list[i].author = Meteor.users.findOne(el.author);

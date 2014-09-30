@@ -34,6 +34,13 @@ Template.brainSession.events({
     // otwieranie okna do edycji imienia
     'click .name-edit-modal-open': function(event) {
         $("#name-edit-modal").modal("show");
+        $("#name-edit-modal-name").focus();
+    },
+    'keyup #name-edit-modal-name': function(event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            $("#name-edit-modal-ok").click();
+        }
     },
     // zmienianie imienia
     'click #name-edit-modal-ok': function(event) {
@@ -50,6 +57,7 @@ Template.brainSession.events({
     // otwieranie okna z edycją tytułu i opisu sesji
     'click .session-edit-modal-open': function() {
         $("#session-edit-modal").modal("show");
+        $("#session-edit-modal-title").focus();
     },
     // zmienianie tytułu i opisu sesji
     'click #session-edit-modal-ok': function() {
@@ -61,7 +69,12 @@ Template.brainSession.events({
         });
         $('#session-edit-modal').modal('hide');
     },
-
+    'keyup #session-edit-modal-title': function(event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            $("#session-edit-modal-ok").click();
+        }
+    },
     // przycisk gotowości na sesję lub następną rundę
     'click #submit-ideas': function(event) {
         var brainSessionId = Router.current().params._id,
@@ -90,10 +103,11 @@ Template.brainSession.events({
         });
     },
     // organizator rozpoczyna sesję lub przechodzi do następnej rundy
-    'click .next-round': function() {
+    'click .next-round': function(event) {
         var brainSessionId = Router.current().params._id,
             brainSession = BrainSessions.findOne(brainSessionId),
-            now = Math.floor(TimeSync.serverTime() / 1000);
+            now = Math.floor(TimeSync.serverTime() / 1000),
+            force = $(event.target).hasClass('next-round-force');
         if (brainSession) {
             // rozpoczynanie sesji
             if (brainSession.round === 0) {
@@ -105,12 +119,20 @@ Template.brainSession.events({
                     }
                 });
             } else { // następna runda
-                BrainSessions.update(brainSessionId, {
-                    '$set': {
-                        roundEnd: now + CONFIG.END_ROUND_DELAY,
-                        shortened: true
+                if (everybodyIsReady() || force || Session.equals('skipNextRoundWarning', true)) {
+                    BrainSessions.update(brainSessionId, {
+                        '$set': {
+                            roundEnd: now + CONFIG.END_ROUND_DELAY,
+                            shortened: true
+                        }
+                    });
+                    $("#round-end-warning-modal").modal('hide');
+                    if (Session.equals('skipNextRoundWarning', 'unknown')) {
+                        Session.set('skipNextRoundWarning', true);
                     }
-                });
+                } else { // ostrzeżenie, że nie wszyscy gotowi
+                    $("#round-end-warning-modal").modal('show');
+                }
             }
         }
     },
@@ -130,6 +152,11 @@ Template.brainSession.events({
             });
         }
     },
+    //
+    'click .skip-next-round-warning-switch': function(event) {
+        var $input = $('.skip-next-round-warning-switch input');
+        Session.set('skipNextRoundWarning', $input.is(":checked"));
+    },
     // organizator kończy sesję
     'click .end-session': function() {
         $("#end-session-modal").modal("show");
@@ -148,6 +175,18 @@ Template.brainSession.events({
             }
         });
         $("#end-session-modal").modal("hide");
+    },
+    'click .session-links-modal-open': function() {
+        $("#session-links-modal").modal("show");
+    },
+    'click #session-links-modal-show-admin-link': function(event) {
+        var $target = $(event.target);
+        console.log($target);
+        $target.next().show();
+        $target.remove();
+    },
+    'click #session-links-modal-ok': function() {
+        $("#session-links-modal").modal("hide");
     },
     // uczestnik sesji pisze ideę
     'keyup textarea.idea': function(event) {
@@ -173,6 +212,11 @@ Template.brainSession.events({
             session: brainSessionId
         }, "ready", false);
     },
+    'click .all-ideas-sorting': function(event) {
+        var $target = $(event.target),
+            sortBy = $target.data('sortBy');
+        Session.set('allIdeasSorting', sortBy);
+    },
     'click .idea-box-like': function(event) {
         var ideaId = this._id,
             idea = Ideas.findOne(this._id);
@@ -182,12 +226,18 @@ Template.brainSession.events({
                 Ideas.update(this._id, {
                     '$pull': {
                         'likedBy': Meteor.userId()
+                    },
+                    '$inc': {
+                        likesCount: -1
                     }
                 });
             } else { // dodajemy
                 Ideas.update(this._id, {
                     '$addToSet': {
                         'likedBy': Meteor.userId()
+                    },
+                    '$inc': {
+                        likesCount: 1
                     }
                 });
             }

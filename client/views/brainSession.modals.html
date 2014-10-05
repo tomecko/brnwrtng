@@ -1,6 +1,7 @@
 <template name="brainSession_modals">
 
-	{{#if isSuperuser}}
+    <!-- {{#if isSuperUser}} -->
+    
         <div class="modal" id="admin-setup-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -174,8 +175,8 @@
             </div>
         </div>
 
-    {{else}}
-    
+    <!-- {{else}} -->
+
         <div class="modal" id="user-welcome-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -196,7 +197,7 @@
                         
                         <div class="form-group">
                             <h4>
-                                The subject of the brainwriting session:<br/>
+                                You're going to solve following problem:<br/>
                                 <strong>
                                     {{#if title}}
                                         {{title}}
@@ -225,7 +226,7 @@
             </div>
         </div>
 
-    {{/if}}
+    <!-- {{/if}} -->
     
     <div class="modal" id="name-edit-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
         <div class="modal-dialog">

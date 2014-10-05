@@ -1,7 +1,7 @@
 Session.setDefault('skipNextRoundWarning', 'unknown');
 Session.setDefault('allIdeasSorting', 'round');
 
-// dynamika rund
+// dynamika rund (TODO: przenieść do plików brainSession)
 Meteor.setInterval(function() {
     var now = Math.floor(TimeSync.serverTime() / 1000),
         brainSessionId = Router.current().params._id,
@@ -52,6 +52,13 @@ Meteor.setInterval(function() {
             title = "(" + formatDuration(timerSeconds) + ")";
             title = title + " ROUND " + brainSession.round;
             title = title + " - " + brainSession.title;
+        }
+
+        if (brainSession && brainSession.closed) {
+            title = 'brainwrite.it';
+            if (brainSession.title) {
+                title = title + ' - ' + brainSession.title;
+            }
         }
 
         if (title) {

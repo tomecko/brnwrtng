@@ -4,8 +4,8 @@ Router.configure({
 
 Router.onBeforeAction('loading');
 
-Router.map(function () {
-    
+Router.map(function() {
+
     // strona główna, landing page
     this.route('home', {
         path: '/'
@@ -15,7 +15,7 @@ Router.map(function () {
     // z moderatorem, albo ze zwyklym uzytkownikiem)
     this.route('brainSession', {
         path: '/session/:_id/:token?',
-        waitOn: function(){
+        waitOn: function() {
             return [Meteor.subscribe("brainSessions"), Meteor.subscribe('users')];
         },
         action: function() {
@@ -31,7 +31,7 @@ Router.map(function () {
                         if (brainSession) {
                             if (Router.current().params.token === brainSession.adminToken) {
                                 BrainSessions.update(brainSessionId, {
-                                    $addToSet : {
+                                    $addToSet: {
                                         admins: userId
                                     }
                                 });
@@ -41,21 +41,21 @@ Router.map(function () {
                     }
 
                     BrainSessions.update(brainSessionId, {
-                        $addToSet : {
+                        $addToSet: {
                             participants: userId
                         }
                     });
 
                 });
-                
+
                 this.render();
-                
+
             } else {
-                
+
                 this.render('loading');
-                
+
             }
-            
+
         },
         data: function() {
             return BrainSessions.findOne(this.params._id);

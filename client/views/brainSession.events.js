@@ -30,6 +30,12 @@ Template.brainSession.events({
         });
         $('#user-welcome-modal').modal('hide');
     },
+    'keyup #user-welcome-modal-name': function(event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            $("#user-welcome-modal-ok").click();
+        }
+    },
 
     // otwieranie okna do edycji imienia
     'click .name-edit-modal-open': function(event) {
@@ -157,11 +163,11 @@ Template.brainSession.events({
         var $input = $('.skip-next-round-warning-switch input');
         Session.set('skipNextRoundWarning', $input.is(":checked"));
     },
-    // organizator kończy sesję
+    // organizator kończy sesję - otwarcie okna
     'click .end-session': function() {
         $("#end-session-modal").modal("show");
     },
-    // organizator kończy sesję
+    // organizator kończy sesję - zamkniecie okna
     'click .end-session-modal-close': function() {
         $("#end-session-modal").modal("hide");
     },
@@ -181,7 +187,6 @@ Template.brainSession.events({
     },
     'click #session-links-modal-show-admin-link': function(event) {
         var $target = $(event.target);
-        console.log($target);
         $target.next().show();
         $target.remove();
     },

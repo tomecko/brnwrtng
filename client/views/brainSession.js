@@ -93,13 +93,13 @@ Template.brainSession_ideas.ideas = function() {
                 sort = {
                     author: 1,
                     round: 1,
-                    likesCount: -1
+                    no: 1
                 }
             } else {
                 sort = {
                     round: 1,
                     author: 1,
-                    likesCount: -1
+                    no: 1
                 }
             }
             ideas = Ideas.find({
@@ -158,16 +158,16 @@ Template.brainSession_timer.timerSeconds = function() {
 };
 
 
-Template.brainSession.rendered = function() {
+Template.brainSession_modals.rendered = function() {
 
-    this.autorun(function(c) {
+    Tracker.autorun(function(c) {
         var user = Meteor.user(),
             brainSessionId = Router.current().params._id,
             brainSession = BrainSessions.findOne(brainSessionId);
-
+        // pokazywanie odpowiednich modali na wejściu do sesji
         if (user && brainSession) {
-            // admin sesji za pierwszym razem
-            if (typeof brainSession.title === 'undefined' && _.indexOf(brainSession.admins, user._id) > -1) {
+            // admin
+            if (_.indexOf(brainSession.admins, Meteor.userId()) > -1 && typeof brainSession.title === 'undefined') {
                 $('#admin-setup-modal').modal('show');
             } else {
                 // jeśli user jest bez imienia
@@ -179,7 +179,17 @@ Template.brainSession.rendered = function() {
 
     });
 
-    // TODO:
+};
+
+Template.brainSession.rendered = function() {
+
+    $(window).scroll(function() {
+        $('#side-col').css({
+            'margin-top': $('body').scrollTop()
+        })
+    });
+
+    // ew. TODO:
     // pobrać wpisane idee i umieścić je w textarea
     // czyli obsłużyć przypadek, że ktoś sobie pisze i odświeża stronę w trakcie rundy
     // niech mu się zachowują treści pomysłów

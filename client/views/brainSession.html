@@ -1,11 +1,11 @@
 <template name="brainSession">
 
-    {{> brainSession_modals linkForParticipants=linkForParticipants linkForAdmins=linkForAdmins}}
+    {{> brainSession_modals linkForParticipants=linkForParticipants linkForAdmins=linkForAdmins title=title}}
         
     <div class="container-fluid">
     <div class="row">
         
-        <div class="col-sm-3">
+        <div class="col-sm-3" id="side-col">
             <div class="well well-sm">
                 {{#unless closed}}
                     <div class="text-center">
@@ -132,9 +132,11 @@
 <template name="brainSession_participants">
     {{#if participants}}
         <h2>People
-            <button class="btn btn-sm btn-primary session-links-modal-open">
-                <i class="fa fa-plus"></i> invite
-            </button>
+            {{#if isSuperuser}}
+                <button class="btn btn-sm btn-primary session-links-modal-open">
+                    <i class="fa fa-plus"></i> invite
+                </button>
+            {{/if}}
             {{!--<small>({{getLength participants}})</small>--}}
         </h2>
         <ul class="list-unstyled blink blink-fast">

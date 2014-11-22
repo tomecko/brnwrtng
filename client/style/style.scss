@@ -1,8 +1,47 @@
 $primary-color: #428bca;
 
+#logo {
+    margin-top: 20px;
+}
+
 #chat {
     max-height: 200px;
     overflow-y: hidden;
+}
+
+#session-title {
+    margin-top: 55px;
+}
+
+#main-action-button {
+    margin-top: 48px;
+    text-transform: uppercase;
+}
+
+#send-idea {
+    margin-bottom: 10px;
+}
+
+.disabled {
+    opacity: 0.15;
+}
+
+.brwr-timer,
+.brwr-round-info {
+    font-size: 1.5em;
+    line-height: 34px;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.brwr-progress-lg {
+    margin: 5px 0;
+    height: 24px;
+    .progress-bar {
+        line-height: 24px;
+    }
 }
 
 .brwr-form-control-small {
@@ -23,11 +62,11 @@ $primary-color: #428bca;
 }
 
 .idea-box {
-    width: 300px;
-    height: 150px;
-    float: left;
-    margin-right: 20px;
-    overflow: hidden; // TODO: lepiej zrobić
+    // width: 100%;
+    // height: 150px;
+    // float: left;
+    // margin-right: 20px;
+    // overflow: hidden; // TODO: lepiej zrobić
 }
 
 .clickable {
@@ -68,4 +107,8 @@ button.stylish-clicked:active {
 
 .clickable {
     cursor: pointer;
+}
+
+.well {
+    background-color: #fff;
 }

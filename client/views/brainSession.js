@@ -17,6 +17,14 @@ Template.brainSession.linkForAdmins = function() {
     }
 };
 
+Template.brainSession.round = function() {
+    var brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId);
+    if (brainSession) {
+        return brainSession.round;
+    }
+};
+
 Template.brainSession_chat.messages = function() {
     var brainSessionId = Router.current().params._id;
     return ChatMessages.find({
@@ -141,20 +149,37 @@ Template.brainSession_participants.participants = function() {
 };
 
 // liczba sekund do końca rundy
-Template.brainSession_timer.timerSeconds = function() {
+Template.brainSession_progress.timer = function() {
     var brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId),
         timerSeconds = getTimerSeconds(),
         brainSessionLengthInSeconds;
     if (brainSession) {
-        brainSessionLengthInSeconds = brainSession.roundLength * 60;
-        knobSettings.max = brainSessionLengthInSeconds
-        $('.dial')
-            .trigger('configure', knobSettings)
-            .val(brainSessionLengthInSeconds - timerSeconds)
-            .trigger('change');
+        return {
+            seconds: timerSeconds,
+            // length: brainSession.roundLength * 60,
+            percentage: Math.floor(100 * timerSeconds / (brainSession.roundLength * 60))
+        }
     }
-    return getTimerSeconds();
+};
+
+Template.brainSession_ideas_current_round.ideas = function() {
+    var brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId),
+        ideas, count;
+    if (brainSession) {
+        ideas = Ideas.find({
+            session: brainSessionId,
+            round: brainSession.round,
+            author: Meteor.userId()
+        }).fetch();
+        count = ideas.length;
+        ideas = ideas.concat([{}, {}, {}]);
+        return {
+            list: ideas.slice(0, CONFIG.IDEAS_PER_ROUND),
+            count: count
+        };
+    }
 };
 
 
@@ -165,7 +190,7 @@ Template.brainSession_modals.rendered = function() {
             brainSessionId = Router.current().params._id,
             brainSession = BrainSessions.findOne(brainSessionId);
         // pokazywanie odpowiednich modali na wejściu do sesji
-        if (user && brainSession) {
+        if (user && brainSession && Session.get('closed-modal') != brainSessionId) { // 'closed-modal' => do better!
             // admin
             if (_.indexOf(brainSession.admins, Meteor.userId()) > -1 && typeof brainSession.title === 'undefined') {
                 $('#admin-setup-modal').modal('show');

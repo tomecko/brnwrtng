@@ -1,4 +1,7 @@
 Template.brainSession.events({
+    'click .modal .close': function() {
+        Session.set('closed-modal', Router.current().params._id); // TODO: better
+    },
     // zamykanie modala dla admina na początku sesji
     'click #admin-setup-modal-ok': function(event) {
         var userId = Meteor.userId(),
@@ -89,6 +92,48 @@ Template.brainSession.events({
             user: Meteor.userId(),
             session: brainSessionId
         }, "ready", brainSession.round);
+    },
+    'keyup #idea-form textarea': function(event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            $("#idea-form").submit();
+        }
+        Meteor.call('upsertActivity', {
+            user: Meteor.userId(),
+            session: Router.current().params._id
+        }, "write");
+    },
+    // wysłanie idei
+    'submit #idea-form': function(event) {
+        event.preventDefault();
+        var $target = $(event.target),
+            $textarea = $target.find('textarea'),
+            no = +$target.attr('data-no'),
+            text = $textarea.val().trim(),
+            brainSessionId = Router.current().params._id,
+            brainSession = BrainSessions.findOne(brainSessionId);
+        if (!text.length) {
+            $textarea.val("");
+            return;
+        }
+        Meteor.call('upsertIdea', {
+            author: Meteor.userId(),
+            session: brainSessionId,
+            sheet: +$target.attr('data-sheet'),
+            round: +$target.attr('data-round'),
+            no: no,
+            text: text,
+        }, function(error, result) {
+            if (!error) {
+                $textarea.val("");
+            }
+        });
+        if (no == CONFIG.IDEAS_PER_ROUND - 1) {
+            Meteor.call('upsertActivity', {
+                user: Meteor.userId(),
+                session: brainSessionId
+            }, "ready", brainSession.round);
+        }
     },
     // wysłanie wiadomości na chacie
     'submit #chat-send-message': function(event) {
@@ -194,29 +239,29 @@ Template.brainSession.events({
         $("#session-links-modal").modal("hide");
     },
     // uczestnik sesji pisze ideę
-    'keyup textarea.idea': function(event) {
-        var $target = $(event.target),
-            $container = $target.closest('[data-round]'),
-            brainSessionId = Router.current().params._id;
+    // 'keyup textarea.idea': function(event) {
+    //     var $target = $(event.target),
+    //         $container = $target.closest('[data-round]'),
+    //         brainSessionId = Router.current().params._id;
 
-        Meteor.call('upsertIdea', {
-            author: Meteor.userId(),
-            no: $target.data('no'),
-            session: Router.current().params._id,
-            sheet: +$container.attr('data-sheet'),
-            round: +$container.attr('data-round'),
-            text: $target.val(),
-        });
-        Meteor.call('upsertActivity', {
-            user: Meteor.userId(),
-            session: Router.current().params._id
-        }, "write");
+    //     Meteor.call('upsertIdea', {
+    //         author: Meteor.userId(),
+    //         no: $target.data('no'),
+    //         session: Router.current().params._id,
+    //         sheet: +$container.attr('data-sheet'),
+    //         round: +$container.attr('data-round'),
+    //         text: $target.val(),
+    //     });
+    //     Meteor.call('upsertActivity', {
+    //         user: Meteor.userId(),
+    //         session: Router.current().params._id
+    //     }, "write");
 
-        Meteor.call('upsertActivity', {
-            user: Meteor.userId(),
-            session: brainSessionId
-        }, "ready", false);
-    },
+    //     Meteor.call('upsertActivity', {
+    //         user: Meteor.userId(),
+    //         session: brainSessionId
+    //     }, "ready", false);
+    // },
     'click .all-ideas-sorting': function(event) {
         var $target = $(event.target),
             sortBy = $target.data('sortBy');

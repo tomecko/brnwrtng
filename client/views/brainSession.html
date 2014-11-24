@@ -5,19 +5,20 @@
     <div class="container-fluid">
         <div class="row">
 
-            <div class="col-sm-9">
+            <div class="col-sm-8">
                 <div class="well">
                     <div class="row" style="margin-bottom: 30px;">
-                        <div class="{{#if isSuperuser}}col-sm-8{{else}}col-sm-12{{/if}}">
+                        <div class="{{#if isSuperuser}}col-lg-8 col-md-10 col-sm-9 col-xs-12{{else}}col-sm-12{{/if}}">
                             {{> brainSession_info linkForParticipants=linkForParticipants title=title}}
                         </div>
                         {{#if isSuperuser}}
-                        <div class="col-sm-4 text-right">
-                            {{> brainSession_action round=round}}
-                        </div>
+                            <div class="col-lg-4 col-md-2 col-sm-3 col-xs-12 text-right">
+                                {{> brainSession_action round=round}}
+                            </div>
                         {{/if}}
                     </div>
-                    <div class="row {{#unless round}}disabled{{/unless}}">
+                    <hr>
+                    <div class="row brwr-modal-container" style="min-height: 510px;">
                         {{#unless closed}}
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <h2 style="margin-top:0">Your ideas</h2>
@@ -28,14 +29,22 @@
                         <div class="{{#if closed}}col-xs-12{{else}}col-xs-12 col-sm-12 col-md-6 col-lg-6{{/if}}">
                             {{> brainSession_ideas}}
                         </div>
+
+                        {{#unless round}}
+                            <div class="brwr-modal-backdrop modal-backdrop in"></div>
+                            {{#if _inArray participantsWhoEntered currentUser._id}}
+                                {{> brainSession_start_modal participants=participants linkForParticipants=linkForParticipants linkForAdmins=linkForAdmins}}
+                            {{/if}}
+                        {{/unless}}
                     </div>
                 </div>
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-sm-4" id="side-col">
                 <div class="well">
                     {{> brainSession_logo}}
                     {{> brainSession_participants}}
+                    <hr>
                     {{> brainSession_chat}}
                 </div>
             </div>
@@ -51,86 +60,9 @@
     </div>
 </template>
 
-<template name="brainSession_action">
-    {{#if round}}
-        {{#unless ../closed}}
-            <button id="main-action-button" class="btn btn-warning btn-lg end-session">
-                <i class="fa fa-eject"></i>
-                End
-                <span class="hidden-xs hidden-sm hidden-md">Brainwriting</span>
-            </button>
-        {{/unless}}
-    {{else}}
-        <button id="main-action-button" class="btn btn-success btn-lg next-round">
-            <i class="fa fa-play"></i>
-            Start
-            <span class="hidden-xs hidden-sm hidden-md">Brainwriting</span>
-        </button>
-    {{/if}}
-</template>
-
-<template name="XbrainSession">
-
-    {{> brainSession_modals linkForParticipants=linkForParticipants linkForAdmins=linkForAdmins title=title}}
-        
-    <div class="container-fluid">
-    <div class="row">
-        
-        <div class="col-sm-3" id="side-col">
-            <div class="well well-sm">
-                {{#unless closed}}
-                    <div class="text-center">
-                        {{> brainSession_round_info}}
-                        {{> brainSession_timer}}
-                    </div>
-                    <hr/>
-                {{/unless}}
-                {{> brainSession_participants}}
-                <hr/>
-                {{> brainSession_chat}}
-            </div>
-        </div>
-        
-        <div class="col-sm-9">
-            <div class="well well-sm">
-                {{> brainSession_info linkForParticipants=linkForParticipants title=title}}
-                <hr>
-                {{#if closed}}
-                    {{> brainSession_ideas}}
-                {{else}}
-                    {{#if round}}
-                        <div class="row">
-                            <div class="col-sm-4">
-                                {{> brainSession_ideas_current_round}}
-                            </div>
-                            <div class="col-sm-8">
-                                {{> brainSession_ideas}}
-                            </div>
-                        </div>
-                    {{else}}
-                        <h2>Session hasn't begun yet.</h2>
-                    {{/if}}
-                {{/if}}
-            </div>
-        </div>
-
-    </div>
-    </div>
-</template>
-
-<template name="brainSession_round_info">
-    <h2 class="text-center">
-        {{#if round}}
-            Round {{round}}
-        {{else}}
-            Not started
-        {{/if}}
-    </h2>
-</template>
-
 <template name="brainSession_info">
     
-    <h2 id="session-title" class="{{#if isSuperuser}}session-edit-modal-open clickable{{/if}} {{#unless title}}empty{{/unless}}">
+    <h2 class="{{#if isSuperuser}}session-edit-modal-open clickable{{/if}} {{#unless title}}empty{{/unless}}" style="margin-top: 35px;">
         {{#if title}}
             {{title}}
         {{else}}
@@ -143,28 +75,99 @@
 
 </template>
 
-<template name="brainSession_timer">
-    <h2 id="timer" class="clearfix text-center {{#if _lt timerSeconds 5}}warn{{/if}}">
-        <div id="timer-knob" data-minutes="{{roundLength}}">
-            <input type="text" value="0" class="dial">
+<template name="brainSession_action">
+    {{#if round}}
+        {{#unless ../closed}}
+            <button class="btn btn-warning btn-lg end-session" style="margin-top: 28px;">
+                <i class="fa fa-eject"></i>
+                End
+                <span class="hidden-xs hidden-sm hidden-md">Brainwriting</span>
+            </button>
+        {{/unless}}
+    {{/if}}
+</template>
+
+<template name="brainSession_start_modal">
+
+    <div class="brwr-modal modal" id="" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" style="display:block">
+        <div class="modal-dialog brwr-modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header brwr-modal-header">
+                    <h2 class="modal-title">
+                        {{#if isSuperuser}}
+                            Invite people
+                        {{else}}
+                            Almost ready to start
+                        {{/if}}
+                    </h2>
+                </div>
+                <div class="modal-body brwr-modal-body clearfix">
+
+                    {{#if isSuperuser}}
+                        <div class="form-group">
+                            <h4>
+                                <strong><i class="fa fa-link"></i> Share this link:<br/></strong>
+                            </h4>
+                            <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForParticipants}}">
+                            <a id="show-admin-link" class="clickable pull-right">
+                                <i class="fa fa-link"></i>
+                                show admin link
+                            </a>
+                        </div>
+                        <div id="admin-link" class="form-group" style="display: none">
+                            <h4>
+                                <strong><i class="fa fa-link"></i> Admin link:<br/></strong>
+                            </h4>
+                            <p>Send this link to grant someone admin rights.<br/><i>(admin can go to the next round and end brainwriting)</i></p>
+                            <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForAdmins}}">
+                        </div>
+
+                        <hr>
+
+                        <h4>
+                            {{#if othersCount}}
+                                {{#if _gt othersCount '1'}}
+                                    <strong>{{othersCount}} people</strong> have joined so far.
+                                {{else}}
+                                    <strong>1 person</strong> has joined so far.
+                                {{/if}}
+                                Are you ready to start?
+                            {{else}}
+                                Nobody has joined you so far. Share the link and wait.
+                            {{/if}}
+                        </h4>
+
+                        <br/>
+
+                        <button class="btn btn-warning btn-lg next-round pull-right">
+                            <i class="fa fa-play"></i>
+                            Start
+                            <span class="hidden-xs hidden-sm hidden-md">Brainwriting</span>
+                        </button>
+
+                    {{else}}
+
+                        <h4><strong>Wait for other participants to join.</strong></h4>
+                        <h4>In the meantime feel free to chat.</h4>
+
+                    {{/if}}
+
+                </div>
+            </div>
         </div>
-        <div>
-            {{formatDuration timerSeconds}}
-        </div>
-    </h2>
-    {{#unless closed}}
-        {{#if isSuperuser}}
-            {{#if round}}
-                {{#if shortened}}
-                    <button class="next-round-undo btn btn-primary">Undo</button>
-                {{else}}
-                    <button class="next-round btn btn-primary" data-toggle="tooltip" data-animation="true" data-html="true" data-placement="bottom" data-trigger="manual" data-title="It seems everybody&#39;s<br/>ready for the next round.<br/>You may want to click<br/>&quot;Next Round&quot; button.">Next Round</button>&nbsp;<button class="end-session btn btn-default">End Brainwriting</button>
-                {{/if}}
-            {{else}}
-                <button class="next-round btn btn-lg btn-primary">Start Brainwriting</button>
-            {{/if}}
+    </div>
+
+</template>
+
+
+<template name="brainSession_round_info">
+    <h2 class="text-center">
+        {{#if round}}
+            Round {{round}}
+        {{else}}
+            Not started
         {{/if}}
-    {{/unless}}
+    </h2>
 </template>
 
 <template name="brainSession_participants">
@@ -204,9 +207,13 @@
         <ul class="list-unstyled" id="chat">
         {{#each messages}}
             <li>
-                <span class="label {{#if _neq author currentUser._id}}label-primary{{else}}label-default{{/if}}">{{userNameById author}}:</span>
-                {{text}}
-                <span class="text-muted" title="{{formatDate time 'YYYY/MM/DD HH:mm'}}">{{formatDate time 'HH:mm'}}</span>
+                <div class="bubble bubble-chat {{#if _eq author currentUser._id}}bubble-chat-me{{/if}}">
+                    <i><small title="{{formatDate time 'YYYY/MM/DD HH:mm'}}">
+                        {{#if _eq author currentUser._id}}you{{else}}{{userNameById author}}{{/if}}
+                        <small>({{formatDate time 'HH:mm'}})</small>
+                    </small></i>
+                    <p>{{text}}</p>
+                </div>
             </li>
         {{else}}
             <li><em>be first to write a message!</em></li>
@@ -214,7 +221,12 @@
         </ul>
     {{/if}}
     <form id="chat-send-message">
-        <input type="text" class="form-control" placeholder="your message">
+        <div class="input-group" style="max-width: 300px;">
+            <input type="text" class="form-control" placeholder="your message">
+            <span class="input-group-btn">
+                <button class="btn btn-warning" type="submit">Send</button>
+            </span>
+        </div>
     </form>
 </template>
 
@@ -243,7 +255,7 @@
     {{#each ideas}}
         {{#if text}}
             <div class="{{#if ../closed}}col-xs-4{{/if}}">
-                <div class="well well-sm idea-box">
+                <div class="well well-sm bubble bubble-idea">
                     <small>
                         <span class="text-muted">round {{round}}</span>
                         {{#if ../closed}}
@@ -265,22 +277,41 @@
 
 <template name="brainSession_progress">
     <div class="clearfix" style="margin-bottom: 10px; margin-top: 20px;">
-<!--         <div class="no-padding col-xs-3 col-sm-2 col-md-2 col-lg-2 brwr-timer text-center">
-        </div> -->
-        <div class="no-padding col-xs-9 col-sm-5 col-md-4 col-lg-5">
-            <div class="progress brwr-progress-lg">
-                <div class="progress-bar progress-bar-striped {{#if round}}active{{/if}} {{#if _lt timer.percentage '50'}}progress-bar-warning{{/if}} {{#if _lt timer.percentage '16'}}progress-bar-danger{{/if}}" role="progressbar" aria-valuenow="{{timer.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width: {{timer.percentage}}%;">
+        <div class="no-padding col-xs-6 col-sm-7 col-md-7 col-lg-7">
+            <div class="progress brwr-progress brwr-progress-lg">
+                <div class="progress-bar progress-bar-striped {{#if round}}active{{/if}} {{#if _lt timer.percentage '50'}}progress-bar-warning{{/if}} {{#if _lt timer.percentage '16'}}progress-bar-danger{{/if}}" role="progressbar" aria-valuenow="{{timer.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width: {{timer.percentage}}%; min-width: 25px;">
+                </div>
+                <div class="brwr-progress-indicator">
                     {{formatDuration timer.seconds}}
                 </div>
             </div>
         </div>
-        <div class="no-padding col-xs-12 col-sm-5 col-md-6 col-lg-5 text-right">
-            <span class="brwr-round-info" style="padding-right: 8px;">Round {{round}}{{#if _gte participants.length '2'}}<small class="text-muted">/{{participants.length}}</small>{{/if}}</span>
+        <div class="no-padding col-xs-6 col-sm-5 col-md-5 col-lg-5 text-right">
+            <span class="brwr-round-info" style="padding-right: 8px;">
+                {{#if round}}
+                    Round {{round}}
+                    {{#if _gte participants.length '2'}}
+                        <small class="text-muted">/{{participants.length}}</small>
+                    {{/if}}
+                {{/if}}
+            </span>
             {{#if isSuperuser}}
                 {{#unless shortened}}
-                    <button class="btn btn-warning {{#if round}}next-round{{else}}disabled{{/if}} pull-right"><i class="fa fa-step-forward"></i></button>
+                    <button
+                        id="next-round-main"
+                        class="btn btn-warning {{#if round}}next-round{{else}}disabled{{/if}} pull-right"
+                        data-toggle="tooltip"
+                        data-animation="true"
+                        data-html="true"
+                        data-placement="right"
+                        data-trigger="manual"
+                        data-title="Everybody&nbsp;has&nbsp;finished.<br>Ready&nbsp;for&nbsp;next&nbsp;round?">
+                        <i class="fa fa-step-forward"></i>
+                    </button>
                 {{else}}
-                    <button class="btn btn-warning next-round-undo pull-right"><i class="fa fa-undo"></i></button>
+                    <button class="btn btn-warning next-round-undo pull-right">
+                        <i class="fa fa-undo"></i>
+                    </button>
                 {{/unless}}
             {{/if}}
         </div>
@@ -288,32 +319,44 @@
 </template>
 
 <template name="brainSession_ideas_current_round">
-    {{#if round}}
 
-        {{#if _lt ideas.count '3'}}
-        <div class="clearfix" style="margin-top: 20px">
-            <form id="idea-form" data-round="{{round}}" data-sheet="{{sheet}}" data-no="{{#if ideas.count}}{{ideas.count}}{{else}}0{{/if}}">
-                <textarea class="idea form-control" placeholder="type your idea here" style="margin-bottom: 10px;"></textarea>
-                <button type="submit" class="btn btn-lg btn-warning pull-right">
-                    {{#if _lt ideas.count '2'}}
-                        Next Idea
-                    {{else}}
-                        I'm done
-                    {{/if}}
-                </button>
-            </form>
+    {{#if _lt ideas.count '3'}}
+    <div class="clearfix" style="margin-top: 20px">
+        <form id="idea-form" data-round="{{round}}" data-sheet="{{sheet}}" data-no="{{#if ideas.count}}{{ideas.count}}{{else}}0{{/if}}">
+            <textarea class="idea form-control" placeholder="type your idea here" style="margin-bottom: 10px;"></textarea>
+            <button type="submit" class="btn btn-lg btn-warning pull-right">
+                {{#if _lt ideas.count '2'}}
+                    Next Idea
+                {{else}}
+                    I'm done
+                {{/if}}
+            </button>
+        </form>
+    </div>
+    {{else}}
+        <div class="alert alert-warning text-center">
+            {{#if isSuperuser}}
+                {{#unless shortened}}
+                    if you're ready go to the <button class="btn btn-xs btn-warning next-round"><i class="fa fa-step-forward"></i> next round</button>
+                {{else}}
+                    made a mistake? <button class="btn btn-xs btn-warning next-round-undo"><i class="fa fa-undo"></i> undo</button>
+                {{/unless}}
+            {{else}}
+                wait for the next round
+            {{/if}}
         </div>
-        {{else}}
-            <div class="alert alert-warning">Wait for the next round.</div>
-        {{/if}}
-        
-        <div class="clearfix" style="margin-top: 20px;">
-            {{#each ideas.list}}
-                <div class="well well-sm">
-                    {{#if text}}{{text}}{{else}}<span class="text-muted">your idea</span>{{/if}}
-                </div>
-            {{/each}}
-        </div>
-
     {{/if}}
+    
+    <div class="clearfix" style="margin-top: 20px;">
+        {{#each ideas.list}}
+            <div class="well well-sm bubble bubble-idea">
+                {{#if text}}
+                    {{text}}
+                {{else}}
+                    <span class="text-muted placeholderish">your idea</span>
+                {{/if}}
+            </div>
+        {{/each}}
+    </div>
+
 </template>

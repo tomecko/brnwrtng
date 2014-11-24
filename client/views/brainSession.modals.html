@@ -28,18 +28,11 @@
                             <input type="text" id="admin-setup-modal-name" class="form-control input-lg" style="max-width: 200px;" placeholder="(optional)" value="{{currentUser.profile.name}}">
                         </div>
 
-                        <div class="form-group">
-                            <h4>
-                                <strong><i class="fa fa-link"></i> Send this link to invite people:<br/></strong>
-                            </h4>
-                            <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForParticipants}}">
-                        </div>
-
                     </div>
                     <div class="modal-footer">
                         {{!-- <button type="button" class="btn btn-default" data-dismiss="modal">Thanks, I'd like to be anonymous</button> --}}
                         <button type="button" class="btn btn-lg btn-warning" id="admin-setup-modal-ok">
-                            Let's start!
+                            Go!
                         </button>
                     </div>
                 </div>
@@ -68,7 +61,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-lg btn-default end-session-modal-close">
-							Cancel
+                            Cancel
                         </button>
                         <button type="button" class="btn btn-lg btn-warning" id="end-session-modal-ok">
                             Yes, end brainwriting!
@@ -162,7 +155,7 @@
                             <h4>
                                 <strong><i class="fa fa-link"></i> Admin link:<br/></strong>
                             </h4>
-                            <p>Send this link to grant someone admin rights.<br/>(admin rights: proceeding to the next round, ending brainwriting)</p>
+                            <p>Send this link to grant someone admin rights.<br/><i>(admin can go to the next round and end brainwriting)</i></p>
                             <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForAdmins}}">
                         </div>
                     </div>
@@ -197,14 +190,14 @@
                         
                         <div class="form-group">
                             <h4>
-                                You're going to solve following problem:<br/>
-                                <strong>
-                                    {{#if title}}
+                                {{#if title}}
+                                    You're going to solve a following problem:<br/>
+                                    <strong>
                                         {{title}}
-                                    {{else}}
-                                        <i>not defined</i>
-                                    {{/if}}
-                                </strong>
+                                    </strong>
+                                {{else}}
+                                    Admin hasn't defined brainwriting problem yet.
+                                {{/if}}
                             </h4>
                         </div>
                         <hr>

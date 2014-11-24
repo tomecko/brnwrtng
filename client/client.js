@@ -23,13 +23,14 @@ Meteor.setInterval(function() {
             });
             Session.set('everybodyReady', false);
             $("#round-end-warning-modal").modal('hide');
+            $("#next-round-main").tooltip('hide');
         }
         // pokazanie tooltipa podpowiedzi, że wszyscy rzekomo gotowi na następną rundę
         if (everybodyIsReady() && brainSession.round !== Session.get('everybodyReadyRound')) {
-            $(".next-round").tooltip('show');
+            $("#next-round-main").tooltip('show');
             Session.set('everybodyReadyRound', brainSession.round);
             Meteor.setTimeout(function() {
-                $(".next-round").tooltip('hide');
+                $("#next-round-main").tooltip('hide');
             }, 5000);
         }
     }

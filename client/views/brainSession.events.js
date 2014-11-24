@@ -16,6 +16,9 @@ Template.brainSession.events({
         BrainSessions.update(brainSessionId, {
             $set: {
                 title: $("#admin-setup-modal-title").val()
+            },
+            $addToSet: {
+                participantsWhoEntered: userId
             }
         });
 
@@ -25,10 +28,16 @@ Template.brainSession.events({
     // zamykanie okna powitalnego dla nie-admina
     'click #user-welcome-modal-ok': function(event) {
         var userId = Meteor.userId(),
-            name = $("#user-welcome-modal-name").val();
+            name = $("#user-welcome-modal-name").val(),
+            brainSessionId = Router.current().params._id;
         Meteor.users.update(userId, {
             $set: {
                 'profile.name': name
+            }
+        });
+        BrainSessions.update(brainSessionId, {
+            $addToSet: {
+                participantsWhoEntered: userId
             }
         });
         $('#user-welcome-modal').modal('hide');
@@ -93,7 +102,7 @@ Template.brainSession.events({
             session: brainSessionId
         }, "ready", brainSession.round);
     },
-    'keyup #idea-form textarea': function(event) {
+    'keydown #idea-form textarea': function(event) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
         if (keycode == '13') {
             $("#idea-form").submit();
@@ -159,6 +168,7 @@ Template.brainSession.events({
             brainSession = BrainSessions.findOne(brainSessionId),
             now = Math.floor(TimeSync.serverTime() / 1000),
             force = $(event.target).hasClass('next-round-force');
+        $("#next-round-main").tooltip('hide');
         if (brainSession) {
             // rozpoczynanie sesji
             if (brainSession.round === 0) {
@@ -233,6 +243,11 @@ Template.brainSession.events({
     'click #session-links-modal-show-admin-link': function(event) {
         var $target = $(event.target);
         $target.next().show();
+        $target.remove();
+    },
+    'click #show-admin-link': function(event) {
+        var $target = $(event.target);
+        $("#admin-link").show();
         $target.remove();
     },
     'click #session-links-modal-ok': function() {

@@ -74,13 +74,13 @@ isSuperuser = function() {
 
 everybodyIsReady = function() {
     var brainSessionId = Router.current().params._id,
-        brainSession = BrainSessions.findOne(brainSessionId);
+        brainSession = BrainSessions.findOne(brainSessionId),
+        currentRoundIdeasCount;
     if (brainSession) {
-        var readyPeopleCount = Activity.find({
-                session: brainSessionId,
-                ready: brainSession.round
-            }).count(),
-            peopleCount = brainSession.participants.length;
-        return readyPeopleCount === peopleCount;
+        currentRoundIdeasCount = Ideas.find({
+            session: brainSessionId,
+            round: brainSession.round
+        }).count();
+        return currentRoundIdeasCount == brainSession.participants.length * CONFIG.IDEAS_PER_ROUND
     }
 }

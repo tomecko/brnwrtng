@@ -1,32 +1,38 @@
 $primary-color: #428bca;
+$warning-color: #f0ad4e;
+
+@import "bubble";
+
+.btn-link.btn-warning {
+    color: darken($warning-color, 10%);
+    &:hover {
+        color: darken($warning-color, 20%);
+    }
+}
 
 #logo {
     margin-top: 20px;
 }
 
 #chat {
-    max-height: 200px;
+    max-height: 250px;
     overflow-y: hidden;
 }
 
-#session-title {
-    margin-top: 55px;
-}
-
-#main-action-button {
-    margin-top: 48px;
-    text-transform: uppercase;
-}
+// .btn-xl {
+//     padding: 16px 24px;
+//     font-size: 24px;
+//     border-radius: 8px;
+// }
 
 #send-idea {
     margin-bottom: 10px;
 }
 
-.disabled {
-    opacity: 0.15;
-}
+// .disabled {
+//     opacity: 0.15;
+// }
 
-.brwr-timer,
 .brwr-round-info {
     font-size: 1.5em;
     line-height: 34px;
@@ -39,10 +45,25 @@ $primary-color: #428bca;
 .brwr-progress-lg {
     margin: 5px 0;
     height: 24px;
-    .progress-bar {
+    .progress-bar,
+    .brwr-progress-indicator {
         line-height: 24px;
     }
 }
+.brwr-progress {
+    position: relative;
+}
+.brwr-progress-indicator {
+    font-weight: bold;
+    font-size: 1.2em;
+    left: 50%;
+    margin-left: -25px;
+    position: absolute;
+    text-align: center;
+    text-shadow: 0 0 2px #fff;
+    width: 50px;
+}
+
 
 .brwr-form-control-small {
     padding: 3px 6px 3px 12px;
@@ -59,14 +80,6 @@ $primary-color: #428bca;
 
 #timer-knob {
     margin:0 10px;
-}
-
-.idea-box {
-    // width: 100%;
-    // height: 150px;
-    // float: left;
-    // margin-right: 20px;
-    // overflow: hidden; // TODO: lepiej zrobić
 }
 
 .clickable {
@@ -112,3 +125,48 @@ button.stylish-clicked:active {
 .well {
     background-color: #fff;
 }
+
+.placeholderish {
+    font-style: italic;
+}
+::-webkit-input-placeholder {font-style: italic; }
+:-moz-placeholder {font-style: italic; } /* older Firefox*/
+::-moz-placeholder {font-style: italic; } /* Firefox 19+ */ 
+:-ms-input-placeholder {font-style: italic; }
+
+#next-round-main + .tooltip {
+    opacity: 0.75;
+}
+
+/****************************/
+
+.brwr-modal-container {
+    position: relative;
+}
+
+.brwr-modal-backdrop {
+    position: absolute;
+    opacity: 0.9 !important;
+    background-color: #fff !important;
+    z-index: 1000;
+}
+
+.brwr-modal {
+    position: absolute;
+    z-index: 1000;
+}
+
+.brwr-modal-dialog {
+    width: 550px;
+}
+
+.brwr-modal-header {
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.brwr-modal-body {
+    padding: 15px 35px;
+}
+
+/****************************/

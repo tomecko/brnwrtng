@@ -25,6 +25,14 @@ Template.brainSession.round = function() {
     }
 };
 
+Template.brainSession_start_modal.othersCount = function() {
+    var brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId);
+    if (brainSession) {
+        return brainSession.participants.length - 1;
+    }
+};
+
 Template.brainSession_chat.messages = function() {
     var brainSessionId = Router.current().params._id;
     return ChatMessages.find({
@@ -45,7 +53,7 @@ Template.brainSession_ideas_current_round.sheet = function() {
         brainSession = BrainSessions.findOne(brainSessionId),
         roundZeroBased = -1 + brainSession.round,
         participantCount = brainSession.participants.length,
-        userNo = brainSession.participants.indexOf(Meteor.user()._id),
+        userNo = brainSession.participants.indexOf(Meteor.userId()),
         sheet;
     if (brainSession) {
         sheet = (userNo + roundZeroBased) % participantCount;
@@ -221,22 +229,22 @@ Template.brainSession.rendered = function() {
 
 };
 
+// Template.brainSession_timer.rendered = function() {
+//     $(".dial").knob(knobSettings);
+// };
+
+// var knobSettings = {
+//     width: 80,
+//     height: 80,
+//     displayInput: false,
+//     rotation: 'anticlockwise',
+//     readOnly: true
+// };
+
 // hack, żeby chat był przescrollowany na dół
 Template.brainSession_chat.rendered = function() {
     var $chat = $("#chat");
     $chat.scrollTop(9999);
-};
-
-Template.brainSession_timer.rendered = function() {
-    $(".dial").knob(knobSettings);
-};
-
-var knobSettings = {
-    width: 80,
-    height: 80,
-    displayInput: false,
-    rotation: 'anticlockwise',
-    readOnly: true
 };
 
 Meteor.setInterval(function() {

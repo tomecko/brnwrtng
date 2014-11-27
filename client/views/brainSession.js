@@ -25,7 +25,7 @@ Template.brainSession.round = function() {
     }
 };
 
-Template.brainSession_start_modal.othersCount = function() {
+Template.brainSession_start_modal_others_count.othersCount = function() {
     var brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId);
     if (brainSession) {
@@ -206,6 +206,12 @@ Template.brainSession_modals.rendered = function() {
                 // jeśli user jest bez imienia
                 if (!user.profile || typeof user.profile.name === 'undefined') {
                     $('#user-welcome-modal').modal('show');
+                } else {
+                    BrainSessions.update(brainSessionId, {
+                        $addToSet: {
+                            participantsWhoEntered: Meteor.userId()
+                        }
+                    });
                 }
             }
         }

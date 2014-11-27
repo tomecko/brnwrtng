@@ -18,7 +18,7 @@
                         {{/if}}
                     </div>
                     <hr>
-                    <div class="row brwr-modal-container" style="min-height: 510px;">
+                    <div class="row brwr-modal-container" style="min-height: 520px;">
                         {{#unless closed}}
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <h2 style="margin-top:0">Your ideas</h2>
@@ -62,14 +62,14 @@
 
 <template name="brainSession_info">
     
-    <h2 class="{{#if isSuperuser}}session-edit-modal-open clickable{{/if}} {{#unless title}}empty{{/unless}}" style="margin-top: 35px;">
+    <h2 class="{{#if isSuperuser}}session-edit-modal-open clickable{{/if}} {{#unless title}}empty{{/unless}} hoverable" style="margin-top: 35px;">
         {{#if title}}
             {{title}}
         {{else}}
             No subject
         {{/if}}
         {{#if isSuperuser}}
-            <small><i class="fa fa-pencil"></i></small>
+            <small class="visible-on-hover"><i class="fa fa-pencil"></i></small>
         {{/if}}
     </h2>
 
@@ -95,7 +95,8 @@
                 <div class="modal-header brwr-modal-header">
                     <h2 class="modal-title">
                         {{#if isSuperuser}}
-                            Invite people
+                            <span class="start-modal-1">Invite people</span>
+                            <span class="start-modal-2 hidden">Ready to start?</span>
                         {{else}}
                             Almost ready to start
                         {{/if}}
@@ -104,46 +105,46 @@
                 <div class="modal-body brwr-modal-body clearfix">
 
                     {{#if isSuperuser}}
-                        <div class="form-group">
-                            <h4>
-                                <strong><i class="fa fa-link"></i> Share this link:<br/></strong>
-                            </h4>
-                            <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForParticipants}}">
-                            <a id="show-admin-link" class="clickable pull-right">
-                                <i class="fa fa-link"></i>
-                                show admin link
-                            </a>
-                        </div>
-                        <div id="admin-link" class="form-group" style="display: none">
-                            <h4>
-                                <strong><i class="fa fa-link"></i> Admin link:<br/></strong>
-                            </h4>
-                            <p>Send this link to grant someone admin rights.<br/><i>(admin can go to the next round and end brainwriting)</i></p>
-                            <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForAdmins}}">
+
+                        <div class="start-modal-1">
+
+                            {{> brainSession_start_modal_links}}
+                            <!-- <hr> -->
+                            <!-- {{> brainSession_start_modal_others_count}} -->
+                            <br/>
+
+                            <button class="btn btn-warning btn-lg go-to-start-modal-2 pull-right">
+                                <i class="fa fa-check"></i>
+                                OK, got it!
+                            </button>
+
                         </div>
 
-                        <hr>
+                        <div class="start-modal-2 hidden">
 
-                        <h4>
-                            {{#if othersCount}}
-                                {{#if _gt othersCount '1'}}
-                                    <strong>{{othersCount}} people</strong> have joined so far.
-                                {{else}}
-                                    <strong>1 person</strong> has joined so far.
-                                {{/if}}
-                                Are you ready to start?
-                            {{else}}
-                                Nobody has joined you so far. Share the link and wait.
-                            {{/if}}
-                        </h4>
+                            {{> brainSession_start_modal_others_count}}
 
-                        <br/>
+                            <!-- <a id="show-links" class="clickable">
+                                show an invite link
+                            </a> -->
+                            <br/>
 
-                        <button class="btn btn-warning btn-lg next-round pull-right">
-                            <i class="fa fa-play"></i>
-                            Start
-                            <span class="hidden-xs hidden-sm hidden-md">Brainwriting</span>
-                        </button>
+                            <div id="links" style="display: none;">
+                                {{> brainSession_start_modal_links}}
+                            </div>
+
+                            <button class="btn btn-default btn-lg go-to-start-modal-1 pull-left">
+                                <i class="fa fa-caret-left"></i>
+                                Back to invite link
+                            </button>
+
+                            <button class="btn btn-warning btn-lg next-round pull-right">
+                                <i class="fa fa-play"></i>
+                                Start
+                                <span class="hidden-xs hidden-sm hidden-md">Brainwriting</span>
+                            </button>
+
+                        </div>
 
                     {{else}}
 
@@ -160,6 +161,40 @@
 </template>
 
 
+<template name="brainSession_start_modal_links">
+    <div class="form-group">
+        <h4>
+            <strong><i class="fa fa-link"></i> Share this link:<br/></strong>
+        </h4>
+        <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForParticipants}}">
+        <a id="show-admin-link" class="clickable pull-right">
+            <i class="fa fa-link"></i>
+            show admin link
+        </a>
+    </div>
+    <div class="admin-link form-group hidden">
+        <h4>
+            <strong><i class="fa fa-link"></i> Admin link:<br/></strong>
+        </h4>
+        <p>Send this link to grant someone admin rights.<br/><i>(admin can go to the next round and end brainwriting)</i></p>
+        <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForAdmins}}">
+    </div>
+</template>
+
+<template name="brainSession_start_modal_others_count">
+    <h4>
+        {{#if othersCount}}
+            {{#if _gt othersCount '1'}}
+                <strong>{{othersCount}} people</strong> have joined so far.
+            {{else}}
+                <strong>1 person</strong> has joined so far.
+            {{/if}}
+        {{else}}
+            <strong>Nobody has joined so far.</strong> Share the link and wait.
+        {{/if}}
+    </h4>
+</template>
+
 <template name="brainSession_round_info">
     <h2 class="text-center">
         {{#if round}}
@@ -172,28 +207,37 @@
 
 <template name="brainSession_participants">
      {{#if participants}}
-        <h2>People
+        <h2>
+            People
+            <span style="font-size: 0.5em">({{getLength participants}})</span>
             {{#if isSuperuser}}
                 <button class="btn btn-sm btn-warning session-links-modal-open">
                     <i class="fa fa-plus"></i> invite
                 </button>
             {{/if}}
-            {{!--<small>({{getLength participants}})</small>--}}
         </h2>
         <ul class="list-group blink blink-fast">
         {{#each participants}}
-            <li class="list-group-item {{#if activity.ready}}active{{/if}}">
+            <li class="list-group-item {{#if activity.ready}}{{#unless ../closed}}active{{/unless}}{{/if}}">
                 {{#unless ../closed}}
                     <i class="fa fa-fw fa-check-circle primary-color" style="{{#if activity.ready}}color:#fff;{{/if}}"></i>
                 {{/unless}}
                 
-                <span class="{{#if _eq currentUser._id this._id}}name-edit-modal-open clickable{{/if}}">
+                <span class="{{#if _eq currentUser._id this._id}}name-edit-modal-open clickable{{/if}} hoverable">
                     {{userName this}}
-                    {{#if _eq currentUser._id this._id}}<small><i class="fa fa-pencil"></i></small>{{/if}}
+                    {{#if _eq currentUser._id this._id}}<small class="visible-on-hover"><i class="fa fa-pencil"></i></small>{{/if}}
                 </span>
+
+                {{#if activity.ready}}
+                    {{#unless ../closed}}
+                        <span class="badge">DONE</span>
+                    {{/unless}}
+                {{/if}}
                 
                 {{#if activity.write}}
-                    <i class="fa fa-bolt faa-shake animated" style="margin-left: 5px;"></i>
+                    {{#unless activity.ready}}
+                        <i class="fa fa-bolt faa-shake animated" style="margin-left: 5px;"></i>
+                    {{/unless}}
                 {{/if}}
             </li>
         {{/each}}
@@ -254,7 +298,7 @@
     <div class="clearfix">
     {{#each ideas}}
         {{#if text}}
-            <div class="{{#if ../closed}}col-xs-4{{/if}}">
+            <div class="{{#if ../closed}}col-xs-12 col-sm-12 col-md-6 col-lg-4{{/if}}">
                 <div class="well well-sm bubble bubble-idea">
                     <small>
                         <span class="text-muted">round {{round}}</span>
@@ -305,7 +349,7 @@
                         data-html="true"
                         data-placement="right"
                         data-trigger="manual"
-                        data-title="Everybody&nbsp;has&nbsp;finished.<br>Ready&nbsp;for&nbsp;next&nbsp;round?">
+                        data-title="Everybody&nbsp;has&nbsp;finished.<br>Ready&nbsp;for&nbsp;the&nbsp;next&nbsp;round?">
                         <i class="fa fa-step-forward"></i>
                     </button>
                 {{else}}
@@ -326,25 +370,30 @@
             <textarea class="idea form-control" placeholder="type your idea here" style="margin-bottom: 10px;"></textarea>
             <button type="submit" class="btn btn-lg btn-warning pull-right">
                 {{#if _lt ideas.count '2'}}
-                    Next Idea
+                    <i class="fa fa-caret-right"></i> Next Idea
                 {{else}}
-                    I'm done
+                    <i class="fa fa-check-circle"></i> I'm done
                 {{/if}}
             </button>
         </form>
     </div>
     {{else}}
-        <div class="alert alert-warning text-center">
-            {{#if isSuperuser}}
-                {{#unless shortened}}
-                    if you're ready go to the <button class="btn btn-xs btn-warning next-round"><i class="fa fa-step-forward"></i> next round</button>
-                {{else}}
-                    made a mistake? <button class="btn btn-xs btn-warning next-round-undo"><i class="fa fa-undo"></i> undo</button>
-                {{/unless}}
+        
+        {{#if isSuperuser}}
+            {{#unless shortened}}
+                <div class="alert alert-warning text-center">
+                    if you're ready go to the next round
+                </div>
+                <!-- <button class="btn btn-xs btn-warning next-round"><i class="fa fa-step-forward"></i> next round</button> -->
             {{else}}
+                <!-- made a mistake? <button class="btn btn-xs btn-warning next-round-undo"><i class="fa fa-undo"></i> undo</button> -->
+            {{/unless}}
+        {{else}}
+            <div class="alert alert-warning text-center">
                 wait for the next round
-            {{/if}}
-        </div>
+            </div>
+        {{/if}}
+
     {{/if}}
     
     <div class="clearfix" style="margin-top: 20px;">

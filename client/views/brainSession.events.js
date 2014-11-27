@@ -162,6 +162,16 @@ Template.brainSession.events({
             $chat.scrollTop(9999);
         });
     },
+    'click .go-to-start-modal-2': function(event) {
+        $(".start-modal-1").addClass('hidden');
+        $(".admin-link").addClass('hidden');
+        $(".start-modal-2").removeClass('hidden');
+    },
+    'click .go-to-start-modal-1': function(event) {
+        $(".start-modal-2").addClass('hidden');
+        $(".admin-link").addClass('hidden');
+        $(".start-modal-1").removeClass('hidden');
+    },
     // organizator rozpoczyna sesję lub przechodzi do następnej rundy
     'click .next-round': function(event) {
         var brainSessionId = Router.current().params._id,
@@ -245,9 +255,14 @@ Template.brainSession.events({
         $target.next().show();
         $target.remove();
     },
+    'click #show-links': function(event) {
+        var $target = $(event.target);
+        $("#links").show();
+        $target.remove();
+    },
     'click #show-admin-link': function(event) {
         var $target = $(event.target);
-        $("#admin-link").show();
+        $(".admin-link").removeClass('hidden');
         $target.remove();
     },
     'click #session-links-modal-ok': function() {

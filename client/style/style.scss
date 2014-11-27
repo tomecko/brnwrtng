@@ -170,3 +170,17 @@ button.stylish-clicked:active {
 }
 
 /****************************/
+
+.hoverable:hover .visible-on-hover {
+    visibility: visible;
+}
+.visible-on-hover {
+    visibility: hidden;
+}
+
+/****************************/
+
+.list-group-item.active .badge {
+    background-color: #fff;
+    color: $primary-color;
+}

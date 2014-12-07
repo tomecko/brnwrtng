@@ -25,6 +25,15 @@ Template.brainSession.events({
         $("#admin-setup-modal").modal("hide");
         $("#setup-session-links-modal").modal("show");
     },
+    // zamykanie ostatniego okna adminowego
+    'click #session-almost-started-modal-ok': function(event) {
+        $('#session-almost-started-modal').modal('hide');
+        $("#start-brainwriting").tooltip('show');
+        Meteor.setTimeout(function() {
+            $("#start-brainwriting").tooltip('hide');
+        }, 5000);
+    },
+
     // zamykanie okna powitalnego dla nie-admina
     'click #user-waits-modal-ok': function(event) {
         $('#user-waits-modal').modal('hide');
@@ -188,6 +197,7 @@ Template.brainSession.events({
             force = $(event.target).hasClass('next-round-force');
         $("#next-round-main").tooltip('hide');
         $("#session-almost-started-modal").modal('hide');
+        $("#start-brainwriting").tooltip('hide');
         if (brainSession) {
             // rozpoczynanie sesji
             if (brainSession.round === 0) {

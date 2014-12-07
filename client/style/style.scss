@@ -3,6 +3,15 @@ $warning-color: #f0ad4e;
 
 @import "bubble";
 
+body {
+    min-height: 600px;
+}
+
+#side-col {
+    position: absolute;
+    top: 0; right: 0;
+}
+
 .btn-link.btn-warning {
     color: darken($warning-color, 10%);
     &:hover {
@@ -17,7 +26,8 @@ $warning-color: #f0ad4e;
 }
 
 #logo {
-    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 #chat {
@@ -210,4 +220,36 @@ button.stylish-clicked:active {
 
 .generic-username {
     font-style: italic;
+}
+
+#people-list {
+    max-height: 400px;
+    overflow-y:auto;
+}
+
+@media (max-height: 700px) {
+    #people-list {
+        max-height: 190px;
+    }
+    #chat {
+        max-height: 240px;
+    }
+}
+
+@media (max-height: 650px) {
+    #people-list {
+        max-height: 140px;
+    }
+    #chat {
+        max-height: 220px;
+    }
+}
+
+@media (max-height: 600px) {
+    #people-list {
+        max-height: 90px;
+    }
+    #chat {
+        max-height: 200px;
+    }
 }

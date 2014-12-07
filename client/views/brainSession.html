@@ -59,7 +59,7 @@
 
 <template name="brainSession_logo">
     <div id="logo" class="text-center">
-        <a href="/"><img src="/brainwrite.it.png" width="150"></a>
+        <a href="/"><img src="/brainwrite.it.png" width="100"></a>
     </div>
 </template>
 
@@ -88,7 +88,16 @@
             </button>
         {{/unless}}
     {{else}}
-        <button class="btn btn-warning btn-lg next-round" style="margin-top: 28px;">
+        <button
+            class="btn btn-warning btn-lg next-round"
+            style="margin-top: 28px;"
+            id="start-brainwriting"
+            data-toggle="tooltip"
+            data-animation="true"
+            data-html="true"
+            data-placement="bottom"
+            data-trigger="manual"
+            data-title="Start brainwriting when everybody is ready for action.">
             <i class="fa fa-play"></i>
             Start
             <span class="hidden-xs hidden-sm hidden-md">Brainwriting</span>
@@ -216,6 +225,9 @@
             </ul>
         {{/if}}
     </h4>
+    <h4 style="margin-top: 20px;">
+        Start brainwriting when everybody is ready.
+    </h4>
 </template>
 
 <template name="brainSession_round_info">
@@ -230,16 +242,16 @@
 
 <template name="brainSession_participants">
      {{#if participants}}
-        <h2>
+        <h3>
             People
             <span style="font-size: 0.5em">({{getLength participants}})</span>
             {{#if isSuperuser}}
-                <button class="btn btn-sm btn-usual session-links-modal-open">
+                <button class="btn btn-xs btn-usual session-links-modal-open">
                     <i class="fa fa-plus"></i> Invite
                 </button>
             {{/if}}
-        </h2>
-        <ul class="list-group blink blink-fast">
+        </h3>
+        <ul class="list-group blink blink-fast" id="people-list">
         {{#each participants}}
             <li class="list-group-item {{#if activity.ready}}{{#unless ../closed}}active{{/unless}}{{/if}}">
                 {{#unless ../closed}}
@@ -269,7 +281,7 @@
 </template>
 
 <template name="brainSession_chat">
-    <h2>Chat</h2>
+    <h3>Chat</h3>
     {{#if messages}}
         <ul class="list-unstyled" id="chat">
         {{#each messages}}

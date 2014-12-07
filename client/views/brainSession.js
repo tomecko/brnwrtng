@@ -227,11 +227,11 @@ Template.brainSession_modals.rendered = function() {
 
 Template.brainSession.rendered = function() {
 
-    $(window).scroll(function() {
-        $('#side-col').css({
-            'margin-top': $('body').scrollTop()
-        })
-    });
+    // $(window).scroll(function() {
+    //     $('#side-col').css({
+    //         'margin-top': $('body').scrollTop()
+    //     })
+    // });
 
     // ew. TODO:
     // pobrać wpisane idee i umieścić je w textarea

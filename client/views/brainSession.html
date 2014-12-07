@@ -207,8 +207,10 @@
             <ul class="list-unstyled">
                 {{#each participants}}
                     {{#unless _eq currentUser._id this._id}}
-                        <i class="fa fa-check"></i>
-                        <span class="{{#unless hasProfileName this}}generic-username{{/unless}}">{{userName this}}</span>
+                        <li>
+                            <i class="fa fa-check"></i>
+                            <span class="{{#unless hasProfileName this}}generic-username{{/unless}}">{{userName this}}</span>
+                        </li>
                     {{/unless}}
                 {{/each}}
             </ul>

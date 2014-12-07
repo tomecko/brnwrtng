@@ -28,6 +28,7 @@ Template.brainSession.events({
     // zamykanie okna powitalnego dla nie-admina
     'click #user-waits-modal-ok': function(event) {
         $('#user-waits-modal').modal('hide');
+        Session.set('user-waits-modal-ok-clicked', true);
     },
 
 

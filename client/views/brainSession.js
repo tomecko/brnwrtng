@@ -209,7 +209,7 @@ Template.brainSession_modals.rendered = function() {
                 if (!user.profile || typeof user.profile.name === 'undefined') {
                     $('#user-welcome-modal').modal('show');
                 } else {
-                    if (!brainSession.round) {
+                    if (!brainSession.round && !Session.get('user-waits-modal-ok-clicked')) {
                         $('#user-waits-modal').modal('show');
                     }
                     BrainSessions.update(brainSessionId, {

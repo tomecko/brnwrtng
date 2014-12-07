@@ -209,7 +209,9 @@ Template.brainSession_modals.rendered = function() {
                 if (!user.profile || typeof user.profile.name === 'undefined') {
                     $('#user-welcome-modal').modal('show');
                 } else {
-                    $('#user-waits-modal').modal('show');
+                    if (!brainSession.round) {
+                        $('#user-waits-modal').modal('show');
+                    }
                     BrainSessions.update(brainSessionId, {
                         $addToSet: {
                             participantsWhoEntered: Meteor.userId()

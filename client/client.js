@@ -25,6 +25,9 @@ Meteor.setInterval(function() {
             $("#round-end-warning-modal").modal('hide');
             $("#next-round-main").tooltip('hide');
         }
+        if (brainSession.round) {
+            $("#user-waits-modal").modal('hide');
+        }
         // pokazanie tooltipa podpowiedzi, że wszyscy rzekomo gotowi na następną rundę
         if (everybodyIsReady() && brainSession.round !== Session.get('everybodyReadyRound')) {
             $("#next-round-main").tooltip('show');
@@ -34,7 +37,7 @@ Meteor.setInterval(function() {
             }, 5000);
         }
     }
-}, 900);
+}, 800);
 
 // miganie timerem
 Meteor.setInterval(function() {

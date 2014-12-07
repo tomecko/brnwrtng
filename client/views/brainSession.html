@@ -1,6 +1,6 @@
 <template name="brainSession">
 
-    {{> brainSession_modals linkForParticipants=linkForParticipants linkForAdmins=linkForAdmins title=title}}
+    {{> brainSession_modals participants=participants linkForParticipants=linkForParticipants linkForAdmins=linkForAdmins title=title}}
 
     <div class="container-fluid">
         <div class="row">
@@ -18,7 +18,7 @@
                         {{/if}}
                     </div>
                     <hr>
-                    <div class="row brwr-modal-container" style="min-height: 520px;">
+                    <div class="row brwr-modal-container" style="Xmin-height: 520px;">
                         {{#unless closed}}
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <h2 style="margin-top:0">Your ideas</h2>
@@ -32,9 +32,12 @@
 
                         {{#unless round}}
                             <div class="brwr-modal-backdrop modal-backdrop in"></div>
+                        <!--
+                            <div class="alert alert-warning br-not-started-alert">not started</div>
                             {{#if _inArray participantsWhoEntered currentUser._id}}
                                 {{> brainSession_start_modal participants=participants linkForParticipants=linkForParticipants linkForAdmins=linkForAdmins}}
                             {{/if}}
+                        -->
                         {{/unless}}
                     </div>
                 </div>
@@ -43,7 +46,7 @@
             <div class="col-sm-4" id="side-col">
                 <div class="well">
                     {{> brainSession_logo}}
-                    {{> brainSession_participants}}
+                    {{> brainSession_participants participants=participants}}
                     <hr>
                     {{> brainSession_chat}}
                 </div>
@@ -56,7 +59,7 @@
 
 <template name="brainSession_logo">
     <div id="logo" class="text-center">
-        <a href="/"><img src="/brainwrite.it.jpg" width="150"></a>
+        <a href="/"><img src="/brainwrite.it.png" width="150"></a>
     </div>
 </template>
 
@@ -78,12 +81,18 @@
 <template name="brainSession_action">
     {{#if round}}
         {{#unless ../closed}}
-            <button class="btn btn-warning btn-lg end-session" style="margin-top: 28px;">
-                <i class="fa fa-eject"></i>
+            <button class="btn btn-usual btn-lg end-session" style="margin-top: 28px;">
+                <i class="fa fa-power-off"></i>
                 End
                 <span class="hidden-xs hidden-sm hidden-md">Brainwriting</span>
             </button>
         {{/unless}}
+    {{else}}
+        <button class="btn btn-warning btn-lg next-round" style="margin-top: 28px;">
+            <i class="fa fa-play"></i>
+            Start
+            <span class="hidden-xs hidden-sm hidden-md">Brainwriting</span>
+        </button>
     {{/if}}
 </template>
 
@@ -193,6 +202,18 @@
             <strong>Nobody has joined so far.</strong> Share the link and wait.
         {{/if}}
     </h4>
+    <h4 style="margin-top: 20px;">
+        {{#if othersCount}}
+            <ul class="list-unstyled">
+                {{#each participants}}
+                    {{#unless _eq currentUser._id this._id}}
+                        <i class="fa fa-check"></i>
+                        <span class="{{#unless hasProfileName this}}generic-username{{/unless}}">{{userName this}}</span>
+                    {{/unless}}
+                {{/each}}
+            </ul>
+        {{/if}}
+    </h4>
 </template>
 
 <template name="brainSession_round_info">
@@ -211,8 +232,8 @@
             People
             <span style="font-size: 0.5em">({{getLength participants}})</span>
             {{#if isSuperuser}}
-                <button class="btn btn-sm btn-warning session-links-modal-open">
-                    <i class="fa fa-plus"></i> invite
+                <button class="btn btn-sm btn-usual session-links-modal-open">
+                    <i class="fa fa-plus"></i> Invite
                 </button>
             {{/if}}
         </h2>
@@ -224,7 +245,7 @@
                 {{/unless}}
                 
                 <span class="{{#if _eq currentUser._id this._id}}name-edit-modal-open clickable{{/if}} hoverable">
-                    {{userName this}}
+                    <span class="{{#unless hasProfileName this}}generic-username{{/unless}}">{{userName this}}</span>
                     {{#if _eq currentUser._id this._id}}<small class="visible-on-hover"><i class="fa fa-pencil"></i></small>{{/if}}
                 </span>
 
@@ -268,7 +289,7 @@
         <div class="input-group" style="max-width: 300px;">
             <input type="text" class="form-control" placeholder="your message">
             <span class="input-group-btn">
-                <button class="btn btn-warning" type="submit">Send</button>
+                <button class="btn btn-usual" type="submit">Send</button>
             </span>
         </div>
     </form>
@@ -323,7 +344,7 @@
     <div class="clearfix" style="margin-bottom: 10px; margin-top: 20px;">
         <div class="no-padding col-xs-6 col-sm-7 col-md-7 col-lg-7">
             <div class="progress brwr-progress brwr-progress-lg">
-                <div class="progress-bar progress-bar-striped {{#if round}}active{{/if}} {{#if _lt timer.percentage '50'}}progress-bar-warning{{/if}} {{#if _lt timer.percentage '16'}}progress-bar-danger{{/if}}" role="progressbar" aria-valuenow="{{timer.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width: {{timer.percentage}}%; min-width: 25px;">
+                <div class="progress-bar progress-bar-striped {{#if round}}active{{/if}} {{#if _lt timer.percentage '50'}}progress-bar-warning{{/if}} {{#if _lt timer.percentage '16'}}progress-bar-danger{{/if}}" role="progressbar" aria-valuenow="{{timer.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width: {{timer.percentage}}%; min-width: 2px;">
                 </div>
                 <div class="brwr-progress-indicator">
                     {{formatDuration timer.seconds}}
@@ -353,7 +374,7 @@
                         <i class="fa fa-step-forward"></i>
                     </button>
                 {{else}}
-                    <button class="btn btn-warning next-round-undo pull-right">
+                    <button class="btn btn-usual next-round-undo pull-right">
                         <i class="fa fa-undo"></i>
                     </button>
                 {{/unless}}

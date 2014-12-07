@@ -23,7 +23,13 @@ Template.brainSession.events({
         });
 
         $("#admin-setup-modal").modal("hide");
+        $("#setup-session-links-modal").modal("show");
     },
+    // zamykanie okna powitalnego dla nie-admina
+    'click #user-waits-modal-ok': function(event) {
+        $('#user-waits-modal').modal('hide');
+    },
+
 
     // zamykanie okna powitalnego dla nie-admina
     'click #user-welcome-modal-ok': function(event) {
@@ -41,6 +47,7 @@ Template.brainSession.events({
             }
         });
         $('#user-welcome-modal').modal('hide');
+        $('#user-waits-modal').modal('show');
     },
     'keyup #user-welcome-modal-name': function(event) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -179,6 +186,7 @@ Template.brainSession.events({
             now = Math.floor(TimeSync.serverTime() / 1000),
             force = $(event.target).hasClass('next-round-force');
         $("#next-round-main").tooltip('hide');
+        $("#session-almost-started-modal").modal('hide');
         if (brainSession) {
             // rozpoczynanie sesji
             if (brainSession.round === 0) {
@@ -199,7 +207,7 @@ Template.brainSession.events({
                     });
                     $("#round-end-warning-modal").modal('hide');
                     if (Session.equals('skipNextRoundWarning', 'unknown')) {
-                        Session.set('skipNextRoundWarning', true);
+                        Session.set('skipNextRoundWarning', false);
                     }
                 } else { // ostrzeżenie, że nie wszyscy gotowi
                     $("#round-end-warning-modal").modal('show');
@@ -255,6 +263,10 @@ Template.brainSession.events({
         $target.next().show();
         $target.remove();
     },
+    'click .back-to-links-modal': function(event) {
+        $("#session-almost-started-modal").modal("hide");
+        $("#setup-session-links-modal").modal("show");
+    },
     'click #show-links': function(event) {
         var $target = $(event.target);
         $("#links").show();
@@ -267,6 +279,10 @@ Template.brainSession.events({
     },
     'click #session-links-modal-ok': function() {
         $("#session-links-modal").modal("hide");
+    },
+    'click #setup-session-links-modal-ok': function() {
+        $("#setup-session-links-modal").modal("hide");
+        $("#session-almost-started-modal").modal("show");
     },
     // uczestnik sesji pisze ideę
     // 'keyup textarea.idea': function(event) {

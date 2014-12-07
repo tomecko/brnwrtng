@@ -116,7 +116,7 @@
                         <h4><strong>Do you really want to go to the next round?</strong></h4>
                         <div class="checkbox">
                             <label class="skip-next-round-warning-switch">
-                                <input type="checkbox" checked="{{#unless sessionEquals 'skipNextRoundWarning' false}}checked{{/unless}}">
+                                <input type="checkbox" checked="{{#if sessionEquals 'skipNextRoundWarning' true}}checked{{/if}}">
                                 don't show this message again
                             </label>
                         </div>
@@ -125,6 +125,43 @@
                         <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancel</button>
                         <button type="button" class="btn btn-warning btn-lg next-round next-round-force">
                             Yes, go to the next round!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="setup-session-links-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h2 class="modal-title">
+                            Invite people
+                        </h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <h4>
+                                <strong><i class="fa fa-link"></i> Send this link to invite people:<br/></strong>
+                            </h4>
+                            <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForParticipants}}">
+                        </div>
+                        <a id="session-links-modal-show-admin-link" class="clickable">
+                            <i class="fa fa-link"></i>
+                            show admin link
+                        </a>
+                        <div class="form-group" style="display: none">
+                            <h4>
+                                <strong><i class="fa fa-link"></i> Admin link:<br/></strong>
+                            </h4>
+                            <p>Send this link to grant someone admin rights.<br/><i>(admin can go to the next round and end brainwriting)</i></p>
+                            <input type="text" class="form-control input-lg js-select-text-on-focus" value="{{linkForAdmins}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning btn-lg" id="setup-session-links-modal-ok">
+                            OK, got it!
                         </button>
                     </div>
                 </div>
@@ -141,7 +178,7 @@
                         </h2>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="form-group" style="margin-bottom: 15px;">
                             <h4>
                                 <strong><i class="fa fa-link"></i> Send this link to invite people:<br/></strong>
                             </h4>
@@ -161,6 +198,70 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-warning btn-lg" id="session-links-modal-ok">
+                            OK, got it!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="session-almost-started-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h2 class="modal-title">
+                            {{#if isSuperuser}}
+                                Ready to start?
+                            {{else}}
+                                Almost ready to start
+                            {{/if}}
+                        </h2>
+                    </div>
+                    <div class="modal-body">
+                        {{#if isSuperuser}}
+
+                            {{> brainSession_start_modal_others_count}}
+
+                        {{else}}
+
+                            <h4><strong>Wait for other participants to join.</strong></h4>
+                            <h4>In the meantime feel free to chat.</h4>
+
+                        {{/if}}
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default btn-lg pull-left back-to-links-modal">
+                            <i class="fa fa-caret-left"></i>
+                            Back to invite link
+                        </button>
+
+                        <button class="btn btn-warning btn-lg next-round pull-right">
+                            <i class="fa fa-play"></i>
+                            Start
+                            <span class="hidden-xs hidden-sm hidden-md">Brainwriting</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="user-waits-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h2 class="modal-title">
+                            Almost ready to start
+                        </h2>
+                    </div>
+                    <div class="modal-body">
+                        <h4><strong>Wait for other participants to join.</strong></h4>
+                        <h4>In the meantime feel free to chat.</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning btn-lg" id="user-waits-modal-ok">
                             OK, got it!
                         </button>
                     </div>

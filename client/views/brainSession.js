@@ -131,7 +131,7 @@ Template.brainSession_ideas.ideas = function() {
     }
 };
 
-Template.brainSession_participants.participants = function() {
+Template.brainSession.participants = function() {
     var brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId);
     if (brainSession) {
@@ -166,7 +166,7 @@ Template.brainSession_progress.timer = function() {
         return {
             seconds: timerSeconds,
             // length: brainSession.roundLength * 60,
-            percentage: Math.floor(100 * timerSeconds / (brainSession.roundLength * 60))
+            percentage: 100 * timerSeconds / (brainSession.roundLength * 60)
         }
     }
 };
@@ -200,13 +200,16 @@ Template.brainSession_modals.rendered = function() {
         // pokazywanie odpowiednich modali na wejściu do sesji
         if (user && brainSession && Session.get('closed-modal') != brainSessionId) { // 'closed-modal' => do better!
             // admin
-            if (_.indexOf(brainSession.admins, Meteor.userId()) > -1 && typeof brainSession.title === 'undefined') {
-                $('#admin-setup-modal').modal('show');
+            if (_.indexOf(brainSession.admins, Meteor.userId()) > -1) {
+                if (typeof brainSession.title === 'undefined') {
+                    $('#admin-setup-modal').modal('show');
+                }
             } else {
                 // jeśli user jest bez imienia
                 if (!user.profile || typeof user.profile.name === 'undefined') {
                     $('#user-welcome-modal').modal('show');
                 } else {
+                    $('#user-waits-modal').modal('show');
                     BrainSessions.update(brainSessionId, {
                         $addToSet: {
                             participantsWhoEntered: Meteor.userId()

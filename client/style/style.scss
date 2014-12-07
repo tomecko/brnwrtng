@@ -10,6 +10,12 @@ $warning-color: #f0ad4e;
     }
 }
 
+.btn-usual {
+    color: #333;
+    background-color: #f2f2f2;
+    border-color: #ccc;
+}
+
 #logo {
     margin-top: 20px;
 }
@@ -54,13 +60,18 @@ $warning-color: #f0ad4e;
     position: relative;
 }
 .brwr-progress-indicator {
+    color: #000;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.5em;
     left: 50%;
     margin-left: -25px;
     position: absolute;
     text-align: center;
-    text-shadow: 0 0 2px #fff;
+    text-shadow:
+         1px  1px 0 #fff,
+        -1px  1px 0 #fff,
+         1px -1px 0 #fff,
+        -1px -1px 0 #fff;
     width: 50px;
 }
 
@@ -140,13 +151,23 @@ button.stylish-clicked:active {
 
 /****************************/
 
+.br-not-started-alert {
+    position: absolute;
+    top: 50px; left: 50%;
+    margin-left: -50px;
+    width: 100px;
+    z-index: 1001;
+}
+
+/****************************/
+
 .brwr-modal-container {
     position: relative;
 }
 
 .brwr-modal-backdrop {
     position: absolute;
-    opacity: 0.9 !important;
+    opacity: 0.85 !important;
     background-color: #fff !important;
     z-index: 1000;
 }
@@ -183,4 +204,10 @@ button.stylish-clicked:active {
 .list-group-item.active .badge {
     background-color: #fff;
     color: $primary-color;
+}
+
+/****************************/
+
+.generic-username {
+    font-style: italic;
 }

@@ -43,6 +43,12 @@ UI.registerHelper("convertMinutesToSeconds", function(mins) {
     return mins * 60;
 });
 
+UI.registerHelper("hasProfileName", function(user) {
+    if (user) {
+        return !!(user.profile && user.profile.name);
+    }
+});
+
 UI.registerHelper("userName", function(user) {
     if (user) {
         return (user.profile && user.profile.name) ? user.profile.name : user.username;

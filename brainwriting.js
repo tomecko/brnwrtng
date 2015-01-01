@@ -6,7 +6,7 @@ ChatMessages = new Meteor.Collection("chatMessages");
 CONFIG = {
     END_ROUND_DELAY: 5,
     IDEAS_PER_ROUND: 3,
-    SESSION_LENGTH: 2,
+    SESSION_LENGTH: 10,
     END_NEAR_WARNING: 1,
     OTHERS_IDEAS_CHUNK: 3
 };

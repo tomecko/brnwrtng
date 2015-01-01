@@ -29,6 +29,14 @@ UI.registerHelper("isUserReady", function() {
     return currentActivity ? currentActivity.ready == brainSession.round : false;
 });
 
+UI.registerHelper("sessionInProgress", function() {
+    var brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId);
+
+    return brainSession.round && !brainSession.closed;
+});
+
+
 UI.registerHelper("absoluteUrl", function() {
     return Meteor.absoluteUrl().slice(0, -1);;
 });
@@ -78,6 +86,11 @@ UI.registerHelper("formatDate", function(timestamp, format) {
 UI.registerHelper("formatDuration", function(secondsTotal) {
     return formatDuration(secondsTotal);
 });
+
+UI.registerHelper("fromCurrentTimestamp", function(timestamp) {
+    return moment.unix(timestamp).from(moment.unix(Math.floor(Session.get('currentTimestamp'))));
+});
+
 
 UI.registerHelper("_eq", function(arg1, arg2) {
     return arg1 == arg2;
@@ -146,4 +159,22 @@ UI.registerHelper("getPropertyValue", function(obj, property) {
 
 UI.registerHelper("sessionEquals", function(key, value) {
     return Session.get(key) === value;
+});
+
+UI.registerHelper("thereIsSomethingMore", function(key, count, skip) {
+    var skip;
+    if ('number' !== typeof skip) {
+        skip = 0;
+    }
+    return (count - skip) > Session.get(key + 'Limit');
+});
+
+UI.registerHelper("resolveNearnessClass", function(percentage) {
+    if (percentage < 10) {
+        return 'very-near blink';
+    } else if (percentage < 20) {
+        return 'very-near';
+    } else if (percentage < 40) {
+        return 'near';
+    }
 });

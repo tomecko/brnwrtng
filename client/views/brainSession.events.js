@@ -23,7 +23,7 @@ Template.brainSession.events({
         });
 
         $("#admin-setup-modal").modal("hide");
-        $("#setup-session-links-modal").modal("show");
+        // $("#setup-session-links-modal").modal("show");
     },
     // zamykanie ostatniego okna adminowego
     'click #session-almost-started-modal-ok': function(event) {
@@ -134,7 +134,8 @@ Template.brainSession.events({
         event.preventDefault();
         var $target = $(event.target),
             $textarea = $target.find('textarea'),
-            no = +$target.attr('data-no'),
+            // no = +$target.attr('data-no'),
+            ts = +$target.attr('data-ts'),
             text = $textarea.val().trim(),
             brainSessionId = Router.current().params._id,
             brainSession = BrainSessions.findOne(brainSessionId);
@@ -142,24 +143,19 @@ Template.brainSession.events({
             $textarea.val("");
             return;
         }
-        Meteor.call('upsertIdea', {
+        Ideas.insert({
             author: Meteor.userId(),
             session: brainSessionId,
-            sheet: +$target.attr('data-sheet'),
-            round: +$target.attr('data-round'),
-            no: no,
+            ts: ts,
+            // sheet: +$target.attr('data-sheet'),
+            // round: +$target.attr('data-round'),
+            // no: no,
             text: text,
         }, function(error, result) {
             if (!error) {
                 $textarea.val("");
             }
         });
-        if (no == CONFIG.IDEAS_PER_ROUND - 1) {
-            Meteor.call('upsertActivity', {
-                user: Meteor.userId(),
-                session: brainSessionId
-            }, "ready", brainSession.round);
-        }
     },
     // wysłanie wiadomości na chacie
     'submit #chat-send-message': function(event) {
@@ -201,6 +197,7 @@ Template.brainSession.events({
         if (brainSession) {
             // rozpoczynanie sesji
             if (brainSession.round === 0) {
+                Session.set('peoplePanel', false);
                 BrainSessions.update(brainSessionId, {
                     '$set': {
                         round: 1,
@@ -350,11 +347,54 @@ Template.brainSession.events({
             }
         }
     },
-    'focus .js-select-text-on-focus': function(event) {
-        var $target = $(event.target);
-        $target.select();
+    'click .js-select-text-on-click': function(event) {
+        var $target = $(event.currentTarget);
+        var range = document.createRange();
+        var selection = window.getSelection();
+        range.selectNodeContents($target[0]);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
     },
     'mouseup .js-select-text-on-focus': function(event) {
         return false;
-    }
+    },
+    'click .my-ideas-load-more': function(event) {
+        var currentLimit = Session.get('myIdeasLimit');
+        Session.set('myIdeasLimit', currentLimit + 3);
+    },
+    'click .others-ideas-load-more': function(event) {
+        var currentLimit = Session.get('othersIdeasLimit');
+        Session.set('othersIdeasLimit', currentLimit + 6);
+    },
+    'click .toggle-panel': function(event) {
+        var $target = $(event.currentTarget),
+            panel = $target.data('panel'),
+            panelKey = panel + 'Panel';
+        Session.set(panelKey, !Session.get(panelKey));
+    },
+    'click .add-1-min': function(event) {
+        var brainSessionId = Router.current().params._id,
+            brainSession = BrainSessions.findOne(brainSessionId),
+            now = Math.floor(TimeSync.serverTime() / 1000);
+        if (brainSession) {
+            BrainSessions.update(brainSessionId, {
+                '$set': {
+                    roundEnd: Math.min(now + CONFIG.SESSION_LENGTH * 60, brainSession.roundEnd + 60)
+                }
+            });
+        }
+        Session.set("add-1-min", false);
+        $("#add-1-min").popover("hide");
+    },
+    'click .timer-actions .popover': function(event) {
+        $("#add-1-min").popover("hide");
+        Session.set("add-1-min", true);
+    },
+    'focus #idea-form textarea': function(event) {
+        $("#idea-form").addClass("focused");
+    },
+    'blur #idea-form textarea': function(event) {
+        $("#idea-form").removeClass("focused");
+    },
 });

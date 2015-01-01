@@ -7,10 +7,10 @@ getTimerSeconds = function() {
         if (0 == brainSession.round) {
             return roundLengthSeconds;
         }
-        return _.min([
+        return _.max([0, _.min([
             roundLengthSeconds,
-            brainSession.roundEnd - Session.get("currentTimestamp")
-        ]);
+            brainSession.roundEnd - Math.floor(Session.get("currentTimestamp"))
+        ])]);
     }
 }
 

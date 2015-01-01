@@ -1,4 +1,285 @@
 <template name="brainSession">
+<div class="container-fluid">
+    {{> brainSession_top_bar round=round closed=closed timer=timer title=title}}
+    {{#if round}}
+        {{> brainSession_progress_bar timer=timer round=round closed=closed}}
+    {{/if}}
+    {{> brainSession_main}}
+    {{> brainSession_modals}}
+</div>
+</template>
+
+<template name="brainSession_top_bar">
+<div id="top-bar" class="row">
+    {{#if isSuperuser}}
+        <div class="{{#if sessionInProgress}}col-sm-8{{else}}col-sm-9{{/if}}">
+            <a href="/" class="pull-left"><img src="/brain80.png" id="logo"></a>
+            <h2 id="session-title" class="session-edit-modal-open clickable {{#unless title}}empty{{/unless}} hoverable">
+                {{#if title}}
+                    {{title}}
+                {{else}}
+                    No subject
+                {{/if}}
+                <small class="visible-on-hover"><i class="fa fa-pencil"></i></small>
+            </h2>
+        </div>
+        <div class="{{#if sessionInProgress}}col-sm-4{{else}}col-sm-3{{/if}} text-center {{#unless sessionInProgress}}no-padding{{/unless}}">
+            {{#unless round}}
+                {{#unless closed}}
+                    <button class="btn btn-warning btn-lg btn-block brwr-btn-big next-round">start</button>
+                {{/unless}}
+            {{else}}
+                {{#unless closed}}
+                    <div class="row">
+                        <div class="col-sm-6 no-padding timer timer-superuser">
+                            <div class="timer-seconds {{resolveNearnessClass timer.percentage}} blink-here">
+                                {{formatDuration timer.seconds}}
+                            </div>
+                            <div class="timer-actions">
+                                <button
+                                    id="add-1-min"
+                                    class="btn btn-xs btn-warning uc add-1-min"
+                                    data-toggle="popover"
+                                    data-placement="bottom"
+                                    data-html="true"
+                                    data-title="Time is running out!"
+                                    data-content="Click this button<br/>if you need more time.">
+                                    <i class="fa fa-plus-circle"></i> add 1 min
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 no-padding">
+                            <button class="btn btn-warning btn-lg btn-block brwr-btn-big end-session">end</button>
+                        </div>
+                    </div>
+                {{/unless}}
+            {{/unless}}
+        </div>
+
+    {{else}}
+
+        <div class="{{#if sessionInProgress}}col-sm-9{{else}}col-sm-12{{/if}}">
+            <a href="/" class="pull-left"><img src="/brain80.png" id="logo"></a>
+            <h2 id="session-title" class="{{#unless title}}empty{{/unless}}">
+                {{#if title}}
+                    {{title}}
+                {{else}}
+                    No subject
+                {{/if}}
+            </h2>
+        </div>
+        {{#if sessionInProgress}}
+            <div class="col-sm-3 text-center no-padding timer {{resolveNearnessClass timer.percentage}} blink-here">
+                {{formatDuration timer.seconds}}
+            </div>
+        {{/if}}
+
+    {{/if}}
+
+</div>
+</template>
+
+
+<template name="brainSession_progress_bar">
+{{#if round}}
+    {{#unless closed}}
+        <div id="progress-bar" class="row {{resolveNearnessClass timer.percentage}}">
+            <div class="blink-here" style="width: {{timer.percentage}}%"></div>
+        </div>
+    {{/unless}}
+{{/if}}
+</template>
+
+<template name="brainSession_main">
+<div id="main" class="row {{#if sessionInProgress}}in-progress{{/if}}">
+    <div class="col-sm-12">
+        {{#unless round}}
+            {{> brainSession_before }}
+        {{else}}
+            {{#unless closed}}
+                {{> brainSession_in_progress }}
+            {{else}}
+                {{> brainSession_after }}
+            {{/unless}}
+        {{/unless}}
+    </div>
+    {{> brainSession_people }}
+</div>
+</template>
+
+<template name="brainSession_before">
+{{#if isSuperuser}}
+    <h2>Invite people!</h2>
+    <p>Great, you've just set up a Brainwriting session.</p>
+    <p>Share this link with your team (e.g. via email):</p>
+    <p><span class="mark js-select-text-on-click">{{linkForParticipants}}</span></p>
+    <p>
+        Wait for others to join.<br/>
+        When everybody is ready START brainwriting.<br/>
+        <span class="text-muted">(you as an admin user are the only person who can do it)</span>
+    </p>
+{{else}}
+    <h2>Welcome to Brainwriting!</h2>
+    {{#if title}}
+        <p>
+            You've been invited to generate ideas on the following subject:<br/>
+            <strong>{{title}}</strong>
+        </p>
+    {{/if}}
+    <p>Wait for others to join the session. Admin will start Brainwriting soon.</p>
+{{/if}}
+</template>
+
+<template name="brainSession_in_progress">
+<div class="row padded">
+    <div class="col-sm-3">
+        <div class="well well-sm box box-bold text-center">
+            Your Ideas
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <div class="row">
+            <div class="col-sm-12 col-sm-6 col-lg-4">
+                <form id="idea-form" data-ts="{{timestamp}}">
+                    <textarea class="form-control inline-block" placeholder="type your idea here"></textarea>
+                    <p class="text-right"><i class="text-muted">press ENTER to send</i></p>
+                </form>
+            </div>
+        </div>
+        {{#if myIdeas.count}}
+            <div class="row">
+                {{#each myIdeas.data}}
+                    <div class="col-sm-12 col-sm-6 col-lg-4">
+                        <div class="well well-sm idea bubble bubble-idea">
+                            <p class="idea-text">{{text}}</p>
+                            <p class="idea-info">
+                                <small class="text-muted">{{fromCurrentTimestamp ts}}</small>
+                                {{#if _len likedBy}}
+                                    <span class="pull-right">
+                                        {{_len likedBy}}
+                                        <i class="fa fa-thumbs-up primary-color"></i>
+                                    </span>
+                                {{/if}}
+                            </p>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        {{/if}}
+        {{#if thereIsSomethingMore 'myIdeas' myIdeas.count}}
+            <div class="row text-center">
+                <button class="btn btn-link my-ideas-load-more"><i class="fa fa-caret-down"></i> load more</button>
+            </div>
+        {{/if}}
+    </div>
+</div>
+<div class="row padded">
+    <div class="col-sm-3">
+        <div class="well well-sm box box-bold text-center">
+            Others' Ideas
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <div class="row">
+            {{#each othersIdeas.data}}
+                <div class="col-sm-12 col-sm-6 col-lg-4">
+                    <div class="well well-sm idea bubble bubble-idea">
+                        <p class="idea-text">{{text}}</p>
+                        <p class="idea-info">
+                            <small class="text-muted">{{fromCurrentTimestamp ts}}</small>
+                            <span class="pull-right">
+                                {{#if _len likedBy}}{{_len likedBy}}{{/if}}
+                                <i class="fa fa-thumbs{{#unless _inArray likedBy currentUser._id}}-o{{/unless}}-up primary-color idea-box-like clickable" title="{{#if _inArray likedBy currentUser._id}}unlike{{else}}like{{/if}}"></i>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            {{else}}
+                <div class="col-sm-12 col-sm-6 col-lg-4">
+                    <div class="well well-sm box text-muted text-center">
+                        <i>no ideas yet</i>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+        <div class="row text-center">
+            {{#if thereIsSomethingMore 'othersIdeas' othersIdeas.count othersIdeas.skip}}
+                <button class="btn btn-link others-ideas-load-more"><i class="fa fa-caret-down"></i> load more</button>
+            {{/if}}
+        </div>
+    </div>
+</div>
+</template>
+
+<template name="brainSession_after">
+
+<h2>
+    All ideas
+    <button class="btn btn-warning" onclick="alert('Sorry, this hasn\'t been implemented yet!\n\nWhat did you expect to happen?');">
+        export to file
+    </button>
+</h2>
+<p>
+    sort by
+    <div class="btn-group all-ideas-sorting">
+        <button class="btn {{#if sessionEquals 'allIdeasSorting' 'author'}}btn-warning{{else}}btn-default{{/if}}" data-sort-by="author">author</button>
+        <button class="btn {{#if sessionEquals 'allIdeasSorting' 'time'}}btn-warning{{else}}btn-default{{/if}}" data-sort-by="time">time</button>
+        <button class="btn {{#if sessionEquals 'allIdeasSorting' 'likes'}}btn-warning{{else}}btn-default{{/if}}" data-sort-by="likes">likes</button>
+    </div>
+</p>
+
+<div class="clearfix">
+{{#each ideas}}
+    <div class="col-sm-12 col-sm-6 col-lg-4">
+        <div class="well well-sm idea bubble bubble-idea">
+            <p class="idea-text">{{text}}</p>
+            <p class="idea-info">
+                <small class="text-muted">{{userName author}}</small>
+                <span class="pull-right">
+                    {{#if _len likedBy}}{{_len likedBy}}{{/if}}
+                    <i class="fa fa-thumbs{{#unless _inArray likedBy currentUser._id}}-o{{/unless}}-up primary-color idea-box-like clickable" title="{{#if _inArray likedBy currentUser._id}}unlike{{else}}like{{/if}}"></i>
+                </span>
+            </p>
+        </div>
+    </div>
+{{else}}
+    <div class="well text-muted">no ideas</div>
+{{/each}}
+</div>
+</template>
+
+<template name="brainSession_people">
+{{#if sessionEquals 'peoplePanel' true}}
+    <div class="{{#if isSuperuser}}{{#if sessionInProgress}}col-sm-4{{else}}col-sm-3{{/if}}{{else}}col-sm-3{{/if}} side-thing side-panel">
+        <h2>
+            <i class="fa fa-user"></i>
+            People
+            <i class="fa fa-arrow-right pull-right toggle-panel clickable" data-panel="people"></i>
+        </h2>
+        <ul class="list-group" id="people-list">
+        {{#each participants}}
+            <li class="list-group-item {{#if activity.ready}}{{#unless ../closed}}active{{/unless}}{{/if}}">
+                <span class="{{#if _eq currentUser._id this._id}}name-edit-modal-open clickable{{/if}} hoverable">
+                    <span class="{{#unless hasProfileName this}}generic-username{{/unless}}">{{userName this}}</span>
+                    {{#if _eq currentUser._id this._id}}<small class="visible-on-hover"><i class="fa fa-pencil"></i></small>{{/if}}
+                </span>
+                {{#if activity.write}}
+                    {{#unless activity.ready}}
+                        <i class="fa fa-bolt faa-shake animated" style="margin-left: 5px;"></i>
+                    {{/unless}}
+                {{/if}}
+            </li>
+        {{/each}}
+        </ul>
+    </div>
+{{else}}
+    <div class="side-thing toggle-panel clickable" data-panel="people">
+        <h2><i class="fa fa-arrow-left pull-left"></i><i class="fa fa-user"></i></h2>
+    </div>
+{{/if}}
+</template>
+
+<template name="XbrainSession">
 
     {{> brainSession_modals participants=participants linkForParticipants=linkForParticipants linkForAdmins=linkForAdmins title=title}}
 

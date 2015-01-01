@@ -1,48 +1,66 @@
 Session.setDefault('skipNextRoundWarning', 'unknown');
 Session.setDefault('allIdeasSorting', 'round');
+Session.setDefault('myIdeasLimit', 3);
+Session.setDefault('othersIdeasLimit', 9);
+Session.setDefault('peoplePanel', true);
 
 // dynamika rund (TODO: przenieść do plików brainSession)
 Meteor.setInterval(function() {
     var now = Math.floor(TimeSync.serverTime() / 1000),
         brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId);
-    // wpisanie do sesji aktualnego czasu
-    Session.set("currentTimestamp", now);
+    // wpisanie do sesji aktualnego czasu, jeśli się rozjechał
+    if (Math.abs(now - Session.get("currentTimestamp")) > 1) {
+        Session.set("currentTimestamp", now);
+    }
     if (brainSession) {
-        // ew. odpalenie następnej rundy
+        // ew. skończenie sesji, jeśli upłynął czas
         if (brainSession.roundEnd < now) {
             BrainSessions.update(brainSessionId, {
                 '$set': {
-                    round: brainSession.round + 1,
-                    roundStart: now,
-                    roundEnd: now + (60 * brainSession.roundLength),
-                },
-                '$unset': {
-                    shortened: ""
+                    closed: true
                 }
             });
-            Session.set('everybodyReady', false);
-            $("#round-end-warning-modal").modal('hide');
-            $("#next-round-main").tooltip('hide');
+            // Session.set('everybodyReady', false);
+            // $("#round-end-warning-modal").modal('hide');
+            // $("#next-round-main").tooltip('hide');
         }
         if (brainSession.round) {
             $("#user-waits-modal").modal('hide');
         }
-        // pokazanie tooltipa podpowiedzi, że wszyscy rzekomo gotowi na następną rundę
-        if (everybodyIsReady() && brainSession.round !== Session.get('everybodyReadyRound')) {
-            $("#next-round-main").tooltip('show');
-            Session.set('everybodyReadyRound', brainSession.round);
-            Meteor.setTimeout(function() {
-                $("#next-round-main").tooltip('hide');
-            }, 5000);
+
+        // brzydki hack na ukrycie panelu z uczestnikami na początku sesji
+        if (brainSession.round === 1 && !Session.get('peoplePanelHiddenOnSessionStart')) {
+            Session.set('peoplePanelHiddenOnSessionStart', true);
+            Session.set('peoplePanel', false);
         }
+
+        // pokazywanie podpowiedzi o przedłużaniu sesji
+        if (brainSession.roundEnd < (now + CONFIG.END_NEAR_WARNING * 60) & Session.get("add-1-min") !== true) {
+            $("#add-1-min").popover("show");
+            Session.set("add-1-min", true);
+        }
+
+        // // pokazanie tooltipa podpowiedzi, że wszyscy rzekomo gotowi na następną rundę
+        // if (everybodyIsReady() && brainSession.round !== Session.get('everybodyReadyRound')) {
+        //     $("#next-round-main").tooltip('show');
+        //     Session.set('everybodyReadyRound', brainSession.round);
+        //     Meteor.setTimeout(function() {
+        //         $("#next-round-main").tooltip('hide');
+        //     }, 5000);
+        // }
     }
 }, 800);
 
-// miganie timerem
+// płynny currentTimestamp
 Meteor.setInterval(function() {
-    $(".warn").toggleClass('warn-not-visible');
-}, 500);
+    Session.set("currentTimestamp", moment().format("x") / 1000);
+}, 10);
+
+// // miganie timerem
+// Meteor.setInterval(function() {
+//     $(".warn").toggleClass('warn-not-visible');
+// }, 500);
 
 // aktualizacja tytułu strony
 Meteor.setInterval(function() {

@@ -9,7 +9,7 @@ Template.home.events({
             // domyslne wartosci
             var brainwritingSession = {
                 ideasPerRound: 3,
-                roundLength: 3,
+                roundLength: CONFIG.SESSION_LENGTH,
                 createdAt: Math.floor(TimeSync.serverTime() / 1000),
                 round: 0,
                 adminToken: getRandomString(9), // losujemy sobie token, ktorego posiadacz bedzie moderatorem
@@ -28,6 +28,9 @@ Template.home.events({
                     }
                 }
             );
+
+            Session.set('peoplePanel', true);
+            Session.set("add-1-min", false);
 
         });
 

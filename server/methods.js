@@ -1,18 +1,18 @@
 Meteor.methods({
     upsertIdea: function(idea) {
         check(idea.author, String);
-        check(idea.no, Number);
-        check(idea.round, Number);
+        // check(idea.no, Number);
+        // check(idea.round, Number);
         check(idea.session, String);
-        check(idea.sheet, Number);
+        // check(idea.sheet, Number);
         check(idea.text, String);
 
         return Ideas.upsert({
             author: idea.author,
-            no: idea.no,
+            // no: idea.no,
             session: idea.session,
-            sheet: idea.sheet,
-            round: idea.round
+            // sheet: idea.sheet,
+            // round: idea.round
         }, {
             $set: {
                 text: idea.text

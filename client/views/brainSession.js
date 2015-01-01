@@ -4,12 +4,12 @@ Template.brainSession_modals.hasName = function() {
     return user && user.profile && user.profile.name && user.profile.name.length > 0;
 };
 
-Template.brainSession.linkForParticipants = function() {
+Template.brainSession_before.linkForParticipants = function() {
     var brainSessionId = Router.current().params._id;
     return Meteor.absoluteUrl("session/" + brainSessionId);
 };
 
-Template.brainSession.linkForAdmins = function() {
+Template.brainSession_before.linkForAdmins = function() {
     var brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId);
     if (brainSession) {
@@ -73,7 +73,64 @@ Template.brainSession_ideas_current_round.ideasPerRound = function() {
     }
 };
 
-Template.brainSession_ideas.ideas = function() {
+Template.brainSession_in_progress.timestamp = function() {
+    return Math.floor(Session.get("currentTimestamp"));
+}
+
+Template.brainSession_in_progress.myIdeas = function() {
+    var brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId);
+    if (brainSession && Meteor.userId()) {
+        return {
+            count: Ideas.find({
+                session: Router.current().params._id,
+                author: Meteor.userId()
+            }).count(),
+            data: Ideas.find({
+                session: Router.current().params._id,
+                author: Meteor.userId()
+            }, {
+                limit: Session.get('myIdeasLimit'),
+                sort: {
+                    ts: -1
+                }
+            })
+        };
+    }
+}
+
+Template.brainSession_in_progress.othersIdeas = function() {
+    var brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId),
+        count, skip;
+    if (brainSession && Meteor.userId()) {
+        count = Ideas.find({
+            session: Router.current().params._id,
+            author: {
+                $not: Meteor.userId()
+            }
+        }).count();
+        skip = count % CONFIG.OTHERS_IDEAS_CHUNK;
+        return {
+            count: count,
+            skip: skip,
+            data: Ideas.find({
+                session: Router.current().params._id,
+                author: {
+                    $not: Meteor.userId()
+                }
+            }, {
+                limit: Session.get('othersIdeasLimit'),
+                skip: skip,
+                sort: {
+                    ts: -1
+                }
+            })
+        };
+    }
+}
+
+Template.brainSession_after.ideas = function() {
     var brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId),
         roundZeroBased, participantCount, userNo, sheet,
@@ -101,21 +158,20 @@ Template.brainSession_ideas.ideas = function() {
             if ('likes' === Session.get('allIdeasSorting')) {
                 sort = {
                     likesCount: -1,
-                    round: 1,
+                    ts: 1,
                     author: 1,
-                    no: 1,
                 }
             } else if ('author' === Session.get('allIdeasSorting')) {
                 sort = {
                     author: 1,
-                    round: 1,
-                    no: 1
+                    ts: 1,
+                    likesCount: -1
                 }
             } else {
                 sort = {
-                    round: 1,
+                    ts: 1,
                     author: 1,
-                    no: 1
+                    likesCount: -1
                 }
             }
             ideas = Ideas.find({
@@ -131,7 +187,7 @@ Template.brainSession_ideas.ideas = function() {
     }
 };
 
-Template.brainSession.participants = function() {
+Template.brainSession_people.participants = function() {
     var brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId);
     if (brainSession) {
@@ -157,7 +213,7 @@ Template.brainSession.participants = function() {
 };
 
 // liczba sekund do końca rundy
-Template.brainSession_progress.timer = function() {
+Template.brainSession.timer = function() {
     var brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId),
         timerSeconds = getTimerSeconds(),
@@ -209,9 +265,9 @@ Template.brainSession_modals.rendered = function() {
                 if (!user.profile || typeof user.profile.name === 'undefined') {
                     $('#user-welcome-modal').modal('show');
                 } else {
-                    if (!brainSession.round && !Session.get('user-waits-modal-ok-clicked')) {
-                        $('#user-waits-modal').modal('show');
-                    }
+                    // if (!brainSession.round && !Session.get('user-waits-modal-ok-clicked')) {
+                    //     $('#user-waits-modal').modal('show');
+                    // }
                     BrainSessions.update(brainSessionId, {
                         $addToSet: {
                             participantsWhoEntered: Meteor.userId()

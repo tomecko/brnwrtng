@@ -174,14 +174,57 @@ Template.brainSession_after.ideas = function() {
                     likesCount: -1
                 }
             }
+
             ideas = Ideas.find({
                 session: Router.current().params._id
             }, {
                 sort: sort
             }).fetch();
-            _.each(ideas, function(el, i, list) {
-                list[i].author = Meteor.users.findOne(el.author);
-            });
+
+            // _.each(ideas, function(el, i, list) {
+            //     list[i].author = Meteor.users.findOne(el.author);
+            // });
+
+            if ('author' === Session.get('allIdeasSorting')) {
+
+                var ideasByAuthors = [],
+                    uniqueAuthors = [];
+
+                // trzeba zindeksować liczbami naturalnymi tablicę z wynikiem, bo
+                // inaczej w widoku #each nie iteruje po tej tablicy
+                uniqueAuthors = _(ideas).chain().flatten().pluck('author').unique().value()
+
+                _.each(ideas, function(el, i, list) {
+                    var authorIndex = uniqueAuthors.indexOf(el.author)
+                    if ('undefined' === typeof ideasByAuthors[authorIndex]) {
+                        ideasByAuthors[authorIndex] = {};
+                    }
+                    ideasByAuthors[authorIndex]['author'] = el.author;
+                    ideasByAuthors[authorIndex]['data'] = ideasByAuthors[authorIndex]['data'] || [];
+                    ideasByAuthors[authorIndex]['data'].push(el);
+                });
+                return ideasByAuthors;
+            }
+
+            if ('likes' === Session.get('allIdeasSorting')) {
+
+                var mostPopularSlots = 12,
+                    ideasByLikes = {
+                        popular: [],
+                        other: []
+                    };
+
+                _.each(ideas, function(el, i, list) {
+                    if (el.likedBy && el.likedBy.length > 0 && mostPopularSlots > 0) {
+                        ideasByLikes.popular.push(el);
+                        mostPopularSlots--;
+                    } else {
+                        ideasByLikes.other.push(el);
+                    }
+                });
+                return ideasByLikes;
+            }
+
             return ideas;
         }
     }

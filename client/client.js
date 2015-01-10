@@ -1,5 +1,5 @@
 Session.setDefault('skipNextRoundWarning', 'unknown');
-Session.setDefault('allIdeasSorting', 'round');
+Session.setDefault('allIdeasSorting', 'likes');
 Session.setDefault('myIdeasLimit', 3);
 Session.setDefault('othersIdeasLimit', 9);
 Session.setDefault('peoplePanel', true);

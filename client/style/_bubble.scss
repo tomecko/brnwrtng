@@ -1,6 +1,9 @@
 $bubble-idea-color: inherit;
 $bubble-idea-bg: #eee;
 
+$bubble-idea-others-color: inherit;
+$bubble-idea-others-bg: #fafafa;
+
 $bubble-chat-color: #111;
 $bubble-chat-bg: #ddd;
 
@@ -39,6 +42,17 @@ $bubble-chat-me-bg: #444;
 
 .bubble-idea:after {
   border-right-color: $bubble-idea-bg;
+}
+
+/*****************/
+
+.bubble-idea-others {
+  background-color: $bubble-idea-others-bg !important;
+  color: $bubble-idea-others-color;
+}
+
+.bubble-idea-others:after {
+  border-right-color: $bubble-idea-others-bg;
 }
 
 /*****************/

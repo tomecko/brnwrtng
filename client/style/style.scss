@@ -152,7 +152,7 @@ p {
 
 .box {
     height: $box-height;
-    line-height: $box-height - 20px;
+    line-height: $box-height;
 }
 .box-bold {
     font-size: 24px;
@@ -160,14 +160,33 @@ p {
 }
 
 .idea {
-    height: $idea-height;
+    // height: $idea-height !important;
+    padding-bottom: 3px;
+    text-align: center;
 }
 .idea-text {
-    height: $idea-height - 25px - 18px;
+    $lines: 3;
+    $p-line-height: 1.25;
+    $p-font-size: 16px;
+    height: $lines * $p-line-height * $p-font-size;
+    line-height: $lines * $p-line-height * $p-font-size;
     overflow: hidden;
+    p {
+        display: inline-block;
+        font-size: $p-font-size;
+        line-height: $p-line-height;
+        margin: 0;
+        vertical-align: middle;
+    }
 }
 .idea-info {
-    height: 25px;
+    font-size: 14px;
+    height: 20px;
+    margin: 0;
+    padding: 0 7px;
+}
+.all-ideas-padded {
+    padding-left: 15px;
 }
 
 #idea-form {
@@ -189,7 +208,6 @@ p {
     right: 0;
     padding: 10px 15px 20px 15px;
     background-color: #ddd;
-    @include opacity(0.9);
     h2 {
         margin-top: 10px;
     }
@@ -197,6 +215,10 @@ p {
 
 .side-panel {
     bottom: 0;
+}
+
+.different {
+    background-color: #eee;
 }
 
 

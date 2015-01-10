@@ -170,7 +170,7 @@ UI.registerHelper("thereIsSomethingMore", function(key, count, skip) {
 });
 
 UI.registerHelper("resolveNearnessClass", function(percentage) {
-    if (percentage < 10) {
+    if (percentage < 1.7) {
         return 'very-near blink';
     } else if (percentage < 20) {
         return 'very-near';

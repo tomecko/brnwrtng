@@ -359,13 +359,17 @@ Template.brainSession.events({
     'mouseup .js-select-text-on-focus': function(event) {
         return false;
     },
-    'click .my-ideas-load-more': function(event) {
-        var currentLimit = Session.get('myIdeasLimit');
-        Session.set('myIdeasLimit', currentLimit + 3);
+    'click .my-ideas-show-all': function(event) {
+        Session.set('myIdeasLimit', 9999);
     },
-    'click .others-ideas-load-more': function(event) {
-        var currentLimit = Session.get('othersIdeasLimit');
-        Session.set('othersIdeasLimit', currentLimit + 6);
+    'click .others-ideas-show-all': function(event) {
+        Session.set('othersIdeasLimit', 9999);
+    },
+    'click .my-ideas-show-less': function(event) {
+        Session.set('myIdeasLimit', 3);
+    },
+    'click .others-ideas-show-less': function(event) {
+        Session.set('othersIdeasLimit', 9);
     },
     'click .toggle-panel': function(event) {
         var $target = $(event.currentTarget),

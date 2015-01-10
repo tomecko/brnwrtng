@@ -14,7 +14,7 @@
     {{#if isSuperuser}}
         <div class="{{#if sessionInProgress}}col-sm-8{{else}}col-sm-9{{/if}}">
             <a href="/" class="pull-left"><img src="/brain80.png" id="logo"></a>
-            <h2 id="session-title" class="session-edit-modal-open clickable {{#unless title}}empty{{/unless}} hoverable">
+            <h2 id="session-title" class="session-edit-modal-open clickable {{#unless title}}empty{{/unless}} hoverable" title="{{title}}">
                 {{#if title}}
                     {{title}}
                 {{else}}
@@ -38,7 +38,7 @@
                             <div class="timer-actions">
                                 <button
                                     id="add-1-min"
-                                    class="btn btn-xs btn-warning uc add-1-min"
+                                    class="btn btn-sm btn-warning uc add-1-min"
                                     data-toggle="popover"
                                     data-placement="bottom"
                                     data-html="true"
@@ -132,17 +132,17 @@
 
 <template name="brainSession_in_progress">
 <div class="row padded">
-    <div class="col-sm-3">
-        <div class="well well-sm box box-bold text-center">
+    <div class="col-sm-2">
+        <div class="box box-bold text-center">
             Your Ideas
         </div>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-10">
         <div class="row">
             <div class="col-sm-12 col-sm-6 col-lg-4">
                 <form id="idea-form" data-ts="{{timestamp}}">
                     <textarea class="form-control inline-block" placeholder="type your idea here"></textarea>
-                    <p class="text-right"><i class="text-muted">press ENTER to send</i></p>
+                    <p class="text-right"><i class="text-muted">&#8629; press ENTER to send</i></p>
                 </form>
             </div>
         </div>
@@ -151,9 +151,9 @@
                 {{#each myIdeas.data}}
                     <div class="col-sm-12 col-sm-6 col-lg-4">
                         <div class="well well-sm idea bubble bubble-idea">
-                            <p class="idea-text">{{text}}</p>
+                            <div class="idea-text" title="{{text}}"><p>{{text}}</p></div>
                             <p class="idea-info">
-                                <small class="text-muted">{{fromCurrentTimestamp ts}}</small>
+                                <small class="text-muted pull-left">{{fromCurrentTimestamp ts}}</small>
                                 {{#if _len likedBy}}
                                     <span class="pull-right">
                                         {{_len likedBy}}
@@ -166,27 +166,30 @@
                 {{/each}}
             </div>
         {{/if}}
-        {{#if thereIsSomethingMore 'myIdeas' myIdeas.count}}
-            <div class="row text-center">
-                <button class="btn btn-link my-ideas-load-more"><i class="fa fa-caret-down"></i> load more</button>
-            </div>
-        {{/if}}
+        <div class="row text-center">
+            {{#if thereIsSomethingMore 'myIdeas' myIdeas.count}}
+                <button class="btn btn-link my-ideas-show-all"><i class="fa fa-caret-down"></i> show all</button>
+            {{/if}}
+            {{#if sessionEquals 'myIdeasLimit' 9999}}
+                <button class="btn btn-link my-ideas-show-less"><i class="fa fa-caret-up"></i> show less</button>
+            {{/if}}
+        </div>
     </div>
 </div>
-<div class="row padded">
-    <div class="col-sm-3">
-        <div class="well well-sm box box-bold text-center">
+<div class="row padded different">
+    <div class="col-sm-2">
+        <div class="box box-bold text-center">
             Others' Ideas
         </div>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-10">
         <div class="row">
             {{#each othersIdeas.data}}
                 <div class="col-sm-12 col-sm-6 col-lg-4">
-                    <div class="well well-sm idea bubble bubble-idea">
-                        <p class="idea-text">{{text}}</p>
+                    <div class="well well-sm idea idea-others bubble bubble-idea bubble-idea-others">
+                        <div class="idea-text" title="{{text}}"><p>{{text}}</p></div>
                         <p class="idea-info">
-                            <small class="text-muted">{{fromCurrentTimestamp ts}}</small>
+                            <small class="text-muted pull-left">{{fromCurrentTimestamp ts}}</small>
                             <span class="pull-right">
                                 {{#if _len likedBy}}{{_len likedBy}}{{/if}}
                                 <i class="fa fa-thumbs{{#unless _inArray likedBy currentUser._id}}-o{{/unless}}-up primary-color idea-box-like clickable" title="{{#if _inArray likedBy currentUser._id}}unlike{{else}}like{{/if}}"></i>
@@ -196,7 +199,7 @@
                 </div>
             {{else}}
                 <div class="col-sm-12 col-sm-6 col-lg-4">
-                    <div class="well well-sm box text-muted text-center">
+                    <div class="box text-muted text-center">
                         <i>no ideas yet</i>
                     </div>
                 </div>
@@ -204,7 +207,10 @@
         </div>
         <div class="row text-center">
             {{#if thereIsSomethingMore 'othersIdeas' othersIdeas.count othersIdeas.skip}}
-                <button class="btn btn-link others-ideas-load-more"><i class="fa fa-caret-down"></i> load more</button>
+                <button class="btn btn-link others-ideas-show-all"><i class="fa fa-caret-down"></i> show all</button>
+            {{/if}}
+            {{#if sessionEquals 'othersIdeasLimit' 9999}}
+                <button class="btn btn-link others-ideas-show-less"><i class="fa fa-caret-up"></i> show less</button>
             {{/if}}
         </div>
     </div>
@@ -213,38 +219,83 @@
 
 <template name="brainSession_after">
 
-<h2>
+<h2 class="all-ideas-padded">
     All ideas
-    <button class="btn btn-warning" onclick="alert('Sorry, this hasn\'t been implemented yet!\n\nWhat did you expect to happen?');">
-        export to file
+    <button class="btn btn-default" onclick="alert('Sorry, this hasn\'t been implemented yet!\n\nWhat did you expect to happen?');">
+        export to .pdf <i class="fa fa-file-pdf-o"></i>
     </button>
 </h2>
-<p>
+<p class="all-ideas-padded">
     sort by
     <div class="btn-group all-ideas-sorting">
-        <button class="btn {{#if sessionEquals 'allIdeasSorting' 'author'}}btn-warning{{else}}btn-default{{/if}}" data-sort-by="author">author</button>
-        <button class="btn {{#if sessionEquals 'allIdeasSorting' 'time'}}btn-warning{{else}}btn-default{{/if}}" data-sort-by="time">time</button>
         <button class="btn {{#if sessionEquals 'allIdeasSorting' 'likes'}}btn-warning{{else}}btn-default{{/if}}" data-sort-by="likes">likes</button>
+        <button class="btn {{#if sessionEquals 'allIdeasSorting' 'author'}}btn-warning{{else}}btn-default{{/if}}" data-sort-by="author">author</button>
+        <!-- <button class="btn {{#if sessionEquals 'allIdeasSorting' 'time'}}btn-warning{{else}}btn-default{{/if}}" data-sort-by="time">time</button> -->
     </div>
 </p>
 
-<div class="clearfix">
-{{#each ideas}}
-    <div class="col-sm-12 col-sm-6 col-lg-4">
-        <div class="well well-sm idea bubble bubble-idea">
-            <p class="idea-text">{{text}}</p>
-            <p class="idea-info">
-                <small class="text-muted">{{userName author}}</small>
-                <span class="pull-right">
-                    {{#if _len likedBy}}{{_len likedBy}}{{/if}}
-                    <i class="fa fa-thumbs{{#unless _inArray likedBy currentUser._id}}-o{{/unless}}-up primary-color idea-box-like clickable" title="{{#if _inArray likedBy currentUser._id}}unlike{{else}}like{{/if}}"></i>
-                </span>
-            </p>
+{{#if sessionEquals 'allIdeasSorting' 'author'}}
+
+    {{#each ideas}}
+        <h3 class="all-ideas-padded clearfix">
+            {{userNameById author}}
+            <small class="text-muted">({{data.length}})</small>
+        </h3>
+        <div class="clearfix">
+            {{#each data}}
+                {{ >brainSession_after_idea }}
+            {{/each}}
         </div>
+    {{else}}
+        <div class="well text-muted">no ideas</div>
+    {{/each}}
+
+{{/if}}
+
+{{#if sessionEquals 'allIdeasSorting' 'likes'}}
+
+    {{#if ideas.popular}}
+        <h3 class="all-ideas-padded clearfix">
+            {{#if ideas.other}}Most Liked Ideas{{else}}All Ideas{{/if}}
+            <small class="text-muted">({{ideas.popular.length}})</small>
+        </h3>
+        <div class="clearfix">
+            {{#each ideas.popular}}
+                {{ >brainSession_after_idea }}
+            {{/each}}
+        </div>
+    {{/if}}
+
+    {{#if ideas.other}}
+        <h3 class="all-ideas-padded clearfix">
+            {{#if ideas.popular}}Other Ideas{{else}}All ideas{{/if}}
+            <small class="text-muted">({{ideas.other.length}})</small>
+        </h3>
+        <div class="clearfix">
+            {{#each ideas.other}}
+                {{ >brainSession_after_idea }}
+            {{/each}}
+        </div>
+    {{/if}}
+
+{{/if}}
+
+</template>
+
+<template name="brainSession_after_idea">
+<div class="col-sm-12 col-sm-6 col-lg-4">
+    <div class="well well-sm idea bubble bubble-idea">
+        <p class="idea-text">{{text}}</p>
+        <p class="idea-info">
+            {{#unless sessionEquals 'allIdeasSorting' 'author'}}
+                <small class="text-muted pull-left">{{userNameById author}}</small>
+            {{/unless}}
+            <span class="pull-right">
+                {{#if _len likedBy}}{{_len likedBy}}{{/if}}
+                <i class="fa fa-thumbs{{#unless _inArray likedBy currentUser._id}}-o{{/unless}}-up primary-color idea-box-like clickable" title="{{#if _inArray likedBy currentUser._id}}unlike{{else}}like{{/if}}"></i>
+            </span>
+        </p>
     </div>
-{{else}}
-    <div class="well text-muted">no ideas</div>
-{{/each}}
 </div>
 </template>
 

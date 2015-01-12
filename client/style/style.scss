@@ -217,11 +217,47 @@ p {
     bottom: 0;
 }
 
+.panel-closed {
+    padding: 10px;
+    text-align: center;
+    width: 140px;
+    &[data-panel="chat"] {
+        right: 0px;
+    }
+    &[data-panel="people"] {
+        right: 150px;
+    }
+    .count {
+        font-size: 24px;
+    }
+    i {
+        margin-top: 12px;
+    }
+    &.chat-unread {
+        background-color: #FFCDD2;
+        i, .count {
+            color: red;
+        }
+    }
+}
+
+.only-panel-closed {
+    right: 25.5% !important;
+}
+
+.superuser.in-progress .only-panel-closed {
+    right: 34% !important;
+}
+
 .different {
     background-color: #eee;
 }
 
 
+#chat {
+    max-height: 70%;
+    overflow-y: scroll;
+}
 
 // body {
 //     min-height: 600px;
@@ -367,13 +403,13 @@ p {
     background-color: #fff;
 }
 
-// .placeholderish {
-//     font-style: italic;
-// }
-// ::-webkit-input-placeholder {font-style: italic; }
-// :-moz-placeholder {font-style: italic; } /* older Firefox*/
-// ::-moz-placeholder {font-style: italic; } /* Firefox 19+ */ 
-// :-ms-input-placeholder {font-style: italic; }
+.placeholderish {
+    font-style: italic;
+}
+::-webkit-input-placeholder {font-style: italic; }
+:-moz-placeholder {font-style: italic; } /* older Firefox*/
+::-moz-placeholder {font-style: italic; } /* Firefox 19+ */ 
+:-ms-input-placeholder {font-style: italic; }
 
 // #next-round-main + .tooltip {
 //     opacity: 0.75;

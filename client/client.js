@@ -2,7 +2,8 @@ Session.setDefault('skipNextRoundWarning', 'unknown');
 Session.setDefault('allIdeasSorting', 'likes');
 Session.setDefault('myIdeasLimit', 3);
 Session.setDefault('othersIdeasLimit', 9);
-Session.setDefault('peoplePanel', true);
+Session.setDefault('panel', 'chat');
+Session.setDefault('peoplePanelHiddenOnSessionStart', false);
 
 // dynamika rund (TODO: przenieść do plików brainSession)
 Meteor.setInterval(function() {
@@ -32,7 +33,8 @@ Meteor.setInterval(function() {
         // brzydki hack na ukrycie panelu z uczestnikami na początku sesji
         if (brainSession.round === 1 && !Session.get('peoplePanelHiddenOnSessionStart')) {
             Session.set('peoplePanelHiddenOnSessionStart', true);
-            Session.set('peoplePanel', false);
+            // Session.set('peoplePanel', false);
+            Session.set('panel', false);
         }
 
         // pokazywanie podpowiedzi o przedłużaniu sesji

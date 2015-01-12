@@ -47,6 +47,29 @@ Template.brainSession_chat.messages = function() {
     });
 };
 
+Template.brainSession_chat.unreadMessagesCount = function() {
+    var brainSessionId = Router.current().params._id,
+        brainSession = BrainSessions.findOne(brainSessionId),
+        lastChatRead;
+    if (brainSession) {
+        lastChatRead = 0;
+        if (brainSession.chatRead && brainSession.chatRead[Meteor.userId()]) {
+            lastChatRead = brainSession.chatRead[Meteor.userId()];
+        }
+        return ChatMessages.find({
+            session: brainSessionId,
+            time: {
+                $exists: true,
+                $gt: lastChatRead
+            }
+        }, {
+            sort: {
+                time: 1
+            }
+        }).count();
+    }
+};
+
 // numer "arkusza" z ideami (można utożsamiać z numerem kartki z papierowego brainwritingu)
 Template.brainSession_ideas_current_round.sheet = function() {
     var brainSessionId = Router.current().params._id,
@@ -297,7 +320,7 @@ Template.brainSession_modals.rendered = function() {
             brainSessionId = Router.current().params._id,
             brainSession = BrainSessions.findOne(brainSessionId);
         // pokazywanie odpowiednich modali na wejściu do sesji
-        if (user && brainSession && Session.get('closed-modal') != brainSessionId) { // 'closed-modal' => do better!
+        if (user && brainSession && Session.get('closed-modal') != brainSessionId && !brainSession.round) { // 'closed-modal' => do better!
             // admin
             if (_.indexOf(brainSession.admins, Meteor.userId()) > -1) {
                 if (typeof brainSession.title === 'undefined') {

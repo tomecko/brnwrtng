@@ -374,8 +374,17 @@ Template.brainSession.events({
     'click .toggle-panel': function(event) {
         var $target = $(event.currentTarget),
             panel = $target.data('panel'),
-            panelKey = panel + 'Panel';
-        Session.set(panelKey, !Session.get(panelKey));
+            brainSessionId = Router.current().params._id,
+            query;
+        Session.set('panel', Session.get('panel') === panel ? false : panel);
+
+        if (Session.get('panel') === 'chat' || panel === 'chat') {
+            query = {
+                '$set': {}
+            };
+            query['$set']['chatRead.' + Meteor.userId()] = Math.floor(Session.get("currentTimestamp") * 1000)
+            BrainSessions.update(brainSessionId, query);
+        }
     },
     'click .add-1-min': function(event) {
         var brainSessionId = Router.current().params._id,

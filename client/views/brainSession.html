@@ -1,5 +1,5 @@
 <template name="brainSession">
-<div class="container-fluid">
+<div class="container-fluid {{#if isSuperuser}}superuser{{/if}} {{#if round}}{{#unless closed}}in-progress{{/unless}}{{/if}}">
     {{> brainSession_top_bar round=round closed=closed timer=timer title=title}}
     {{#if round}}
         {{> brainSession_progress_bar timer=timer round=round closed=closed}}
@@ -104,6 +104,7 @@
         {{/unless}}
     </div>
     {{> brainSession_people }}
+    {{> brainSession_chat}}
 </div>
 </template>
 
@@ -278,6 +279,12 @@
         </div>
     {{/if}}
 
+    {{#unless ideas.popular}}
+        {{#unless ideas.other}}
+            <div class="well text-muted">no ideas</div>
+        {{/unless}}
+    {{/unless}}
+
 {{/if}}
 
 </template>
@@ -300,12 +307,12 @@
 </template>
 
 <template name="brainSession_people">
-{{#if sessionEquals 'peoplePanel' true}}
+{{#if sessionEquals 'panel' 'people'}}
     <div class="{{#if isSuperuser}}{{#if sessionInProgress}}col-sm-4{{else}}col-sm-3{{/if}}{{else}}col-sm-3{{/if}} side-thing side-panel">
         <h2>
             <i class="fa fa-user"></i>
             People
-            <i class="fa fa-arrow-right pull-right toggle-panel clickable" data-panel="people"></i>
+            <i class="fa fa-times pull-right toggle-panel clickable" data-panel="people"></i>
         </h2>
         <ul class="list-group" id="people-list">
         {{#each participants}}
@@ -324,8 +331,57 @@
         </ul>
     </div>
 {{else}}
-    <div class="side-thing toggle-panel clickable" data-panel="people">
-        <h2><i class="fa fa-arrow-left pull-left"></i><i class="fa fa-user"></i></h2>
+    <div class="side-thing toggle-panel clickable panel-closed {{#if sessionEquals 'panel' 'chat'}}only-panel-closed{{/if}}" data-panel="people">
+        <h2>
+            People<br/>
+            <span class="count">{{#if participants}}{{_len participants}}{{/if}}</span>
+            <i class="fa fa-user"></i>
+        </h2>
+    </div>
+{{/if}}
+</template>
+
+<template name="brainSession_chat">
+{{#if sessionEquals 'panel' 'chat'}}
+    <div class="{{#if isSuperuser}}{{#if sessionInProgress}}col-sm-4{{else}}col-sm-3{{/if}}{{else}}col-sm-3{{/if}} side-thing side-panel">
+        <h2>
+            <i class="fa fa-comments"></i>
+            Chat
+            <i class="fa fa-times pull-right toggle-panel clickable" data-panel="chat"></i>
+        </h2>
+        {{#if messages}}
+            <ul class="list-unstyled" id="chat">
+            {{#each messages}}
+                <li>
+                    <div class="bubble bubble-chat {{#if _eq author currentUser._id}}bubble-chat-me{{/if}}">
+                        <i><small title="{{formatDate time 'YYYY/MM/DD HH:mm'}}">
+                            {{#if _eq author currentUser._id}}you{{else}}{{userNameById author}}{{/if}}
+                            <small>({{formatDate time 'HH:mm'}})</small>
+                        </small></i>
+                        <p>{{text}}</p>
+                    </div>
+                </li>
+            {{else}}
+                <li><em>be first to write a message!</em></li>
+            {{/each}}
+            </ul>
+        {{/if}}
+        <form id="chat-send-message">
+            <div class="input-group input-group-lg" style="max-width: 300px;">
+                <input type="text" class="form-control" placeholder="your message">
+                <span class="input-group-btn">
+                    <button class="btn btn-warning" type="submit">Send</button>
+                </span>
+            </div>
+        </form>
+    </div>
+{{else}}
+    <div class="side-thing toggle-panel clickable panel-closed {{#if sessionEquals 'panel' 'people'}}only-panel-closed{{/if}} {{#if unreadMessagesCount}}chat-unread{{/if}}" data-panel="chat">
+        <h2>
+            Chat<br/>
+            {{#if unreadMessagesCount}}<span class="count ">{{unreadMessagesCount}}</span>{{/if}}
+            <i class="fa fa-comments"></i>
+        </h2>
     </div>
 {{/if}}
 </template>
@@ -612,7 +668,7 @@
     {{/if}}
 </template>
 
-<template name="brainSession_chat">
+<template name="XbrainSession_chat">
     <h3>Chat</h3>
     {{#if messages}}
         <ul class="list-unstyled" id="chat">

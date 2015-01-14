@@ -163,7 +163,9 @@ Template.brainSession.events({
         var $target = $(event.target),
             $input = $target.find("input"),
             $chat = $("#chat"),
-            text = $input.val();
+            text = $input.val(),
+            query,
+            brainSessionId = Router.current().params._id;
         $input.val("");
         if ('' === text) return;
         ChatMessages.insert({
@@ -174,6 +176,13 @@ Template.brainSession.events({
         }, function() {
             $chat.scrollTop(9999);
         });
+
+        // zaktualizowanie timestampu przeczytanej ost. wiadomości
+        query = {
+            '$set': {}
+        };
+        query['$set']['chatRead.' + Meteor.userId()] = Math.floor(Session.get("currentTimestamp") * 1000)
+        BrainSessions.update(brainSessionId, query);
     },
     'click .go-to-start-modal-2': function(event) {
         $(".start-modal-1").addClass('hidden');

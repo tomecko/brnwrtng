@@ -28,6 +28,9 @@ p {
     font-size: 16px;
 }
 
+.modal-backdrop.in {
+    @include opacity(.75);
+}
 
 
 .mark {
@@ -37,7 +40,7 @@ p {
     font-size: 26px;
     padding: 5px 10px;
     display: inline-block;
-    @include border-radius(3px);
+    @include border-radius(5px);
     &::selection {
         background-color: darken($warning-color, 5%);
         color: #fff;
@@ -239,6 +242,9 @@ p {
             color: red;
         }
     }
+    &:hover {
+        background-color: darken(#ddd, 5%);
+    }
 }
 
 .only-panel-closed {
@@ -253,11 +259,51 @@ p {
     background-color: #eee;
 }
 
+#people-list {
+    font-size: 20px;
+}
+
 
 #chat {
     max-height: 70%;
     overflow-y: scroll;
 }
+
+.step-wrap {
+    padding-left: 30px;
+}
+
+.step {
+    $size: 50px;
+    $space: 15px;
+    margin-top: 30px;
+    .step-heading {
+        line-height: $size;
+        margin-left: $size + $space;
+    }
+    .step-heading-sub {
+        margin-top: -10px;
+    }
+    .step-number {
+        float: left;
+        background-color: #ddd;
+        color: #333;
+        display: inline-block;
+        font-size: 30px;
+        font-weight: bold;
+        height: $size;
+        margin-right: $space;
+        line-height: $size;
+        text-align: center;
+        width: $size;
+        @include border-radius(50%);
+    }
+    .step-padded {
+        margin-left: $size + $space;
+    }
+}
+
+
 
 // body {
 //     min-height: 600px;

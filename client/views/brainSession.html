@@ -110,7 +110,38 @@
 
 <template name="brainSession_before">
 {{#if isSuperuser}}
-    <h2>Invite people!</h2>
+
+    <div class="step-wrap">
+        <div class="step">
+            <h2 class="step-padded uc">3 steps to start</h2>
+        </div>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <h3 class="step-heading">
+                copy this link:<br/>
+            </h3>
+            <span class="mark js-select-text-on-click step-padded">{{linkForParticipants}}</span>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <h3 class="step-heading">
+                send the link to your team<br/>
+            </h3>
+            <p class="step-padded text-muted step-heading-sub">(via email, Facebook, whatever works for you!)</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <h3 class="step-heading">
+                wait for others to join and then <button class="btn btn-warning uc">start</button>
+            </h3>
+            <p class="step-padded text-muted step-heading-sub">(you're an admin, only you can start the session)</p>
+        </div>
+    </div>
+
+    <!-- <h2>Invite people!</h2>
     <p>Great, you've just set up a Brainwriting session.</p>
     <p>Share this link with your team (e.g. via email):</p>
     <p><span class="mark js-select-text-on-click">{{linkForParticipants}}</span></p>
@@ -118,7 +149,7 @@
         Wait for others to join.<br/>
         When everybody is ready START brainwriting.<br/>
         <span class="text-muted">(you as an admin user are the only person who can do it)</span>
-    </p>
+    </p>-->
 {{else}}
     <h2>Welcome to Brainwriting!</h2>
     {{#if title}}

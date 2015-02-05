@@ -513,21 +513,29 @@ p {
 
 /****************************/
 
-// .list-group-item.active .badge {
-//     background-color: #fff;
-//     color: $primary-color;
-// }
+.list-group-item .badge {
+    line-height: 22px;
+    margin-left: 4px;
+}
 
 // /****************************/
 
-// .generic-username {
-//     font-style: italic;
-// }
+.generic-username {
+    font-style: italic;
+}
 
 // #people-list {
 //     max-height: 400px;
 //     overflow-y:auto;
 // }
+
+.alert-narrow {
+    display: inline-block;
+    button {
+        margin-left: 40px;
+    }
+}
+
 
 // @media (max-height: 700px) {
 //     #people-list {
@@ -569,4 +577,10 @@ p {
 .blink.blink-here, .blink .blink-here {
   animation: blink 1s step-start 0s infinite;
   -webkit-animation: blink 1s step-start 0s infinite;
+}
+
+@media (min-width: 1200px) {
+    .superuser.in-progress .only-panel-closed {
+        right: 25.5% !important;
+    }
 }

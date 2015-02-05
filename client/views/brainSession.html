@@ -1,6 +1,6 @@
 <template name="brainSession">
 <div class="container-fluid {{#if isSuperuser}}superuser{{/if}} {{#if round}}{{#unless closed}}in-progress{{/unless}}{{/if}}">
-    {{> brainSession_top_bar round=round closed=closed timer=timer title=title}}
+    {{> brainSession_top_bar round=round closed=closed timer=timer title=title timeAddedAt=timeAddedAt admins=admins}}
     {{#if round}}
         {{> brainSession_progress_bar timer=timer round=round closed=closed}}
     {{/if}}
@@ -69,8 +69,13 @@
             </h2>
         </div>
         {{#if sessionInProgress}}
-            <div class="col-sm-3 text-center no-padding timer {{resolveNearnessClass timer.percentage}} blink-here">
-                {{formatDuration timer.seconds}}
+            <div class="col-sm-3 text-center no-padding timer {{resolveNearnessClass timer.percentage}}" style="position: relative">
+                <span class="blink-here">{{formatDuration timer.seconds}}</span>
+                {{#if isRecent timeAddedAt}}
+                    <span class="label label-warning" style="position: absolute; bottom: 7px; left: 50%; width: 200px; margin-left: -100px; font-size: 14px;">
+                        admin added extra time!
+                    </span>
+                {{/if}}
             </div>
         {{/if}}
 
@@ -135,7 +140,7 @@
         <div class="step">
             <span class="step-number">3</span>
             <h3 class="step-heading">
-                wait for others to join and then <button class="btn btn-warning uc">start</button>
+                wait for others to join and then <button class="btn btn-warning uc next-round">start</button>
             </h3>
             <p class="step-padded text-muted step-heading-sub">(you're an admin, only you can start the session)</p>
         </div>
@@ -166,7 +171,7 @@
 <div class="row padded">
     <div class="col-sm-2">
         <div class="box box-bold text-center">
-            Your Ideas
+            <i class="fa fa-bolt"></i> My Ideas
         </div>
     </div>
     <div class="col-sm-10">
@@ -211,7 +216,7 @@
 <div class="row padded different">
     <div class="col-sm-2">
         <div class="box box-bold text-center">
-            Others' Ideas
+            <i class="fa fa-user"></i> Others
         </div>
     </div>
     <div class="col-sm-10">
@@ -250,6 +255,13 @@
 </template>
 
 <template name="brainSession_after">
+
+{{#if sessionEquals 'afterSessionAlert' true}}
+    <div class="alert alert-warning alert-narrow" style="margin-top: 10px;">
+        This Brainwriting session has ended. Read all ideas and choose the best ones!
+        <button class="btn btn-warning after-session-alert"><i class="fa fa-times"></i> OK, got it!</button>
+    </div>
+{{/if}}
 
 <h2 class="all-ideas-padded">
     All ideas
@@ -339,7 +351,7 @@
 
 <template name="brainSession_people">
 {{#if sessionEquals 'panel' 'people'}}
-    <div class="{{#if isSuperuser}}{{#if sessionInProgress}}col-sm-4{{else}}col-sm-3{{/if}}{{else}}col-sm-3{{/if}} side-thing side-panel">
+    <div class="{{#if isSuperuser}}{{#if sessionInProgress}}col-sm-4 col-lg-3{{else}}col-sm-3{{/if}}{{else}}col-sm-3{{/if}} side-thing side-panel">
         <h2>
             <i class="fa fa-user"></i>
             People
@@ -347,10 +359,16 @@
         </h2>
         <ul class="list-group" id="people-list">
         {{#each participants}}
-            <li class="list-group-item {{#if activity.ready}}{{#unless ../closed}}active{{/unless}}{{/if}}">
-                <span class="{{#if _eq currentUser._id this._id}}name-edit-modal-open clickable{{/if}} hoverable">
+            <li class="list-group-item {{#if _eq currentUser._id this._id}}name-edit-modal-open clickable{{/if}} hoverable">
+                <span>
                     <span class="{{#unless hasProfileName this}}generic-username{{/unless}}">{{userName this}}</span>
                     {{#if _eq currentUser._id this._id}}<small class="visible-on-hover"><i class="fa fa-pencil"></i></small>{{/if}}
+                    {{#if _eq currentUser._id this._id}}
+                        <span class="badge uc pull-right">you</span>
+                    {{/if}}
+                    {{#if _inArray ../admins this._id}}
+                        <span class="badge uc pull-right">admin</span>
+                    {{/if}}
                 </span>
                 {{#if activity.write}}
                     {{#unless activity.ready}}
@@ -374,7 +392,7 @@
 
 <template name="brainSession_chat">
 {{#if sessionEquals 'panel' 'chat'}}
-    <div class="{{#if isSuperuser}}{{#if sessionInProgress}}col-sm-4{{else}}col-sm-3{{/if}}{{else}}col-sm-3{{/if}} side-thing side-panel">
+    <div class="{{#if isSuperuser}}{{#if sessionInProgress}}col-sm-4 col-lg-3{{else}}col-sm-3{{/if}}{{else}}col-sm-3{{/if}} side-thing side-panel">
         <h2>
             <i class="fa fa-comments"></i>
             Chat
@@ -398,8 +416,8 @@
             </ul>
         {{/if}}
         <form id="chat-send-message">
-            <div class="input-group input-group-lg" style="max-width: 300px;">
-                <input type="text" class="form-control" placeholder="your message">
+            <div class="input-group input-group-lg" style="max-width: 400px;">
+                <input type="text" class="form-control" placeholder="my message">
                 <span class="input-group-btn">
                     <button class="btn btn-warning" type="submit">Send</button>
                 </span>
@@ -440,7 +458,7 @@
                     <div class="row brwr-modal-container" style="Xmin-height: 520px;">
                         {{#unless closed}}
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <h2 style="margin-top:0">Your ideas</h2>
+                            <h2 style="margin-top:0">My ideas</h2>
                             {{> brainSession_progress}}
                             {{> brainSession_ideas_current_round}}
                         </div>
@@ -720,7 +738,7 @@
     {{/if}}
     <form id="chat-send-message">
         <div class="input-group" style="max-width: 300px;">
-            <input type="text" class="form-control" placeholder="your message">
+            <input type="text" class="form-control" placeholder="type your message here">
             <span class="input-group-btn">
                 <button class="btn btn-usual" type="submit">Send</button>
             </span>

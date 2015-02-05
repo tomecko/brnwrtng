@@ -402,7 +402,8 @@ Template.brainSession.events({
         if (brainSession) {
             BrainSessions.update(brainSessionId, {
                 '$set': {
-                    roundEnd: Math.min(now + CONFIG.SESSION_LENGTH * 60, brainSession.roundEnd + 60)
+                    roundEnd: Math.min(now + CONFIG.SESSION_LENGTH * 60, brainSession.roundEnd + 60),
+                    timeAddedAt: now
                 }
             });
         }
@@ -418,5 +419,8 @@ Template.brainSession.events({
     },
     'blur #idea-form textarea': function(event) {
         $("#idea-form").removeClass("focused");
+    },
+    'click .after-session-alert': function(event) {
+        Session.set('afterSessionAlert', false);
     },
 });

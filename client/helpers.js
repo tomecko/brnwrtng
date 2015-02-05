@@ -178,3 +178,7 @@ UI.registerHelper("resolveNearnessClass", function(percentage) {
         return 'near';
     }
 });
+
+UI.registerHelper("isRecent", function(ts) {
+    return Session.get("currentTimestamp") - ts > 8 ? false : true;
+});

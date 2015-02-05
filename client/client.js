@@ -30,12 +30,20 @@ Meteor.setInterval(function() {
             $("#user-waits-modal").modal('hide');
         }
 
-        // brzydki hack na ukrycie panelu z uczestnikami na początku sesji
-        if (brainSession.round === 1 && !Session.get('peoplePanelHiddenOnSessionStart')) {
-            Session.set('peoplePanelHiddenOnSessionStart', true);
-            // Session.set('peoplePanel', false);
+        // brzydki hack na ukrycie paneli na początku sesji
+        if (!brainSession.round) {
+            Session.set('panelHiddenOnSessionStart', false);
+        }
+        if (brainSession.round === 1 && !Session.get('panelHiddenOnSessionStart')) {
+            Session.set('panelHiddenOnSessionStart', true);
             Session.set('panel', false);
         }
+
+        // alert na koncu sesji domyślnie pokazujemy
+        if (!brainSession.round) {
+            Session.set('afterSessionAlert', true);
+        }
+
 
         // pokazywanie podpowiedzi o przedłużaniu sesji
         if (brainSession.roundEnd < (now + CONFIG.END_NEAR_WARNING * 60) & Session.get("add-1-min") !== true) {
@@ -66,7 +74,7 @@ Meteor.setInterval(function() {
 
 // aktualizacja tytułu strony
 Meteor.setInterval(function() {
-    if (Router.current() && "brainSession" == Router.current().route.name) {
+    if ("brainSession" == Router.current().route.getName()) {
         var timerSeconds = getTimerSeconds(),
             brainSessionId = Router.current().params._id,
             brainSession = BrainSessions.findOne(brainSessionId),
@@ -74,8 +82,10 @@ Meteor.setInterval(function() {
 
         if (brainSession && brainSession.round > 0 && !brainSession.closed) {
             title = "(" + formatDuration(timerSeconds) + ")";
-            title = title + " ROUND " + brainSession.round;
-            title = title + " - " + brainSession.title;
+            if (brainSession.title) {
+                title = title + ' - ' + brainSession.title;
+            }
+            title = title + ' - brainwrite.it';
         }
 
         if (brainSession && brainSession.closed) {

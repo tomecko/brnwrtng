@@ -33,7 +33,10 @@ establishSession = function() {
 }
 
 Template.home.rendered = function() {
-    establishSession();
+    setTimeout(function() {
+        establishSession(),
+        0
+    });
 }
 
 Template.home.events({

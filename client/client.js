@@ -11,7 +11,7 @@ Meteor.setInterval(function() {
         brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId);
     // wpisanie do sesji aktualnego czasu, jeśli się rozjechał
-    if (Math.abs(now - Session.get("currentTimestamp")) > 1) {
+    if (Math.abs(now - Session.get("currentTimestamp")) > 2) {
         Session.set("currentTimestamp", now);
     }
     if (brainSession) {
@@ -65,7 +65,7 @@ Meteor.setInterval(function() {
 // płynny currentTimestamp
 Meteor.setInterval(function() {
     Session.set("currentTimestamp", moment().format("x") / 1000);
-}, 10);
+}, 100);
 
 // // miganie timerem
 // Meteor.setInterval(function() {

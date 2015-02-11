@@ -3,7 +3,7 @@ Router.configure({
     loadingTemplate: 'loading'
 });
 
-Router.onBeforeAction('loading');
+// Router.onBeforeAction('loading');
 
 Router.map(function() {
 

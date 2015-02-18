@@ -300,7 +300,7 @@ p {
 }
 
 .in-progress #chat-col {
-    top: $top-bar-height + $progress-bar-height !important;
+    top: $top-bar-height + $progress-bar-height;
 }
 
 #chat {

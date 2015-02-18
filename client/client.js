@@ -102,5 +102,5 @@ Meteor.setInterval(function() {
 }, 900);
 
 $(window).scroll(function() {
-    $("#chat-col").css("top", Math.max(0, 100 - $(document).scrollTop() + ($("#progress-bar").length ? 10 : 0)));
+    adjustChatTop();
 });

@@ -127,7 +127,6 @@ Template.brainSession_in_progress.othersIdeas = function() {
         Session.set('lastIdeasRefresh', Session.get('currentTimestamp'));
     }
     if ((Session.get('currentTimestamp') - Session.get('lastIdeasRefresh')) > CONFIG.OTHERS_IDEAS_INTERVAL) {
-        console.log('!');
         CACHE['othersIdeas'] = false;
         Session.set('lastIdeasRefresh', Session.get('currentTimestamp'));
     }
@@ -419,6 +418,10 @@ Template.brainSession_chat.rendered = function() {
     var $chat = $("#chat");
     $chat.scrollTop(9999);
 };
+
+Template.brainSession_after.rendered = function() {
+    adjustChatTop();
+}
 
 Meteor.setInterval(function() {
     var $chat = $("#chat");

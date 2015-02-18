@@ -84,3 +84,8 @@ everybodyIsReady = function() {
         return currentRoundIdeasCount == brainSession.participants.length * CONFIG.IDEAS_PER_ROUND
     }
 }
+
+adjustChatTop = function() {
+    newTop = Math.max(0, 100 - $(document).scrollTop() + ($("#progress-bar").length ? 15 : 0)) + 'px';
+    $("#chat-col").css("top", newTop);
+}

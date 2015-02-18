@@ -155,11 +155,32 @@ p {
 
 .box {
     height: $box-height;
+}
+.box-single-line {
     line-height: $box-height;
+    h3 {
+        line-height: $box-height;
+        margin: 0;
+    }
 }
 .box-bold {
-    font-size: 24px;
-    font-weight: bold;
+    h3 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+}
+.box-others {
+    height: auto;
+    min-height: $box-height;
+    padding-top: 30px;
+    h3 {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+.text-very-muted {
+    font-size: 11px;
 }
 
 .idea {
@@ -191,6 +212,12 @@ p {
 .all-ideas-padded {
     padding-left: 15px;
 }
+.all-ideas-btns {
+    margin-top: 20px;
+    .export-pdf {
+        margin-left: 25px;
+    }
+}
 
 #idea-form {
     textarea {
@@ -205,64 +232,76 @@ p {
     }
 }
 
-.side-thing {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 10px 15px 20px 15px;
-    background-color: #ddd;
-    h2 {
-        margin-top: 10px;
-    }
-}
+// .side-thing {
+//     position: absolute;
+//     top: 0;
+//     right: 0;
+//     padding: 10px 15px 20px 15px;
+//     background-color: #ddd;
+//     h2 {
+//         margin-top: 10px;
+//     }
+// }
 
-.side-panel {
-    bottom: 0;
-}
+// .side-panel {
+//     bottom: 0;
+// }
 
-.panel-closed {
-    padding: 10px;
-    text-align: center;
-    width: 140px;
-    &[data-panel="chat"] {
-        right: 0px;
-    }
-    &[data-panel="people"] {
-        right: 150px;
-    }
-    .count {
-        font-size: 24px;
-    }
-    i {
-        margin-top: 12px;
-    }
-    &.chat-unread {
-        background-color: #FFCDD2;
-        i, .count {
-            color: red;
-        }
-    }
-    &:hover {
-        background-color: darken(#ddd, 5%);
-    }
-}
+// .panel-closed {
+//     padding: 10px;
+//     text-align: center;
+//     width: 140px;
+//     &[data-panel="chat"] {
+//         right: 0px;
+//     }
+//     &[data-panel="people"] {
+//         right: 150px;
+//     }
+//     .count {
+//         font-size: 24px;
+//     }
+//     i {
+//         margin-top: 12px;
+//     }
+//     &.chat-unread {
+//         background-color: #FFCDD2;
+//         i, .count {
+//             color: red;
+//         }
+//     }
+//     &:hover {
+//         background-color: darken(#ddd, 5%);
+//     }
+// }
 
-.only-panel-closed {
-    right: 25.5% !important;
-}
+// .only-panel-closed {
+//     right: 25.5% !important;
+// }
 
-.superuser.in-progress .only-panel-closed {
-    right: 34% !important;
-}
+// .superuser.in-progress .only-panel-closed {
+//     right: 34% !important;
+// }
 
 .different {
     background-color: #eee;
 }
 
-#people-list {
-    font-size: 20px;
+// #people-list {
+//     font-size: 20px;
+// }
+
+
+#chat-col {
+    background-color: #ddd;
+    position: fixed;
+    top: $top-bar-height;
+    right: 0;
+    bottom: 0;
 }
 
+.in-progress #chat-col {
+    top: $top-bar-height + $progress-bar-height !important;
+}
 
 #chat {
     max-height: 70%;
@@ -511,6 +550,20 @@ p {
     visibility: hidden;
 }
 
+.hoverable:hover .show-on-hover {
+    display: inline-block !important;
+}
+.show-on-hover {
+    display: none !important;
+}
+
+.hoverable:hover .hide-on-hover {
+    display: none !important;
+}
+.hide-on-hover {
+    display: inline-block;
+}
+
 /****************************/
 
 .list-group-item .badge {
@@ -534,6 +587,22 @@ p {
     button {
         margin-left: 40px;
     }
+}
+
+.br-label {
+    background: #eee;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 4px;
+    padding: 2px 3px;
+    span {
+        display: inline-block;
+    }
+}
+
+.br-label-warning {
+    background: $warning-color;
+    color: #fff;
 }
 
 
@@ -579,8 +648,8 @@ p {
   -webkit-animation: blink 1s step-start 0s infinite;
 }
 
-@media (min-width: 1200px) {
-    .superuser.in-progress .only-panel-closed {
-        right: 25.5% !important;
-    }
-}
+// @media (min-width: 1200px) {
+//     .superuser.in-progress .only-panel-closed {
+//         right: 25.5% !important;
+//     }
+// }

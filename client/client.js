@@ -31,13 +31,13 @@ Meteor.setInterval(function() {
         }
 
         // brzydki hack na ukrycie paneli na początku sesji
-        if (!brainSession.round) {
-            Session.set('panelHiddenOnSessionStart', false);
-        }
-        if (brainSession.round === 1 && !Session.get('panelHiddenOnSessionStart')) {
-            Session.set('panelHiddenOnSessionStart', true);
-            Session.set('panel', false);
-        }
+        // if (!brainSession.round) {
+        //     Session.set('panelHiddenOnSessionStart', false);
+        // }
+        // if (brainSession.round === 1 && !Session.get('panelHiddenOnSessionStart')) {
+        //     Session.set('panelHiddenOnSessionStart', true);
+        //     Session.set('panel', false);
+        // }
 
         // alert na koncu sesji domyślnie pokazujemy
         if (!brainSession.round) {
@@ -65,7 +65,7 @@ Meteor.setInterval(function() {
 // płynny currentTimestamp
 Meteor.setInterval(function() {
     Session.set("currentTimestamp", moment().format("x") / 1000);
-}, 100);
+}, 300);
 
 // // miganie timerem
 // Meteor.setInterval(function() {
@@ -100,3 +100,7 @@ Meteor.setInterval(function() {
         }
     }
 }, 900);
+
+$(window).scroll(function() {
+    $("#chat-col").css("top", Math.max(0, 100 - $(document).scrollTop() + ($("#progress-bar").length ? 10 : 0)));
+});

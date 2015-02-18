@@ -43,7 +43,7 @@ forceLogin = function(callback) {
     // zarejestrowanie i zalogowanie, jeśli ktoś nie jest zalogowany
     if (!Meteor.user()) {
 
-        var username = "user_" + getRandomString(9);
+        var username = "guest_" + getRandomString(5);
 
         Meteor.call('addUser', {
             username: username,

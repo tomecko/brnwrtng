@@ -12,7 +12,7 @@
 <template name="brainSession_top_bar">
 <div id="top-bar" class="row">
     {{#if isSuperuser}}
-        <div class="{{#if sessionInProgress}}col-sm-8{{else}}col-sm-9{{/if}}">
+        <div class="{{#if sessionInProgress}}col-sm-9{{else}}col-sm-9{{/if}}">
             <a href="/" class="pull-left"><img src="/brain80.png" id="logo"></a>
             <h2 id="session-title" class="session-edit-modal-open clickable {{#unless title}}empty{{/unless}} hoverable" title="{{title}}">
                 {{#if title}}
@@ -23,7 +23,7 @@
                 <small class="visible-on-hover"><i class="fa fa-pencil"></i></small>
             </h2>
         </div>
-        <div class="{{#if sessionInProgress}}col-sm-4{{else}}col-sm-3{{/if}} text-center {{#unless sessionInProgress}}no-padding{{/unless}}">
+        <div class="{{#if sessionInProgress}}col-sm-3{{else}}col-sm-3{{/if}} text-center {{#unless sessionInProgress}}no-padding{{/unless}}">
             {{#unless round}}
                 {{#unless closed}}
                     <button class="btn btn-warning btn-lg btn-block brwr-btn-big next-round">start</button>
@@ -99,7 +99,7 @@
 
 <template name="brainSession_main">
 <div id="main" class="row {{#if sessionInProgress}}in-progress{{/if}}">
-    <div class="col-sm-12">
+    <div class="{{#if isSuperuser}}{{#if sessionInProgress}}col-sm-8 col-lg-9{{else}}col-sm-9{{/if}}{{else}}col-sm-9{{/if}}">
         {{#unless round}}
             {{> brainSession_before }}
         {{else}}
@@ -110,7 +110,7 @@
             {{/unless}}
         {{/unless}}
     </div>
-    {{> brainSession_people }}
+    {{!-- {{> brainSession_people }} --}}
     {{> brainSession_chat}}
 </div>
 </template>
@@ -172,8 +172,8 @@
 <template name="brainSession_in_progress">
 <div class="row padded">
     <div class="col-sm-2">
-        <div class="box box-bold text-center">
-            <i class="fa fa-bolt"></i> My Ideas
+        <div class="box box-bold box-single-line text-center">
+            <h3><i class="fa fa-bolt"></i> My Ideas</h3>
         </div>
     </div>
     <div class="col-sm-10">
@@ -217,8 +217,15 @@
 </div>
 <div class="row padded different">
     <div class="col-sm-2">
-        <div class="box box-bold text-center">
-            <i class="fa fa-user"></i> Others
+        <div class="box box-bold box-others text-center">
+            <h3><i class="fa fa-user"></i> Others</h3>
+            <small class="text-muted text-very-muted">
+                {{#if othersIdeas.refreshesIn}}
+                    refreshes in <strong>{{ othersIdeas.refreshesIn }}</strong>
+                {{else}}
+                    <i class="fa fa-refresh fa-spin"></i>
+                {{/if}}
+            </small>
         </div>
     </div>
     <div class="col-sm-10">
@@ -238,8 +245,8 @@
                 </div>
             {{else}}
                 <div class="col-sm-12 col-sm-6 col-lg-4">
-                    <div class="box text-muted text-center">
-                        <i>no ideas yet</i>
+                    <div class="box box-single-line text-muted text-center">
+                        <i>ideas will appear here</i>
                     </div>
                 </div>
             {{/each}}
@@ -265,19 +272,24 @@
     </div>
 {{/if}}
 
+{{!--
 <h2 class="all-ideas-padded">
-    All ideas
+    <!-- All ideas -->
     <button class="btn btn-default" onclick="alert('Sorry, this hasn\'t been implemented yet!\n\nWhat did you expect to happen?');">
         export to .pdf <i class="fa fa-file-pdf-o"></i>
     </button>
 </h2>
-<p class="all-ideas-padded">
+--}}
+<p class="all-ideas-padded all-ideas-btns">
     sort by
     <div class="btn-group all-ideas-sorting">
         <button class="btn {{#if sessionEquals 'allIdeasSorting' 'likes'}}btn-warning{{else}}btn-default{{/if}}" data-sort-by="likes">likes</button>
         <button class="btn {{#if sessionEquals 'allIdeasSorting' 'author'}}btn-warning{{else}}btn-default{{/if}}" data-sort-by="author">author</button>
         <!-- <button class="btn {{#if sessionEquals 'allIdeasSorting' 'time'}}btn-warning{{else}}btn-default{{/if}}" data-sort-by="time">time</button> -->
     </div>
+    <button class="btn btn-default export-pdf" onclick="alert('Sorry, this hasn\'t been implemented yet!\n\nWhat did you expect to happen?');">
+        export to .pdf <i class="fa fa-file-pdf-o"></i>
+    </button>
 </p>
 
 {{#if sessionEquals 'allIdeasSorting' 'author'}}
@@ -359,7 +371,6 @@
             People
             <i class="fa fa-times pull-right toggle-panel clickable" data-panel="people"></i>
         </h2>
-        <ul class="list-group" id="people-list">
         {{#each participants}}
             <li class="list-group-item {{#if _eq currentUser._id this._id}}name-edit-modal-open clickable{{/if}} hoverable">
                 <span>
@@ -379,7 +390,6 @@
                 {{/if}}
             </li>
         {{/each}}
-        </ul>
     </div>
 {{else}}
     <div class="side-thing toggle-panel clickable panel-closed {{#if sessionEquals 'panel' 'chat'}}only-panel-closed{{/if}}" data-panel="people">
@@ -393,48 +403,88 @@
 </template>
 
 <template name="brainSession_chat">
-{{#if sessionEquals 'panel' 'chat'}}
-    <div class="{{#if isSuperuser}}{{#if sessionInProgress}}col-sm-4 col-lg-3{{else}}col-sm-3{{/if}}{{else}}col-sm-3{{/if}} side-thing side-panel">
-        <h2>
-            <i class="fa fa-comments"></i>
-            Chat
-            <i class="fa fa-times pull-right toggle-panel clickable" data-panel="chat"></i>
-        </h2>
-        {{#if messages}}
-            <ul class="list-unstyled" id="chat">
-            {{#each messages}}
-                <li>
-                    <div class="bubble bubble-chat {{#if _eq author currentUser._id}}bubble-chat-me{{/if}}">
-                        <i><small title="{{formatDate time 'YYYY/MM/DD HH:mm'}}">
-                            {{#if _eq author currentUser._id}}you{{else}}{{userNameById author}}{{/if}}
-                            <small>({{formatDate time 'HH:mm'}})</small>
-                        </small></i>
-                        <p>{{text}}</p>
-                    </div>
-                </li>
+<div id="chat-col" class="{{#if isSuperuser}}{{#if sessionInProgress}}col-sm-3 col-lg-3{{else}}col-sm-3{{/if}}{{else}}col-sm-3{{/if}}">
+    <h3>
+        <i class="fa fa-user"></i>
+        People
+        <small>({{participants.length}})</small>
+    </h3>
+    {{#each participants}}
+        <span
+            class="br-label {{#if _eq currentUser._id this._id}}br-label-warning{{/if}} {{#unless hasProfileName this}}generic-username{{/unless}} {{#if _eq currentUser._id this._id}}name-edit-modal-open clickable{{/if}} hoverable"
+            style="margin-right: 5px; padding-right: 5px"
+            title="{{#if _inArray ../admins this._id}}admin sets brainwriting subject, starts and ends brainwriting sessions{{/if}}">
+            {{#if activity.write}}
+                <i class="fa fa-fw fa-bolt faa-shake animated hide-on-hover"></i>
             {{else}}
-                <li><em>be first to write a message!</em></li>
-            {{/each}}
-            </ul>
-        {{/if}}
-        <form id="chat-send-message">
-            <div class="input-group input-group-lg" style="max-width: 400px;">
-                <input type="text" class="form-control" placeholder="my message">
-                <span class="input-group-btn">
-                    <button class="btn btn-warning" type="submit">Send</button>
-                </span>
-            </div>
-        </form>
-    </div>
-{{else}}
-    <div class="side-thing toggle-panel clickable panel-closed {{#if sessionEquals 'panel' 'people'}}only-panel-closed{{/if}} {{#if unreadMessagesCount}}chat-unread{{/if}}" data-panel="chat">
-        <h2>
-            Chat<br/>
-            {{#if unreadMessagesCount}}<span class="count ">{{unreadMessagesCount}}</span>{{/if}}
-            <i class="fa fa-comments"></i>
-        </h2>
-    </div>
-{{/if}}
+                {{#if _eq currentUser._id this._id}}
+                    <i class="fa fa-fw fa-pencil show-on-hover"></i>
+                    <i class="fa fa-fw fa-user hide-on-hover"></i>
+                {{else}}
+                    <i class="fa fa-fw fa-user"></i>
+                {{/if}}
+            {{/if}}
+            {{userName this}}
+            {{#if _inArray ../admins this._id}}(ADMIN){{/if}}
+        </span>
+    {{/each}}
+
+    <h3>
+        <i class="fa fa-comments"></i>
+        Chat
+        <!-- <i class="fa fa-times pull-right toggle-panel clickable" data-panel="chat"></i> -->
+    </h3>
+
+    {{!--
+    <ul class="list-group" id="people-list">
+    {{#each participants}}
+        <li class="list-group-item {{#if _eq currentUser._id this._id}}name-edit-modal-open clickable{{/if}} hoverable">
+            <span>
+                <span class="{{#unless hasProfileName this}}generic-username{{/unless}}">{{userName this}}</span>
+                {{#if _eq currentUser._id this._id}}<small class="visible-on-hover"><i class="fa fa-pencil"></i></small>{{/if}}
+                {{#if _eq currentUser._id this._id}}
+                    <span class="badge uc pull-right">you</span>
+                {{/if}}
+                {{#if _inArray ../admins this._id}}
+                    <span class="badge uc pull-right">admin</span>
+                {{/if}}
+            </span>
+            {{#if activity.write}}
+                {{#unless activity.ready}}
+                    <i class="fa fa-bolt faa-shake animated" style="margin-left: 5px;"></i>
+                {{/unless}}
+            {{/if}}
+        </li>
+    {{/each}}
+    </ul>
+    --}}
+
+    {{#if messages}}
+        <ul class="list-unstyled" id="chat">
+        {{#each messages}}
+            <li>
+                <div class="bubble bubble-chat {{#if _eq author currentUser._id}}bubble-chat-me{{/if}}">
+                    <i><small title="{{formatDate time 'YYYY/MM/DD HH:mm'}}">
+                        {{#if _eq author currentUser._id}}you{{else}}{{userNameById author}}{{/if}}
+                        <small>({{formatDate time 'HH:mm'}})</small>
+                    </small></i>
+                    <p>{{text}}</p>
+                </div>
+            </li>
+        {{else}}
+            <li><em>be first to write a message!</em></li>
+        {{/each}}
+        </ul>
+    {{/if}}
+    <form id="chat-send-message">
+        <div class="input-group input-group-lg" style="max-width: 400px;">
+            <input type="text" class="form-control" placeholder="my message">
+            <span class="input-group-btn">
+                <button class="btn btn-warning" type="submit">Send</button>
+            </span>
+        </div>
+    </form>
+</div>
 </template>
 
 <template name="XbrainSession">

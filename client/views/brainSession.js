@@ -123,35 +123,75 @@ Template.brainSession_in_progress.myIdeas = function() {
 }
 
 Template.brainSession_in_progress.othersIdeas = function() {
+    if (Session.get('lastIdeasRefresh') === undefined) {
+        Session.set('lastIdeasRefresh', Session.get('currentTimestamp'));
+    }
+    if ((Session.get('currentTimestamp') - Session.get('lastIdeasRefresh')) > CONFIG.OTHERS_IDEAS_INTERVAL) {
+        console.log('!');
+        CACHE['othersIdeas'] = false;
+        Session.set('lastIdeasRefresh', Session.get('currentTimestamp'));
+    }
+
     var brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId),
         count, skip;
     if (brainSession && Meteor.userId()) {
-        count = Ideas.find({
-            session: Router.current().params._id,
-            author: {
-                $not: Meteor.userId()
-            }
-        }).count();
-        skip = count % CONFIG.OTHERS_IDEAS_CHUNK;
-        return {
-            count: count,
-            skip: skip,
-            data: Ideas.find({
+        if (!CACHE['othersIdeas']) {
+            CACHE['othersIdeas'] = Ideas.find({
                 session: Router.current().params._id,
                 author: {
                     $not: Meteor.userId()
+                },
+                ts: {
+                    $lt: Math.round(Session.get('lastIdeasRefresh'))
                 }
             }, {
                 limit: Session.get('othersIdeasLimit'),
-                skip: skip,
                 sort: {
                     ts: -1
                 }
-            })
-        };
+            });
+        }
+        return {
+            data: CACHE['othersIdeas'],
+            refreshesIn: Math.round(Session.get('lastIdeasRefresh') + CONFIG.OTHERS_IDEAS_INTERVAL - Session.get('currentTimestamp'))
+        }
     }
 }
+
+
+
+
+// Template.brainSession_in_progress.othersIdeas = function() {
+//     var brainSessionId = Router.current().params._id,
+//         brainSession = BrainSessions.findOne(brainSessionId),
+//         count, skip;
+//     if (brainSession && Meteor.userId()) {
+//         count = Ideas.find({
+//             session: Router.current().params._id,
+//             author: {
+//                 $not: Meteor.userId()
+//             }
+//         }).count();
+//         skip = count % CONFIG.OTHERS_IDEAS_CHUNK;
+//         return {
+//             count: count,
+//             skip: skip,
+//             data: Ideas.find({
+//                 session: Router.current().params._id,
+//                 author: {
+//                     $not: Meteor.userId()
+//                 }
+//             }, {
+//                 limit: Session.get('othersIdeasLimit'),
+//                 skip: skip,
+//                 sort: {
+//                     ts: -1
+//                 }
+//             })
+//         };
+//     }
+// }
 
 Template.brainSession_after.ideas = function() {
     var brainSessionId = Router.current().params._id,
@@ -253,7 +293,7 @@ Template.brainSession_after.ideas = function() {
     }
 };
 
-Template.brainSession_people.participants = function() {
+Template.brainSession_chat.participants = function() {
     var brainSessionId = Router.current().params._id,
         brainSession = BrainSessions.findOne(brainSessionId);
     if (brainSession) {
